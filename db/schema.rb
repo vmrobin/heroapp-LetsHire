@@ -20,4 +20,15 @@ ActiveRecord::Schema.define(:version => 20130319022125) do
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
+  create_table "users", :force => true do |t|
+    t.string   "email",                         :null => false
+    t.string   "password",                      :null => false
+    t.string   "name"
+    t.boolean  "admin",      :default => false, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "users", ["email"], :name => "users_email_index", :unique => true
+
 end
