@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
+# TODO change back to: source 'https://rubygems.org'
 
 gem 'rails', '3.2.12'
 gem 'slim-rails', '0.2.0'
@@ -10,6 +11,7 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
+  gem 'factory_girl_rails', '4.2.1'
 end
 
 # Gems used only for assets and not required
@@ -26,6 +28,7 @@ group :test do
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
+  gem 'faker', '1.1.2'
 end
 
 group :production do
