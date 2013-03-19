@@ -31,6 +31,7 @@ group :test do
   gem 'growl', '1.0.3'
   gem 'factory_girl_rails', '4.2.1'
   gem 'faker', '1.1.2'
+  gem 'libnotify'
 end
 
 group :production do
