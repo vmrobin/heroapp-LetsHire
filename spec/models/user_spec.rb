@@ -13,4 +13,12 @@ describe User do
     user = FactoryGirl.create(:user)
     FactoryGirl.build(:user, :email => user.email).should_not be_valid
   end
+
+  it 'creates non-admin user by default' do
+    FactoryGirl.build(:user).admin?.should be_false
+  end
+
+  it 'creates admin user' do
+    User.new_admin.admin?.should be_true
+  end
 end

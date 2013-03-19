@@ -6,8 +6,8 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-User.new_admin(:email => 'admin',
-               :password => '0DPiKuNIrrVmD8IUCuw1hQxNqZc=',
+User.new_admin(:email => 'admin@local',
+               :password => 'admin',
                :name => 'System Administrator').save
 
 Department.delete_all
