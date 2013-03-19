@@ -9,3 +9,13 @@
 User.new_admin(:email => 'admin',
                :password => '0DPiKuNIrrVmD8IUCuw1hQxNqZc=',
                :name => 'System Administrator').save
+
+Department.delete_all
+Department.create([ { name: 'Administration', description: 'Administration & Facility Department'},
+                    { name: 'Facility', description: 'Facility'},
+                    { name: 'Finance', description: 'Finanace'},
+                    { name: 'IT', description: 'IT'},
+                    { name: 'HR', description: 'Human Resource'},
+                    { name: 'Marketing', description: 'Marketing'},
+                    { name: 'R&D', description: 'Rearch and Development'},
+                    ])
