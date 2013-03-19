@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Department.delete_all
+Department.create([ { name: 'Administration', description: 'Administration & Facility Department'},
+                    { name: 'Facility', description: 'Facility'},
+                    { name: 'Finance', description: 'Finanace'},
+                    { name: 'IT', description: 'IT'},
+                    { name: 'HR', description: 'Human Resource'},
+                    { name: 'Marketing', description: 'Marketing'},
+                    { name: 'R&D', description: 'Rearch and Development'},
+                    ])
