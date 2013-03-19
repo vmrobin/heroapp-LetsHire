@@ -29,6 +29,7 @@ group :test do
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
   gem 'faker', '1.1.2'
+  gem 'libnotify'
 end
 
 group :production do
