@@ -1,8 +1,11 @@
 source 'http://ruby.taobao.org'
+# TODO change back to: source 'https://rubygems.org'
 
 gem 'rails', '3.2.12'
 gem 'slim-rails', '0.2.0'
 gem 'bootstrap-sass', '2.1'
+gem 'devise', '2.2.3'
+gem 'cancan', '1.6.9'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
@@ -28,6 +31,9 @@ group :test do
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
+  gem 'factory_girl_rails', '4.2.1'
+  gem 'faker', '1.1.2'
+  gem 'libnotify'
 end
 
 gem 'carmen-rails', '~> 1.0.0.beta3'

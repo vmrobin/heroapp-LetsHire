@@ -99,3 +99,12 @@ footer {
     }
   }
 }
+
+/* for devise prompts */
+.flash-alert {
+  @extend .alert-error;
+}
+
+.flash-notice {
+  @extend .alert-success;
+}
