@@ -1,0 +1,9 @@
+div id='opening_state_wrapper'
+  -country_code ||= params[:country_code]
+  -country = Carmen::Country.coded(country_code)
+  -if country.nil?
+    em Please select a country code
+  -elsif country.subregions?
+    =subregion_select 'opening', :state, country_code
+  -else
+    =text_field 'opening', :state

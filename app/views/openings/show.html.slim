@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  b Title:
+  = @opening.title
+p
+  b Address:
+  = @opening.full_address
+p
+  b Department:
+  = @opening.department.name if @opening.department
+p
+  b Description:
+  = @opening.description
+
+= link_to 'Edit', edit_opening_path(@opening)
+= '|'
+= link_to 'Back', openings_path

@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
 
 gem 'rails', '3.2.12'
 gem 'slim-rails', '0.2.0'
@@ -10,6 +10,8 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
+  gem 'better_errors'
+  gem 'meta_request'
 end
 
 # Gems used only for assets and not required
@@ -27,6 +29,8 @@ group :test do
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
 end
+
+gem 'carmen-rails', '~> 1.0.0.beta3'
 
 group :production do
   gem 'pg', '0.12.2'

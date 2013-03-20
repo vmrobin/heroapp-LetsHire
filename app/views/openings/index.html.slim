@@ -1,0 +1,19 @@
+h1 Listing openings
+
+table
+  tr
+    th Title
+    th
+    th
+    th
+
+  - @openings.each do |opening|
+    tr
+      td= opening.title
+      td= link_to 'Show', opening
+      td= link_to 'Edit', edit_opening_path(opening)
+      td= link_to 'Destroy', opening, :confirm => 'Are you sure?', :method => :delete
+
+br
+
+= link_to 'New Opening', new_opening_path
