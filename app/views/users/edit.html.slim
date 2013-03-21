@@ -1,0 +1,14 @@
+h3 Edit user: #{@user.name}
+= form_for(:user, :url => {:action => 'update'}, :html => {:method => 'put'}) do |form|
+  p
+    = form.label :email
+    = form.text_field :email
+  p
+    = form.label :department
+    = collection_select :user, :department_id, Department.all, :id, :name
+  p
+    = form.label :role
+    = collection_select :user, :role_id, Role.all, :id, :name
+  p
+    = form.submit 'Save'
+

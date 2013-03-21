@@ -6,6 +6,7 @@ gem 'slim-rails', '0.2.0'
 gem 'bootstrap-sass', '2.1'
 gem 'devise', '2.2.3'
 gem 'cancan', '1.6.9'
+gem 'will_paginate', '~> 3.0'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'

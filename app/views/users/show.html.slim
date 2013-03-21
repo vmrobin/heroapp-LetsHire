@@ -1,0 +1,22 @@
+= notice
+h3 User Details
+p
+  label name
+  = @user.name
+p
+  label email
+  = @user.email
+- if @user.admin
+  p
+    label Administrator
+p
+  label Role
+  = @role_name
+p
+  label Department
+  = @department_name
+p
+  =link_to 'Edit', edit_user_path(@user.id)
+  =link_to 'Delete', user_path, :confirm => 'Are you sure?', :method => :delete
+  =link_to 'Back to users', users_path
+

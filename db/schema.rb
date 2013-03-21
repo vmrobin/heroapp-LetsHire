@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130319022125) do
+ActiveRecord::Schema.define(:version => 20130320083641) do
 
   create_table "departments", :force => true do |t|
     t.string "name"
@@ -20,6 +20,20 @@ ActiveRecord::Schema.define(:version => 20130319022125) do
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
+  create_table "permissions", :force => true do |t|
+    t.string   "name",       :null => false
+    t.string   "operation",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name",          :null => false
+    t.integer  "permission_id", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",              :default => "",    :null => false
     t.string   "encrypted_password", :default => "",    :null => false
@@ -27,6 +41,8 @@ ActiveRecord::Schema.define(:version => 20130319022125) do
     t.boolean  "admin",              :default => false, :null => false
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+    t.integer  "role_id"
+    t.integer  "department_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
