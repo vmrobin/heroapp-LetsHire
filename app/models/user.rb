@@ -21,4 +21,11 @@ class User < ActiveRecord::Base
     user.assign_attributes({ :admin => true }, :without_protection => true)
     user
   end
+
+
+  def self.hiringManagers
+    #fixme  Need narrow down the scope once Role is ready
+    all
+  end
+
 end

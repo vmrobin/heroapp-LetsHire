@@ -13,6 +13,8 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
+  gem 'better_errors', '0.7.2'
+  gem 'meta_request', '0.2.2'
 end
 
 # Gems used only for assets and not required
@@ -33,6 +35,8 @@ group :test do
   gem 'faker', '1.1.2'
   gem 'libnotify'
 end
+
+gem 'carmen-rails', '~> 1.0.0.beta3'
 
 group :production do
   gem 'pg', '0.12.2'

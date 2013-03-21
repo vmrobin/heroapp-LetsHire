@@ -19,7 +19,9 @@ LetsHire::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+  match '/addresses/subregion_options' => 'openings#subregion_options'
 
+  resources :openings
   # Sample resource route with options:
   #   resources :products do
   #     member do
