@@ -10,6 +10,14 @@ class Opening < ActiveRecord::Base
 
   validates :title, :presence => true
 
+
+  STATUSES = { :active => 1, :draft => 0, :closed => -1 }
+  STATUS_STRINGS = STATUSES.invert
+
+  def status_str
+    STATUS_STRINGS[status]
+  end
+
   def full_address
     unless country.nil?
       Country.coded(country).try { |country_obj|
@@ -18,7 +26,7 @@ class Opening < ActiveRecord::Base
         logger.debug sub_regions.inspect
         logger.debug province
         if province_obj.nil?
-          province.to_s + ', ' + country_obj.name
+          (province ||  "UNKNOWN") + ', ' + country_obj.name
         else
           province_obj.name.to_s + ',' + country_obj.name
         end
