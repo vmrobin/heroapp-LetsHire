@@ -16,6 +16,8 @@ group :development, :test do
   gem 'spork', '0.9.2'
   gem 'better_errors', '0.7.2'
   gem 'meta_request', '0.2.2'
+  gem 'execjs', '1.4.0'
+  gem 'therubyracer', '0.11.4'
 end
 
 # Gems used only for assets and not required

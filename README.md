@@ -14,6 +14,7 @@ Intall and start the app
 3. Start the server:
     rails server
 
-4. Start the guard:
-    guard
+4. Run unit tests:
+    rake db:migrate
+    rake
 
