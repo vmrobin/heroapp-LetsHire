@@ -2,7 +2,7 @@ class OpeningsController < ApplicationController
   # GET /openings
   # GET /openings.json
   def index
-    @openings = Opening.all
+    @openings = Opening.paginate(:page => params[:page], :per_page => 20)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -19,10 +19,10 @@
 
   .field
     = f.label :Country
-    = f.country_select :country, {}, prompt: 'Please select a country'
+    = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
   .field
     = f.label :State, 'State/Province'
-    = render partial: 'subregion_select', object: @opening, locals: { opening_form: f, country_code: f.object.country}
+    = render partial: 'subregion_select', :object => @opening, :locals => { :opening_form => f, :country_code => f.object.country}
   .field
     = f.label :Description
     = f.text_area :description

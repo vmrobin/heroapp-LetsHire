@@ -20,6 +20,8 @@ table
       td= link_to 'Edit', edit_opening_path(opening)
       td= link_to 'Destroy', opening, :confirm => 'Are you sure?', :method => :delete
 
+= will_paginate @openings
+
 br
 
 = link_to 'New Opening', new_opening_path
