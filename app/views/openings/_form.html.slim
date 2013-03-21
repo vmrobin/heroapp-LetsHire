@@ -12,6 +12,11 @@
   .field
     = f.label :Department
     = f.select :department_id, Department.all.map{|d|[d.name, d.id]}
+
+  .field
+    = f.label :HiringManager, 'Hiring Manager'
+    = f.select :hiring_manager_id, User.hiringManagers.map { |user| [user.name, user.id]}
+
   .field
     = f.label :Country
     = f.country_select :country, {}, prompt: 'Please select a country'

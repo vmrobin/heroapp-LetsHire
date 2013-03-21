@@ -3,7 +3,7 @@ class CreateOpenings < ActiveRecord::Migration
     create_table :openings do |t|
       t.string :title
       t.string :country
-      t.string :state
+      t.string :province
 
       t.references :department
       t.integer :hiring_manager_id

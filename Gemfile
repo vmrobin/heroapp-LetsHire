@@ -13,8 +13,8 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
-  gem 'better_errors'
-  gem 'meta_request'
+  gem 'better_errors', '0.7.2'
+  gem 'meta_request', '0.2.2'
 end
 
 # Gems used only for assets and not required

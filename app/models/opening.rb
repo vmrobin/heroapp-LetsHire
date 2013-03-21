@@ -1,24 +1,28 @@
 require 'carmen'
-include Carmen
 
 class Opening < ActiveRecord::Base
-  attr_accessible :title, :country, :description, :state, :department_id
-  belongs_to :department
+  include Carmen
 
+  attr_accessible :title, :country, :province, :description, :department_id, :status, :hiring_manager_id, :recruiter_id
+  belongs_to :department
+  belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
+  belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
+
+  validates :title, :presence => true
 
   def full_address
     unless country.nil?
-      country_obj = Country.coded(country)
-      unless country_obj.nil?
-        country_name = country_obj.official_name
-        state_obj = country_obj.subregions.coded(state)
-        if state_obj.nil?
-          state.to_s + ', ' + country_name
+      Country.coded(country).try { |country_obj|
+        sub_regions = country_obj.subregions
+        province_obj = sub_regions.respond_to?(:coded) ?  sub_regions.coded(province) : nil
+        logger.debug sub_regions.inspect
+        logger.debug province
+        if province_obj.nil?
+          province.to_s + ', ' + country_obj.name
         else
-          state_obj.name.to_s + ',' + country_name
+          province_obj.name.to_s + ',' + country_obj.name
         end
-      end
-
+      }
     end
   end
 

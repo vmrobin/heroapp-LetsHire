@@ -4,14 +4,17 @@ p
   b Title:
   = @opening.title
 p
+  b Department:
+  = @opening.department.try(:name)
+p
+  b HiringManager:
+  = @opening.hiring_manager.try(:name)
+p
   b Address:
   = @opening.full_address
 p
-  b Department:
-  = @opening.department.name if @opening.department
-p
   b Description:
-  = @opening.description
+  = simple_format(@opening.description)
 
 = link_to 'Edit', edit_opening_path(@opening)
 = '|'

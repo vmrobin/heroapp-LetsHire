@@ -3,6 +3,9 @@ h1 Listing openings
 table
   tr
     th Title
+    th Department
+    th Hiring Manager
+    th Status
     th
     th
     th
@@ -10,6 +13,9 @@ table
   - @openings.each do |opening|
     tr
       td= opening.title
+      td= opening.department.try(:name)
+      td= opening.hiring_manager.try(:name)
+      td= opening.status
       td= link_to 'Show', opening
       td= link_to 'Edit', edit_opening_path(opening)
       td= link_to 'Destroy', opening, :confirm => 'Are you sure?', :method => :delete

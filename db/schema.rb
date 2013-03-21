@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(:version => 20130320021446) do
   create_table "openings", :force => true do |t|
     t.string   "title"
     t.string   "country"
-    t.string   "state"
+    t.string   "province"
     t.integer  "department_id"
     t.integer  "hiring_manager_id"
     t.integer  "recruiter_id"

@@ -24,7 +24,7 @@ describe OpeningsController do
   # Opening. As you add validations to Opening, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    { :title => 'Marketing Manager' }
   end
 
   # This should return the minimal set of values that should be in the session

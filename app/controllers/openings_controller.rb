@@ -19,6 +19,8 @@ class OpeningsController < ApplicationController
       format.html # show.html.erb
       format.json { render json: @opening }
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to openings_url, notice: 'Invalid opening'
   end
 
   # GET /openings/new
@@ -35,6 +37,8 @@ class OpeningsController < ApplicationController
   # GET /openings/1/edit
   def edit
     @opening = Opening.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to openings_url, notice: 'Invalid opening'
   end
 
   # POST /openings
@@ -67,6 +71,8 @@ class OpeningsController < ApplicationController
         format.json { render json: @opening.errors, status: :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to openings_url, notice: 'Invalid opening'
   end
 
   # DELETE /openings/1
