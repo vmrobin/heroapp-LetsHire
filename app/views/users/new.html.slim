@@ -1,0 +1,17 @@
+h3 Invite new user
+= form_for(:user, :url => {:action => 'create'}) do |form|
+  p
+    = form.label :name
+    = form.text_field :name
+  p
+    = form.label :email
+    = form.text_field :email
+  p
+    = form.label :department
+    = collection_select :user, :department_id, Department.all, :id, :name
+  p
+    = form.label :role
+    = form.collection_select :role, User::ROLES, :to_s, :humanize
+  p
+    = submit_tag 'Invite'
+

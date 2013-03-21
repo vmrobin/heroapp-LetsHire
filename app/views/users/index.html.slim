@@ -1,0 +1,21 @@
+h3 User Management
+= link_to 'Invite new user', new_user_path
+table.table_hover
+  thead
+    tr
+      th username
+      th email
+      th actions
+  tbody
+    - for user in @users do
+      tr
+        td =user.name
+        td =user.email
+        td
+          =link_to 'Details', user
+          =link_to 'Edit', edit_user_path(user.id)
+          =link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete
+
+div.digg_pagination
+  = will_paginate @users
+

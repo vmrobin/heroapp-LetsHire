@@ -28,5 +28,9 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
+
+    user ||= User.new
+
+    can :manage, :all if User::ROLES.include?(user.role)
   end
 end

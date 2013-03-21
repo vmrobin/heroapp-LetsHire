@@ -7,7 +7,9 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  attr_accessible :email, :password, :name
+  attr_accessible :email, :password, :name, :department_id, :role
+
+  ROLES = %w[Recruiter HiringManager Interviewer Other]
 
   validates :email, :presence => true, :uniqueness => true
 
