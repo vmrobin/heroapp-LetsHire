@@ -1,0 +1,21 @@
+p#notice = notice
+
+p
+  b Title:
+  = @opening.title
+p
+  b Department:
+  = @opening.department.try(:name)
+p
+  b HiringManager:
+  = @opening.hiring_manager.try(:name)
+p
+  b Address:
+  = @opening.full_address
+p
+  b Description:
+  = simple_format(@opening.description)
+
+= link_to 'Edit', edit_opening_path(@opening)
+= '|'
+= link_to 'Back', openings_path

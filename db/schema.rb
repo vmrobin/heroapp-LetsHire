@@ -11,27 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130320083641) do
+ActiveRecord::Schema.define(:version => 20130321083307) do
 
   create_table "departments", :force => true do |t|
-    t.string "name"
+    t.string "name",        :null => false
     t.string "description"
   end
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
-  create_table "permissions", :force => true do |t|
-    t.string   "name",       :null => false
-    t.string   "operation",  :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "roles", :force => true do |t|
-    t.string   "name",          :null => false
-    t.integer  "permission_id", :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+  create_table "openings", :force => true do |t|
+    t.string   "title"
+    t.string   "country"
+    t.string   "province"
+    t.integer  "department_id"
+    t.integer  "hiring_manager_id"
+    t.integer  "recruiter_id"
+    t.string   "description"
+    t.integer  "status"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -41,8 +40,8 @@ ActiveRecord::Schema.define(:version => 20130320083641) do
     t.boolean  "admin",              :default => false, :null => false
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
-    t.integer  "role_id"
     t.integer  "department_id"
+    t.string   "role"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

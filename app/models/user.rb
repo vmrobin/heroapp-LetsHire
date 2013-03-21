@@ -7,7 +7,9 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  attr_accessible :email, :password, :name, :department_id, :role_id
+  attr_accessible :email, :password, :name, :department_id, :role
+
+  ROLES = %w[Recruiter HiringManager Interviewer Other]
 
   validates :email, :presence => true, :uniqueness => true
 
@@ -21,4 +23,11 @@ class User < ActiveRecord::Base
     user.assign_attributes({ :admin => true }, :without_protection => true)
     user
   end
+
+
+  def self.hiringManagers
+    #fixme  Need narrow down the scope once Role is ready
+    all
+  end
+
 end
