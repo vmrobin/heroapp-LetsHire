@@ -11,7 +11,7 @@ class Opening < ActiveRecord::Base
   validates :title, :presence => true
 
 
-  STATUSES = { :active => 1, :draft => 0, :closed => -1 }
+  STATUSES = { :draft => 0, :published => 1, :closed => -1 }
   STATUS_STRINGS = STATUSES.invert
 
   def status_str

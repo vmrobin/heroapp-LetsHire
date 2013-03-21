@@ -31,5 +31,9 @@
     .field
       = f.label :Status
       = f.select :status, Opening::STATUSES
+  -else
+    .field
+      = f.check_box :status
+      = f.label 'activate it right now'
   .actions
     = f.submit 'Save'
