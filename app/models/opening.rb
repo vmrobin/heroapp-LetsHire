@@ -3,10 +3,14 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :country, :province, :city, :description, :department_id, :status, :hiring_manager_id, :recruiter_id
+  attr_accessible :title, :country, :province, :city, :description
+  attr_accessible :department_id, :status, :hiring_manager_id, :recruiter_id, :participants, :participant_ids
   belongs_to :department
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
+
+  has_many :opening_participants, :class_name => "OpeningParticipant", :readonly => true
+  has_many :participants, :class_name => "User", :through => :opening_participants
 
   validates :title, :presence => true
 
@@ -31,7 +35,10 @@ class Opening < ActiveRecord::Base
         end
       }
     end
+  end
 
+  def published?
+    status == STATUSES[:published]
   end
 
   private
