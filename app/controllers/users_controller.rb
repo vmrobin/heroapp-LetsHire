@@ -14,8 +14,10 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { redirect_to users_url }
+        format.json { render :json => @user, :status => 'created', :location => @user }
       else
-        format.html { redirect_to new_user_url }
+        format.html { render :action => 'new' }
+        format.json { render :json => @user.errors, :status => :unprocessable_entity}
       end
     end
   end
@@ -33,6 +35,7 @@ class UsersController < ApplicationController
     @department_name = Department.find(@user.department_id).name if @user.department_id
     respond_to do |format|
       format.html
+      format.json { render :json => @user}
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to users_url, notice: 'Invalid user'
@@ -41,10 +44,12 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     respond_to do |format|
-      if @user.update _attributes(params[:user])
+      if @user.update_attributes(params[:user])
         format.html { redirect_to( @user, :notice => 'User was successfully updated')}
+        format.json { render :no_content }
       else
-        format.html { redirect_to edit_user_path }
+        format.html { render :action => 'edit' }
+        format.json { render :json => @user.errors, :status => :unprocessable_entity }
       end
     end
   rescue ActiveRecord::RecordNotFound
@@ -64,6 +69,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to users_url }
+      format.json { render :no_content}
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to users_url, notice: 'Invalid user'

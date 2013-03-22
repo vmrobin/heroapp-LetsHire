@@ -7,6 +7,8 @@ gem 'bootstrap-sass', '2.1'
 gem 'devise', '2.2.3'
 gem 'cancan', '1.6.9'
 gem 'will_paginate', '~> 3.0'
+gem 'validates_email_format_of'
+gem 'dynamic_form'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
