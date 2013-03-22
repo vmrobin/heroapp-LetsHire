@@ -20,6 +20,21 @@ ActiveRecord::Schema.define(:version => 20130322035010) do
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
+  create_table "interviews", :force => true do |t|
+    t.string   "type",         :null => false
+    t.string   "title",        :null => false
+    t.text     "description"
+    t.string   "status"
+    t.float    "score"
+    t.text     "assessment"
+    t.datetime "scheduled_at", :null => false
+    t.integer  "duration"
+    t.string   "phone"
+    t.string   "location"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "openings", :force => true do |t|
     t.string   "title"
     t.string   "country"
