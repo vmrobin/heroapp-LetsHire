@@ -15,10 +15,12 @@ table
       td= opening.title
       td= opening.department.try(:name)
       td= opening.hiring_manager.try(:name)
-      td= opening.status
+      td= opening.status_str
       td= link_to 'Show', opening
       td= link_to 'Edit', edit_opening_path(opening)
       td= link_to 'Destroy', opening, :confirm => 'Are you sure?', :method => :delete
+
+= will_paginate @openings
 
 br
 

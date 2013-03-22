@@ -2,7 +2,7 @@ class OpeningsController < ApplicationController
   # GET /openings
   # GET /openings.json
   def index
-    @openings = Opening.all
+    @openings = Opening.paginate(:page => params[:page], :per_page => 20)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,7 +26,7 @@ class OpeningsController < ApplicationController
   # GET /openings/new
   # GET /openings/new.json
   def new
-    @opening = Opening.new
+    @opening = Opening.new(:title => '', :description => description_template)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -91,5 +91,32 @@ class OpeningsController < ApplicationController
   def subregion_options
     render partial: 'subregion_select'
   end
+
+
+
+  private
+  def description_template
+        #Fixme: need load from 'setting' page
+        <<-END_OF_STRING
+About Us
+
+ABC is the world leader in virtualization and cloud infrastructure solutions.
+We empower our 400,000 customers by simplifying, automating, and transforming
+the way they build, deliver, and consume IT. We are a passionate and innovative
+group of people, comprised of thousands of top-notch computer scientists and
+software engineers spread across the world.
+
+Job Description
+We are seeking ....
+
+
+Requirements
+-	condition 1
+-	condition 2
+
+        END_OF_STRING
+      end
+
+
 
 end

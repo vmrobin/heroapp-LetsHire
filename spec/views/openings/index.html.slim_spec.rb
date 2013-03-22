@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'will_paginate/array'
+
 describe "openings/index" do
   before(:each) do
     assign(:openings, [
@@ -7,9 +9,15 @@ describe "openings/index" do
         :title => "Title"
       ),
       stub_model(Opening,
+                 :title => "Title"
+      ),
+      stub_model(Opening,
+                 :title => "Title"
+      ),
+      stub_model(Opening,
         :title => "Title"
       )
-    ])
+    ].paginate(:page => 1, :per_page => 2))
   end
 
   it "renders a list of openings" do

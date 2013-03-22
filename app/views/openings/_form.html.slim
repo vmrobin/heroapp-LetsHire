@@ -11,21 +11,32 @@
     = f.text_field :title
   .field
     = f.label :Department
-    = f.select :department_id, Department.all.map{|d|[d.name, d.id]}
+    = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
 
   .field
     = f.label :HiringManager, 'Hiring Manager'
-    = f.select :hiring_manager_id, User.hiringManagers.map { |user| [user.name, user.id]}
+    = f.select :hiring_manager_id, User.hiringManagers.map { |user| [ user.name, user.id ] }
 
   .field
     = f.label :Country
-    = f.country_select :country, {}, prompt: 'Please select a country'
+    = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
   .field
-    = f.label :State
-    = render partial: 'subregion_select', object: @opening, locals: { opening_form: f, country_code: f.object.country}
+    = f.label :State, 'State/Province'
+    = render partial: 'subregion_select', :object => @opening, :locals => { :opening_form => f, :country_code => f.object.country}
+  .field
+    = f.label :City
+    = f.text_field :city
   .field
     = f.label :Description
     = f.text_area :description
 
+  -if @opening.id
+    .field
+      = f.label :Status
+      = f.select :status, Opening::STATUSES
+  -else
+    .field
+      = f.check_box :status
+      = f.label 'activate it right now'
   .actions
     = f.submit 'Save'

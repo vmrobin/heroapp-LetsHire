@@ -9,7 +9,7 @@ class CreateOpenings < ActiveRecord::Migration
       t.integer :hiring_manager_id
       t.integer :recruiter_id
       t.string :description
-      t.integer :status
+      t.integer :status, :default => 0
 
       t.timestamps
     end
