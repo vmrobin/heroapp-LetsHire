@@ -24,6 +24,9 @@
     = f.label :State, 'State/Province'
     = render partial: 'subregion_select', :object => @opening, :locals => { :opening_form => f, :country_code => f.object.country}
   .field
+    = f.label :City
+    = f.text_field :city
+  .field
     = f.label :Description
     = f.text_area :description
 
