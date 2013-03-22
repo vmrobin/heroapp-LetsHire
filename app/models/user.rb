@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   ROLES = %w[Recruiter HiringManager Interviewer Other]
 
+  validates :name,  :presence => true
   validates :email, :presence => true, :uniqueness => true
   validates :email, :email_format => { :message => 'email format error'}
 
