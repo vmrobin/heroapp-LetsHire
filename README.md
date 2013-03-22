@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire.png?branch=master)](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire)
+
 # Lets Hire: a hero application
 
 This is the hero application for Tempest project.
