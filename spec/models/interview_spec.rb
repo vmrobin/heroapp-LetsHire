@@ -16,12 +16,4 @@ describe Interview do
   it 'requires scheduled_at to be present' do
     FactoryGirl.build(:interview, :scheduled_at => nil).should_not be_valid
   end
-
-  it 'requires created_at to be present' do
-    FactoryGirl.build(:interview, :created_at => nil).should_not be_valid
-  end
-
-  it 'requires updated_at to be present' do
-    FactoryGirl.build(:interview, :updated_at => nil).should_not be_valid
-  end
 end

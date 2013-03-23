@@ -1,5 +1,6 @@
 LetsHire::Application.routes.draw do
-  get "interview/create"
+  get "interview/edit"
+  post "interview/create"
 
   devise_for :users
 
