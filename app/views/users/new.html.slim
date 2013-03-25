@@ -1,21 +1,3 @@
 h3 Invite new user
-= form_for(:user, :url => {:action => 'create'}) do |form|
-  = form.error_messages
-  p
-    = form.label :name
-    = form.text_field :name
-  p
-    = form.label :email
-    = form.text_field :email
-  p
-    = form.label :department
-    = collection_select :user, :department_id, Department.all, :id, :name
-  p
-    - for role in User::ROLES
-      = check_box_tag "user[roles][#{role}]", role, @user.roles.include?(role), {:name => "user[roles][]"}
-      = label_tag "user_roles_#{role}", role.humanize
-      br
-    = hidden_field_tag "user[roles][]", ""
-  p
-    = submit_tag 'Invite'
+== render 'form'
 
