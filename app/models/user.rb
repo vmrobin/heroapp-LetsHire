@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
   attr_accessible :email, :password, :name, :department_id, :roles
 
-  ROLES = %w[recruiter hiringmanager interviewer user]
+  ROLES = %w[interviewer recruiter hiringmanager]
 
   validates :name,  :presence => true
   validates :email, :presence => true, :uniqueness => true

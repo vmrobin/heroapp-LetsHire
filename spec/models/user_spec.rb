@@ -64,7 +64,7 @@ describe User do
         user
       end
       it{ should_not be_able_to :manage, Interview.new }
-      it{ should be_able_to :update, Interview.new}
+      it{ should be_able_to :update, Interview.new }
       it{ should be_able_to :manage, Opening.new }
       it{ should_not be_able_to :manage, User.new }
     end
@@ -77,6 +77,19 @@ describe User do
       end
       it{ should_not be_able_to :manage, Interview.new }
       it{ should be_able_to :update, Interview.new }
+      it{ should_not be_able_to :manage, User.new }
+    end
+
+    context 'mixed roles' do
+      let(:user) do
+        user = FactoryGirl.build(:user)
+        user.add_role('interviewer')
+        user.add_role('hiringmanager')
+        user
+      end
+      it{ should_not be_able_to :manage, Interview.new }
+      it{ should be_able_to :update, Interview.new }
+      it{ should be_able_to :manage, Opening.new }
       it{ should_not be_able_to :manage, User.new }
     end
   end

@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(:version => 20130325065048) do
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
     t.integer  "department_id"
-    t.integer  "roles_mask"
+    t.integer  "roles_mask",         :default => 1
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

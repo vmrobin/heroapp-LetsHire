@@ -1,5 +1,5 @@
 class AddRolesMaskToUsers < ActiveRecord::Migration
   def change
-    add_column :users, :roles_mask, :integer
+    add_column :users, :roles_mask, :integer, :default => 1
   end
 end
