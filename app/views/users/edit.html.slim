@@ -8,8 +8,11 @@ h3 Edit user: #{@user.name}
     = form.label :department
     = collection_select :user, :department_id, Department.all, :id, :name
   p
-    = form.label :role
-    = form.collection_select :role, User::ROLES, :to_s, :humanize
+    - for role in User::ROLES
+      = check_box_tag "user[roles][#{role}]", role, @user.roles.include?(role), {:name => "user[roles][]"}
+      = label_tag "user_roles_#{role}", role.humanize
+      br
+    = hidden_field_tag "user[roles][]", ""
   p
     = form.submit 'Save'
 
