@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(:version => 20130325065048) do
   add_index "candidates", ["email"], :name => "index_candidates_on_email"
   add_index "candidates", ["name"], :name => "index_candidates_on_name"
 
-ActiveRecord::Schema.define(:version => 20130322093032) do
   create_table "departments", :force => true do |t|
     t.string "name",        :null => false
     t.string "description"
