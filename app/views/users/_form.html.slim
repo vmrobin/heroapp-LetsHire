@@ -1,0 +1,30 @@
+= form_for @user, :html => {:class => 'form-horizontal'} do |form|
+  = form.error_messages
+  .control-group
+    = form.label :name, :class => 'control-label'
+    .controls
+      = form.text_field :name, :placeholder => 'Username'
+
+  .control-group
+    = form.label :email, :class => 'control-label'
+    .controls
+      = form.text_field :email, :placeholder => 'Email'
+  .control-group
+    = form.label :department, :class => 'control-label'
+    .controls
+      = collection_select :user, :department_id, Department.all, :id, :name
+  .control-group
+    = form.label :role, :class => 'control-label'
+    .controls
+      - for role in User::ROLES
+        = check_box_tag "user[roles][#{role}]", role, @user.roles.include?(role), {:name => "user[roles][]", :class => 'checkbox'}
+        = label_tag "user_roles_#{role}", role.humanize, :class => 'checkbox inline'
+        br
+      = hidden_field_tag "user[roles][]", ""
+      br
+  .control-group
+    .actions
+      .controls
+        div
+          = form.submit 'Save', :class => 'btn btn-primary'
+          = link_to 'Cancel', users_path, :class => 'btn'

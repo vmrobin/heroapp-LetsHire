@@ -49,4 +49,8 @@ class User < ActiveRecord::Base
   def add_role(role)
     self.roles = roles | [role]
   end
+
+  def department_string
+    Department.find(self.department_id).name if self.department_id
+  end
 end

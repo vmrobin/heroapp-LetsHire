@@ -1,6 +1,7 @@
 h3 User Management
-= link_to 'Invite new user', new_user_path
-table.table_hover
+p.pull-right
+  = link_to 'Invite new user', new_user_path, :class => 'btn btn-info'
+table class='table table-hover'
   thead
     tr
       th username
@@ -12,9 +13,9 @@ table.table_hover
         td =user.name
         td =user.email
         td
-          =link_to 'Details', user
-          =link_to 'Edit', edit_user_path(user.id)
-          =link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete
+          =link_to 'Details', user, :class => 'btn btn-link'
+          =link_to 'Edit', edit_user_path(user.id), :class => 'btn btn-link'
+          =link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-link'
 
 div.digg_pagination
   = will_paginate @users
