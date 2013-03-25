@@ -10,7 +10,5 @@ FactoryGirl.define do
     duration     1
     phone        Faker::PhoneNumber.phone_number
     location     Faker::Address.state
-    created_at   DateTime.now
-    updated_at   DateTime.now
   end
 end
