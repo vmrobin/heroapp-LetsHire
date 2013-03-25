@@ -3,8 +3,9 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :country, :province, :city, :description
-  attr_accessible :department_id, :status, :hiring_manager_id, :recruiter_id, :participants, :participant_ids
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
+  attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
+
   belongs_to :department
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true

@@ -63,12 +63,6 @@ class OpeningsController < ApplicationController
     @opening = Opening.find(params[:id])
 
     respond_to do |format|
-      #if params[:opening].present?
-      #  params[:opening][:participants] = params[:opening][:opening_participants].present? ? User.find_all_by_id(params[:opening][:opening_participants]) : [ ]
-      #
-      #  params[:opening].delete(:opening_participants)
-      #end
-      puts params[:opening]
       if @opening.update_attributes(params[:opening])
         format.html { redirect_to @opening, notice: 'Opening was successfully updated.' }
         format.json { head :no_content }

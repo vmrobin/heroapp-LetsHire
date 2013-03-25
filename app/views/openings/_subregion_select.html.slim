@@ -4,6 +4,6 @@
   -if country.nil?
     em Please select a country code
   -elsif country.subregions?
-    =subregion_select 'opening', :province, country_code, {}
+    =subregion_select 'opening', :province, country_code
   -else
     =text_field 'opening', :province
