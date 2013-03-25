@@ -1,0 +1,20 @@
+h1 Candidate Information
+
+address
+  strong= @candidate.name
+  br
+  abbr title="Email" Email:
+  a href="mailto:#{@candidate.email}" = @candidate.email
+  br
+  abbr title="Phone" Phone:
+  = @candidate.phone
+
+dl class="dl-horizontal"
+  dt From
+  dd= @candidate.source
+  dt Description
+  dd= @candidate.description
+
+br
+br
+= link_to 'Back', candidates_path

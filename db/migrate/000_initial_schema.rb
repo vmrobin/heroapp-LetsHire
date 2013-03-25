@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration
+class InitialSchema < ActiveRecord::Migration
   def change
     create_table :users do |t|
       ## Database authenticatable
@@ -45,5 +45,19 @@ class CreateUsers < ActiveRecord::Migration
     # add_index :users, :confirmation_token,   :unique => true
     # add_index :users, :unlock_token,         :unique => true
     # add_index :users, :authentication_token, :unique => true
+
+    create_table :candidates do |t|
+      t.string :name, :null => false
+      t.string :email, :null => false
+      t.string :phone
+      t.string :source
+      t.text   :description
+
+      # TODO reference JD
+      t.timestamps
+    end
+
+    add_index :candidates, :name
+    add_index :candidates, :email
   end
 end
