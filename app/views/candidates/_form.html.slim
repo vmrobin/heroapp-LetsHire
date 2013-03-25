@@ -1,0 +1,32 @@
+= form_for @candidate, :html => { :class => 'form-horizontal' }  do |f|
+  -if @candidate.errors.any?
+    .alert.alert-error
+      = "#{pluralize(@candidate.errors.count, "error")} prohibited this candidate from being saved:"
+      ul
+        - @candidate.errors.full_messages.each do |msg|
+          li= msg
+
+  .control-group
+    = f.label :name, :class => 'control-label'
+    .controls
+      = f.text_field :name
+  .control-group
+    = f.label :email, :class => 'control-label'
+    .controls
+      = f.text_field :email
+  .control-group
+    = f.label :phone, :class => 'control-label'
+    .controls
+      = f.text_field :phone
+  .control-group
+    = f.label :source, :class => 'control-label'
+    .controls
+      = f.text_field :source
+  .control-group
+    = f.label :description, :class => 'control-label'
+    .controls
+      = f.text_area :description
+  .control-group
+    .controls
+      .actions
+        = f.submit 'Save', :class => 'btn'

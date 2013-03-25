@@ -1,5 +1,6 @@
 LetsHire::Application.routes.draw do
-  get "interview/create"
+  get "interview/edit"
+  post "interview/create"
 
   devise_for :users
 
@@ -26,6 +27,8 @@ LetsHire::Application.routes.draw do
   match '/addresses/subregion_options' => 'openings#subregion_options'
 
   resources :openings
+  resources :candidates
+
   # Sample resource route with options:
   #   resources :products do
   #     member do
