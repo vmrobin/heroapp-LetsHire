@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20130325065048) do
   add_index "candidates", ["email"], :name => "index_candidates_on_email"
   add_index "candidates", ["name"], :name => "index_candidates_on_name"
 
+ActiveRecord::Schema.define(:version => 20130322093032) do
   create_table "departments", :force => true do |t|
     t.string "name",        :null => false
     t.string "description"
@@ -47,6 +48,14 @@ ActiveRecord::Schema.define(:version => 20130325065048) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
+
+  create_table "opening_participants", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "opening_id"
+  end
+
+  add_index "opening_participants", ["opening_id"], :name => "index_opening_participants_on_opening_id"
+  add_index "opening_participants", ["user_id"], :name => "index_opening_participants_on_user_id"
 
   create_table "openings", :force => true do |t|
     t.string   "title"

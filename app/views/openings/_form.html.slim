@@ -1,4 +1,4 @@
-= form_for @opening do |f|
+= form_for @opening, :html => {:class => 'form-horizontal'} do |f|
   -if @opening.errors.any?
     #error_explanation
       h2 = "#{pluralize(@opening.errors.count, "error")} prohibited this opening from being saved:"
@@ -6,37 +6,58 @@
         - @opening.errors.full_messages.each do |msg|
           li= msg
 
-  .field
-    = f.label :Title
-    = f.text_field :title
-  .field
-    = f.label :Department
-    = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
+  fieldset
+    .control-group
+      label.control-label Title
+      div.controls
+        = f.text_field :title
 
-  .field
-    = f.label :HiringManager, 'Hiring Manager'
-    = f.select :hiring_manager_id, User.hiringManagers.map { |user| [ user.name, user.id ] }
+    .control-group
+      label.control-label Department
+      div.controls
+        = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
 
-  .field
-    = f.label :Country
-    = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
-  .field
-    = f.label :State, 'State/Province'
-    = render partial: 'subregion_select', :object => @opening, :locals => { :opening_form => f, :country_code => f.object.country}
-  .field
-    = f.label :City
-    = f.text_field :city
-  .field
-    = f.label :Description
-    = f.text_area :description
+    .control-group
+      label.control-label Hiring Manager
+      div.controls
+        = f.select :hiring_manager_id, User.hiringManagers.map { |user| [ user.name, user.id ] }
 
-  -if @opening.id
-    .field
-      = f.label :Status
-      = f.select :status, Opening::STATUSES
-  -else
-    .field
-      = f.check_box :status
-      = f.label 'activate it right now'
+    .control-group
+      label.control-label Country
+      div.controls
+        = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
+
+    .control-group
+      label.control-label State/Province
+      div.controls
+        = render partial: 'subregion_select', :object => @opening, :locals => { :opening_form => f, :country_code => f.object.country}
+
+    .control-group
+      label.control-label City
+      div.controls
+        = f.text_field :city
+
+    .control-group
+      label.control-label Description
+      div.controls
+        = f.text_area :description
+
+    -if @opening.id
+      .control-group
+        label.control-label Status
+        div.controls
+          = f.select :status, Opening::STATUSES
+
+      -if @opening.published?
+        .control-group
+          label.control-label Potential Interviewers
+          div.controls
+            = f.select :participant_ids, User.all.collect {|x| [x.email, x.id]}, {}, { :multiple => true}
+    -else
+      = f.label :status, :class => 'checkbox' do
+        span Activate it right now
+        = f.check_box :status
+
+
   .actions
     = f.submit 'Save'
