@@ -1,4 +1,7 @@
 LetsHire::Application.routes.draw do
+  get "interview/edit"
+  post "interview/create"
+
   devise_for :users
 
   root to: 'static_pages#home'
