@@ -26,6 +26,8 @@ LetsHire::Application.routes.draw do
   #   resources :products
   match '/addresses/subregion_options' => 'openings#subregion_options'
 
+  get "candidates/resume"
+
   resources :openings
   resources :candidates
 
