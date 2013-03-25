@@ -1,0 +1,20 @@
+h1 Listing Candidates
+
+table
+  tr
+    th Name
+    th Email
+    th Phone
+    th
+
+  - @candidates.each do |candidate|
+    tr
+      td= link_to candidate.name, candidate
+      td
+        a href="mailto:#{candidate.email}" = candidate.email
+      td= candidate.phone
+      td= link_to 'Edit', edit_candidate_path(candidate)
+
+br
+
+= link_to 'New Candidate', new_candidate_path

@@ -13,6 +13,19 @@
 
 ActiveRecord::Schema.define(:version => 20130322035010) do
 
+  create_table "candidates", :force => true do |t|
+    t.string   "name",        :null => false
+    t.string   "email",       :null => false
+    t.string   "phone"
+    t.string   "source"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "candidates", ["email"], :name => "index_candidates_on_email"
+  add_index "candidates", ["name"], :name => "index_candidates_on_name"
+
   create_table "departments", :force => true do |t|
     t.string "name",        :null => false
     t.string "description"
