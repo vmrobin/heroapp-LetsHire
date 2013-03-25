@@ -9,6 +9,7 @@ gem 'cancan', '1.6.9'
 gem 'will_paginate', '~> 3.0'
 gem 'validates_email_format_of'
 gem 'dynamic_form'
+gem 'binding_of_caller'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'

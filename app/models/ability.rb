@@ -30,7 +30,34 @@ class Ability
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
     user ||= User.new
+    if user.admin?
+      can :manage, :all
+    else
+      user.roles.each do |role|
+        send role
+      end
+    end
+  end
 
-    can :manage, :all if User::ROLES.include?(user.role)
+  def recruiter
+    can :manage, Interview
+    can :manage, Opening
+  end
+
+  def hiringmanager
+    can :update, Interview
+    can :manage, Opening
+  end
+
+  def interviewer
+    can :update, Interview
+  end
+
+  def user
+    can :read, :all
+  end
+
+  def is?(role)
+    roles.include?(role.to_s)
   end
 end
