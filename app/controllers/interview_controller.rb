@@ -1,6 +1,9 @@
 class InterviewController < ApplicationController
   rescue_from Exception, :with => :handle_exceptions
 
+  before_filter :require_login
+  load_and_authorize_resource
+
   def edit
     @user = "Mrs. Nya Treutel"
   end

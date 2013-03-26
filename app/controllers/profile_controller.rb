@@ -1,5 +1,7 @@
 class ProfileController < ApplicationController
 
+  before_filter :require_login
+
   def edit
     @user = current_user
     redirect_to root_path unless @user

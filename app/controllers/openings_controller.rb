@@ -1,4 +1,7 @@
 class OpeningsController < ApplicationController
+
+  load_and_authorize_resource
+
   # GET /openings
   # GET /openings.json
   def index
