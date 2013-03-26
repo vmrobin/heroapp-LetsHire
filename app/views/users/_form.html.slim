@@ -23,6 +23,10 @@
       = hidden_field_tag "user[roles][]", ""
       br
   .control-group
+    .controls
+      = form.check_box :admin, {:checked => @user.admin?}
+      = label_tag :admin, 'Set this user to Administrator', :class => 'checkbox inline'
+  .control-group
     .actions
       .controls
         div
