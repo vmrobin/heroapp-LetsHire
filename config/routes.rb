@@ -9,8 +9,8 @@ LetsHire::Application.routes.draw do
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
 
-  match '/me', to: 'me#edit'
-  match '/me/update', to: 'me#update'
+  match '/profile', to: 'profile#edit'
+  match '/profile/update', to: 'profile#update'
 
   resources :users
 

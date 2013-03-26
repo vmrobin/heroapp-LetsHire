@@ -1,4 +1,4 @@
-class MeController < ApplicationController
+class ProfileController < ApplicationController
 
   def edit
     @user = current_user
