@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130325065048) do
+ActiveRecord::Schema.define(:version => 20130325132846) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20130325065048) do
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "resume"
   end
 
   add_index "candidates", ["email"], :name => "index_candidates_on_email"

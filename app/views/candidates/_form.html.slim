@@ -27,6 +27,17 @@
     .controls
       = f.text_area :description
   .control-group
+    = f.label :resume, "Upload Resume", :class => 'control-label'
+    .controls
+      table
+        tr
+          td
+            - if not @resume.nil?
+              = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+          td
+          td
+            = f.file_field :resume
+  .control-group
     .controls
       .actions
         = f.submit 'Save', :class => 'btn'
