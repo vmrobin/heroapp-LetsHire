@@ -30,6 +30,11 @@ describe InterviewController do
     }
   end
 
+  before :each  do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in_as_admin
+  end
+
   describe "GET 'edit'" do
     it "returns http success" do
       get 'edit'

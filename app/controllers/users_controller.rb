@@ -1,7 +1,6 @@
-class UsersController < ApplicationController
+class UsersController < AuthenticatedController
 
   before_filter :require_admin
-  load_and_authorize_resource
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 20)
@@ -79,10 +78,5 @@ class UsersController < ApplicationController
 
   private
 
-  def require_admin
-    unless ( current_user && current_user.admin? )
-      flash[:error] = 'You must be admin to access this section'
-      redirect_to root_path
-    end
-  end
+
 end

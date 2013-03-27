@@ -1,7 +1,4 @@
-class CandidatesController < ApplicationController
-
-  before_filter :require_login
-  load_and_authorize_resource
+class CandidatesController < AuthorizedController
 
   def index
     @candidates = Candidate.all
