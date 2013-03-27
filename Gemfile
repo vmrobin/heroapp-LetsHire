@@ -1,6 +1,7 @@
 source 'http://ruby.taobao.org'
 # TODO change back to: source 'https://rubygems.org'
 
+gem 'mime-types', '1.21'
 gem 'rails', '3.2.12'
 gem 'slim-rails', '0.2.0'
 gem 'bootstrap-sass', '2.1'

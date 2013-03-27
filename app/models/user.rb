@@ -5,9 +5,11 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable
 
+  validates_confirmation_of :password
+
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  attr_accessible :email, :password, :name, :department_id, :roles
+  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles
 
   ROLES = %w[interviewer recruiter hiringmanager]
 
@@ -48,5 +50,9 @@ class User < ActiveRecord::Base
 
   def add_role(role)
     self.roles = roles | [role]
+  end
+
+  def department_string
+    Department.find(self.department_id).name if self.department_id
   end
 end

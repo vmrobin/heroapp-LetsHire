@@ -32,7 +32,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @department_name = Department.find(@user.department_id).name if @user.department_id
     respond_to do |format|
       format.html
       format.json { render :json => @user}
@@ -45,7 +44,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to( @user, :notice => 'User was successfully updated')}
+        format.html { redirect_to @user}
         format.json { render :no_content }
       else
         format.html { render :action => 'edit' }

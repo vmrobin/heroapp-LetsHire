@@ -9,6 +9,9 @@ LetsHire::Application.routes.draw do
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
 
+  match '/profile', to: 'profile#edit'
+  match '/profile/update', to: 'profile#update'
+
   resources :users
 
   # The priority is based upon order of creation:
@@ -25,6 +28,8 @@ LetsHire::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   match '/addresses/subregion_options' => 'openings#subregion_options'
+
+  get "candidates/resume"
 
   resources :openings
   resources :candidates
