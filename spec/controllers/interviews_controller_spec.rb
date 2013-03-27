@@ -26,14 +26,15 @@ describe InterviewsController do
     }
   end
 
-  def valid_session
-    {}
+  before :each  do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in_as_admin
   end
 
   describe "GET index" do
     it "assigns all interviews as @interviews" do
       interview = Interview.create! valid_interview
-      get :index, {}, valid_session
+      get :index, {} 
       assigns(:interviews).should eq([interview])
     end
   end
@@ -41,14 +42,14 @@ describe InterviewsController do
   describe "GET show" do
     it "assigns the requested interview as @interview" do
       interview = Interview.create! valid_interview
-      get :show, { :id => interview.to_param }, valid_session
+      get :show, { :id => interview.to_param } 
       assigns(:interview).should eq(interview)
     end
   end
 
   describe "GET new" do
     it "assigns a new interview as @interview" do
-      get :new, {}, valid_session
+      get :new, {} 
       assigns(:interview).should be_a_new(Interview)
     end
   end
@@ -56,7 +57,7 @@ describe InterviewsController do
   describe "GET edit" do
     it "assigns the requested interview as @interview" do
       interview = Interview.create! valid_interview
-      get :edit, { :id => interview.to_param }, valid_session
+      get :edit, { :id => interview.to_param } 
       assigns(:interview).should eq(interview)
     end
   end
@@ -65,12 +66,12 @@ describe InterviewsController do
     describe "with valid params" do
       it "creates a new Interview" do
         expect do
-          post :create, { :interview => valid_interview }, valid_session
+          post :create, { :interview => valid_interview } 
         end.to change(Interview, :count).by(1)
       end
 
       it "assigns a newly created interview as @interview" do
-        post :create, { :interview => valid_interview }, valid_session
+        post :create, { :interview => valid_interview } 
         assigns(:interview).should be_a(Interview)
         assigns(:interview).should be_persisted
       end
@@ -79,13 +80,13 @@ describe InterviewsController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved interview as @interview" do
         Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {} }, valid_session
+        post :create, { :interview => {} } 
         assigns(:interview).should be_a_new(Interview)
       end
 
       it "re-renders the 'edit' template" do
         Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {} }, valid_session
+        post :create, { :interview => {} } 
         response.should render_template("edit")
       end
     end
@@ -96,12 +97,12 @@ describe InterviewsController do
       it "updates the requested interview" do
         interview = Interview.create! valid_interview
         Interview.any_instance.should_receive(:update_attributes).with({ 'these' => 'params' })
-        put :update, { :id => interview.to_param, :interview => { 'these' => 'params' } }, valid_session
+        put :update, { :id => interview.to_param, :interview => { 'these' => 'params' } } 
       end
 
       it "assigns the requested interview as @interview" do
         interview = Interview.create! valid_interview
-        put :update, { :id => interview.to_param, :interview => valid_interview }, valid_session
+        put :update, { :id => interview.to_param, :interview => valid_interview } 
         assigns(:interview).should eq(interview)
       end
     end
@@ -110,14 +111,14 @@ describe InterviewsController do
       it "assigns the interview as @interview" do
         interview = Interview.create! valid_interview
         Interview.any_instance.stub(:save).and_return(false)
-        put :update, { :id => interview.to_param, :interview => {} }, valid_session
+        put :update, { :id => interview.to_param, :interview => {} } 
         assigns(:interview).should eq(interview)
       end
 
       it "re-renders the 'edit' template" do
         interview = Interview.create! valid_interview
         Interview.any_instance.stub(:save).and_return(false)
-        put :update, { :id => interview.to_param, :interview => {} }, valid_session
+        put :update, { :id => interview.to_param, :interview => {} } 
         response.should render_template("edit")
       end
     end

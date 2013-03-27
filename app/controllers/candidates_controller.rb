@@ -1,4 +1,5 @@
-class CandidatesController < ApplicationController
+class CandidatesController < AuthorizedController
+
   def index
     @candidates = Candidate.all
   end

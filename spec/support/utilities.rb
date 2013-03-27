@@ -7,3 +7,9 @@ def full_title(page_title)
     "#{base_title} | #{page_title}"
   end
 end
+
+
+def sign_in_as_admin
+  user = User.find_by_admin true
+  sign_in user
+end

@@ -89,6 +89,9 @@ require 'rspec/autorun'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Load seed data into database
+load "#{Rails.root}/db/seeds.rb"
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -116,4 +119,6 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+
+  config.include Devise::TestHelpers, :type => :controller
 end

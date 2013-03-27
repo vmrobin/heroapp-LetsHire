@@ -1,4 +1,8 @@
 class OpeningsController < ApplicationController
+
+  before_filter :require_login, :except => [:index, :show]
+  load_and_authorize_resource :except => [:index, :show]
+
   # GET /openings
   # GET /openings.json
   def index

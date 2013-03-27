@@ -31,13 +31,18 @@ describe OpeningsController do
   # in order to pass any filters (e.g. authentication) defined in
   # OpeningsController. Be sure to keep this updated too.
   def valid_session
-    {}
   end
+
+  before :each  do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in_as_admin
+  end
+
 
   describe "GET index" do
     it "assigns all openings as @openings" do
       opening = Opening.create! valid_attributes
-      get :index, {}, valid_session
+      get :index, {}
       assigns(:openings).should eq([opening])
     end
   end
@@ -45,14 +50,14 @@ describe OpeningsController do
   describe "GET show" do
     it "assigns the requested opening as @opening" do
       opening = Opening.create! valid_attributes
-      get :show, {:id => opening.to_param}, valid_session
+      get :show, {:id => opening.to_param} 
       assigns(:opening).should eq(opening)
     end
   end
 
   describe "GET new" do
     it "assigns a new opening as @opening" do
-      get :new, {}, valid_session
+      get :new, {} 
       assigns(:opening).should be_a_new(Opening)
     end
   end
@@ -60,7 +65,7 @@ describe OpeningsController do
   describe "GET edit" do
     it "assigns the requested opening as @opening" do
       opening = Opening.create! valid_attributes
-      get :edit, {:id => opening.to_param}, valid_session
+      get :edit, {:id => opening.to_param} 
       assigns(:opening).should eq(opening)
     end
   end
@@ -69,18 +74,18 @@ describe OpeningsController do
     describe "with valid params" do
       it "creates a new Opening" do
         expect {
-          post :create, {:opening => valid_attributes}, valid_session
+          post :create, {:opening => valid_attributes} 
         }.to change(Opening, :count).by(1)
       end
 
       it "assigns a newly created opening as @opening" do
-        post :create, {:opening => valid_attributes}, valid_session
+        post :create, {:opening => valid_attributes} 
         assigns(:opening).should be_a(Opening)
         assigns(:opening).should be_persisted
       end
 
       it "redirects to the created opening" do
-        post :create, {:opening => valid_attributes}, valid_session
+        post :create, {:opening => valid_attributes} 
         response.should redirect_to(Opening.last)
       end
     end
@@ -89,14 +94,14 @@ describe OpeningsController do
       it "assigns a newly created but unsaved opening as @opening" do
         # Trigger the behavior that occurs when invalid params are submitted
         Opening.any_instance.stub(:save).and_return(false)
-        post :create, {:opening => {}}, valid_session
+        post :create, {:opening => {}} 
         assigns(:opening).should be_a_new(Opening)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Opening.any_instance.stub(:save).and_return(false)
-        post :create, {:opening => {}}, valid_session
+        post :create, {:opening => {}}
         response.should render_template("new")
       end
     end
@@ -111,18 +116,18 @@ describe OpeningsController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Opening.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, {:id => opening.to_param, :opening => {'these' => 'params'}}, valid_session
+        put :update, {:id => opening.to_param, :opening => {'these' => 'params'}} 
       end
 
       it "assigns the requested opening as @opening" do
         opening = Opening.create! valid_attributes
-        put :update, {:id => opening.to_param, :opening => valid_attributes}, valid_session
+        put :update, {:id => opening.to_param, :opening => valid_attributes} 
         assigns(:opening).should eq(opening)
       end
 
       it "redirects to the opening" do
         opening = Opening.create! valid_attributes
-        put :update, {:id => opening.to_param, :opening => valid_attributes}, valid_session
+        put :update, {:id => opening.to_param, :opening => valid_attributes}
         response.should redirect_to(opening)
       end
     end
@@ -132,7 +137,7 @@ describe OpeningsController do
         opening = Opening.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Opening.any_instance.stub(:save).and_return(false)
-        put :update, {:id => opening.to_param, :opening => {}}, valid_session
+        put :update, {:id => opening.to_param, :opening => {}} 
         assigns(:opening).should eq(opening)
       end
 
@@ -140,7 +145,7 @@ describe OpeningsController do
         opening = Opening.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Opening.any_instance.stub(:save).and_return(false)
-        put :update, {:id => opening.to_param, :opening => {}}, valid_session
+        put :update, {:id => opening.to_param, :opening => {}} 
         response.should render_template("edit")
       end
     end
@@ -150,13 +155,13 @@ describe OpeningsController do
     it "destroys the requested opening" do
       opening = Opening.create! valid_attributes
       expect {
-        delete :destroy, {:id => opening.to_param}, valid_session
+        delete :destroy, {:id => opening.to_param} 
       }.to change(Opening, :count).by(-1)
     end
 
     it "redirects to the openings list" do
       opening = Opening.create! valid_attributes
-      delete :destroy, {:id => opening.to_param}, valid_session
+      delete :destroy, {:id => opening.to_param} 
       response.should redirect_to(openings_url)
     end
   end

@@ -1,4 +1,6 @@
-class UsersController < ApplicationController
+class UsersController < AuthenticatedController
+
+  before_filter :require_admin
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 20)
@@ -73,4 +75,8 @@ class UsersController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to users_url, notice: 'Invalid user'
   end
+
+  private
+
+
 end
