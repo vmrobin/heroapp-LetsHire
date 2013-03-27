@@ -1,5 +1,5 @@
+source 'https://rubygems.org'
 source 'http://ruby.taobao.org'
-# TODO change back to: source 'https://rubygems.org'
 
 gem 'mime-types', '1.21'
 gem 'rails', '3.2.12'
