@@ -1,0 +1,19 @@
+h1 Interview Information
+
+dl.dl-horizontal
+  dt Title
+  dd= @interview.title
+  dt Modality
+  dd= @interview.modality
+  dt Description
+  dd= @interview.description
+  dt Scheduled At
+  dd= @interview.scheduled_at
+  dt Phone
+  dd= @interview.phone
+  dt Location
+  dd= @interview.location
+
+br
+br
+= link_to 'Back', interviews_path

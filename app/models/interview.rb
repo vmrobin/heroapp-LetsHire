@@ -1,22 +1,21 @@
 class Interview < ActiveRecord::Base
-  attr_accessible :assessment, :created_at, :description, :duration, :location, :phone, :scheduled_at, :score, :status, :title, :type, :updated_at
+  attr_accessible :assessment, :created_at, :description, :duration, :location, :phone, :scheduled_at, :score, :status, :title, :modality, :updated_at
 
-  module Constants
-    # interview status constants
-    INTERVIEW_STATUS_NEW = "new"
-    INTERVIEW_STATUS_PROGRESS = "progress"
-    INTERVIEW_STATUS_PENDING = "pending"
-    INTERVIEW_STATUS_CLOSED = "closed"
+  # interview status constants
+  STATUS_NEW      = "new"
+  STATUS_PROGRESS = "progress"
+  STATUS_PENDING  = "pending"
+  STATUS_CLOSED   = "closed"
 
-    # interview type constants
-    INTERVIEW_TYPE_PHONE = "phone interview"
-    INTERVIEW_TYPE_ONSITE = "onsite interview"
-  end
-  include Constants
+  # interview modality constants
+  MODALITY_PHONE = "phone interview"
+  MODALITY_ONSITE = "onsite interview"
 
-  INTERVIEW_TYPES = [INTERVIEW_TYPE_PHONE, INTERVIEW_TYPE_ONSITE]
+  MODALITIES = [MODALITY_PHONE, MODALITY_ONSITE]
 
-  INTERVIEW_STATUS = [INTERVIEW_STATUS_NEW, INTERVIEW_STATUS_PROGRESS, INTERVIEW_STATUS_PENDING, INTERVIEW_STATUS_CLOSED]
+  STATUS = [STATUS_NEW, STATUS_PROGRESS, STATUS_PENDING, STATUS_CLOSED]
 
-  validates :type, :title, :scheduled_at, :presence => true
+  validates :modality, :title, :scheduled_at, :presence => true
+  validates :modality, :inclusion => MODALITIES
+  validates :status, :inclusion => STATUS
 end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :interview do
-    type         "phone interview"
+    modality     "phone interview"
     title        "phone interview for Raymond Williamson"
     description  Faker::Lorem.paragraph
     status       "pending"
