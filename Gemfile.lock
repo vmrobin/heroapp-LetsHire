@@ -35,6 +35,7 @@ GEM
       erubis (>= 2.6.6)
     binding_of_caller (0.7.1)
       debug_inspector (>= 0.0.1)
+    bootstrap-datetimepicker-rails (0.0.10)
     bootstrap-sass (2.1.0.0)
     builder (3.0.4)
     cancan (1.6.9)
@@ -215,6 +216,7 @@ PLATFORMS
 DEPENDENCIES
   better_errors (= 0.7.2)
   binding_of_caller
+  bootstrap-datetimepicker-rails (= 0.0.10)
   bootstrap-sass (= 2.1)
   cancan (= 1.6.9)
   capybara (= 1.1.2)

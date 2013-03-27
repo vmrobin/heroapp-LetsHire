@@ -1,7 +1,4 @@
 LetsHire::Application.routes.draw do
-  get "interview/edit"
-  post "interview/create"
-
   devise_for :users
 
   root to: 'static_pages#home'
@@ -9,7 +6,8 @@ LetsHire::Application.routes.draw do
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
 
-  resources :users
+  match '/profile', to: 'profile#edit'
+  match '/profile/update', to: 'profile#update'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -28,8 +26,10 @@ LetsHire::Application.routes.draw do
 
   get "candidates/resume"
 
+  resources :users
   resources :openings
   resources :candidates
+  resources :interviews
 
   # Sample resource route with options:
   #   resources :products do

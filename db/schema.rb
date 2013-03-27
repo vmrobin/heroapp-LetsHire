@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(:version => 20130325132846) do
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
   create_table "interviews", :force => true do |t|
-    t.string   "type",         :null => false
+    t.string   "modality",     :null => false
     t.string   "title",        :null => false
     t.text     "description"
     t.string   "status"
