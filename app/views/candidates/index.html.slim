@@ -14,6 +14,7 @@ table class='table table-hover'
         a href="mailto:#{candidate.email}" = candidate.email
       td= candidate.phone
       td= link_to 'Edit', edit_candidate_path(candidate)
+      td= link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete
 
 br
 

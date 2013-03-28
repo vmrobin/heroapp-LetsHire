@@ -1,5 +1,4 @@
 class InterviewsController < AuthenticatedController
-  rescue_from Exception, :with => :handle_exceptions
   authorize_resource :class => false
 
   def index

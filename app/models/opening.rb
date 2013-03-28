@@ -13,6 +13,9 @@ class Opening < ActiveRecord::Base
   has_many :opening_participants, :class_name => "OpeningParticipant", :readonly => true
   has_many :participants, :class_name => "User", :through => :opening_participants
 
+  has_many :opening_candidates, :class_name => "OpeningCandidate", :readonly => true
+  has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
+
   validates :title, :presence => true
 
 
