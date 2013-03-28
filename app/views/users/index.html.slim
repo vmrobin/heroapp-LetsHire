@@ -1,4 +1,4 @@
-h3 User Management
+h3 Users Management
 p.pull-right
   = link_to 'Invite new user', new_user_path, :class => 'btn btn-info'
 table class='table table-hover'
@@ -10,10 +10,9 @@ table class='table table-hover'
   tbody
     - for user in @users do
       tr
-        td =user.name
-        td =user.email
+        td = link_to user.name, user, :class => 'btn btn-link'
+        td = user.email
         td
-          =link_to 'Details', user, :class => 'btn btn-link'
           =link_to 'Edit', edit_user_path(user.id), :class => 'btn btn-link'
           =link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-link'
 
