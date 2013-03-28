@@ -1,4 +1,4 @@
-h1 Interview Information
+h1 Interview Information for #{@candidate.name}
 
 dl.dl-horizontal
   dt Title
@@ -9,11 +9,16 @@ dl.dl-horizontal
   dd= @interview.description
   dt Scheduled At
   dd= @interview.scheduled_at
+  dt Duration
+  dd= @interview.duration
   dt Phone
   dd= @interview.phone
   dt Location
   dd= @interview.location
+  dt Status
+  dd= @interview.status
 
 br
 br
-= link_to 'Back', interviews_path
+- if can? :update, Interview
+  = link_to 'Edit', edit_interview_path(@interview)

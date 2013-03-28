@@ -1,4 +1,4 @@
-= form_for @interview, :html => { :class => 'form-horizontal' } do |f|
+= form_for [@candidate, @interview], :html => { :class => 'form-horizontal' } do |f|
   - if @interview.errors.any?
     .alert.alert-error
       = "#{pluralize(@interview.errors.count, 'error')} prohibited this interview from being saved:"

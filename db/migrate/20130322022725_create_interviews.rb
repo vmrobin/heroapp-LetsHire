@@ -1,6 +1,8 @@
 class CreateInterviews < ActiveRecord::Migration
   def change
     create_table :interviews do |t|
+      t.integer :candidate_id
+
       t.string :modality,       :null => false
       t.string :title,          :null => false
       t.text :description

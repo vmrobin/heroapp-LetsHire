@@ -28,7 +28,9 @@ LetsHire::Application.routes.draw do
 
   resources :users
   resources :openings
-  resources :candidates
+  resources :candidates do
+    resources :interviews
+  end
   resources :interviews
 
   # Sample resource route with options:

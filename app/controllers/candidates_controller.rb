@@ -6,6 +6,7 @@ class CandidatesController < AuthorizedController
 
   def show
     @candidate = Candidate.find params[:id]
+    @interviews = @candidate.interviews.order('scheduled_at ASC')
   end
 
   def new
@@ -14,12 +15,18 @@ class CandidatesController < AuthorizedController
 
   def edit
     @candidate = Candidate.find params[:id]
-    @resume = File.basename(@candidate[:resume])
+    @resume = if @candidate.resume
+        File.basename @candidate.resume
+      else
+        nil
+      end
   end
 
   def create
-    upload_file(params[:candidate][:resume], params[:candidate][:name])
-    params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
+    if params[:candidate][:resume]
+      upload_file(params[:candidate][:resume], params[:candidate][:name])
+      params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
+    end
 
     @candidate = Candidate.new params[:candidate]
     if @candidate.save
@@ -30,8 +37,10 @@ class CandidatesController < AuthorizedController
   end
 
   def update
-    upload_file(params[:candidate][:resume], params[:candidate][:name])
-    params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
+    if params[:candidate][:resume]
+      upload_file(params[:candidate][:resume], params[:candidate][:name])
+      params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
+    end
 
     @candidate = Candidate.find params[:id]
     if @candidate.update_attributes(params[:candidate])
