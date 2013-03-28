@@ -1,6 +1,6 @@
-h1 Listing openings
+h3 openings
 
-table
+table class='table table-hover'
   tr
     th Title
     th Department
@@ -16,9 +16,9 @@ table
       td= opening.department.try(:name)
       td= opening.hiring_manager.try(:name)
       td= opening.status_str
-      td= link_to 'Show', opening
+      td= link_to 'Details', opening
       td= link_to 'Edit', edit_opening_path(opening)
-      td= link_to 'Destroy', opening, :confirm => 'Are you sure?', :method => :delete
+      td= link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete
 
 = will_paginate @openings
 
