@@ -16,5 +16,28 @@ dl class="dl-horizontal"
   dd= @candidate.description
 
 br
-br
-= link_to 'Back', candidates_path
+
+h4 Arranged Interviews
+
+table
+  tr
+    th Title
+    th Modality
+    th Scheduled At
+    th Duration
+    th Phone
+    th Location
+    th Status
+
+  - @interviews.each do |interview|
+    tr
+      td= link_to interview.title, interview
+      td= interview.modality
+      td= interview.scheduled_at
+      td= interview.duration
+      td= interview.phone
+      td= interview.location
+      td= interview.status
+
+- if can? :manage, Interview
+  = link_to 'New Interview', new_candidate_interview_path(@candidate)

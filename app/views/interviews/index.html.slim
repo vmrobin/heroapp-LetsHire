@@ -2,16 +2,22 @@ h3 Interviews
 
 table class='table table-hover'
   tr
+    th Candidate
     th Title
     th Modality
-    th
+    th Scheduled At
+    th Duration
+    th Phone
+    th Location
+    th Status
 
   - @interviews.each do |interview|
     tr
+      td= link_to interview.candidate.name, interview.candidate
       td= link_to interview.title, interview
       td= interview.modality
-      td= link_to 'Edit', edit_interview_path(interview)
-
-br
-
-= link_to 'New Interview', new_interview_path
+      td= interview.scheduled_at
+      td= interview.duration
+      td= interview.phone
+      td= interview.location
+      td= interview.status
