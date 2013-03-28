@@ -54,13 +54,6 @@ GEM
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.0.9)
-    coffee-rails (3.2.2)
-      coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.6.1)
     debug_inspector (0.0.2)
     devise (2.2.3)
       bcrypt-ruby (~> 3.0)
@@ -222,7 +215,6 @@ DEPENDENCIES
   cancan (= 1.6.9)
   capybara (= 1.1.2)
   carmen-rails (~> 1.0.0.beta3)
-  coffee-rails (= 3.2.2)
   devise (= 2.2.3)
   dynamic_form
   execjs (= 1.4.0)
