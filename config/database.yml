@@ -1,15 +1,24 @@
+localcommon: &localcommon
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
 common: &common
   adapter: postgresql
   encoding: unicode
   username: postgres
 
-development:
-  <<: *common
-  database: letshire_development
-
 test:
+  <<: *localcommon
+  database: db/test.sqlite3
+
+development:
+  <<: *localcommon
+  database: db/development.sqlite3
+
+ci:
   <<: *common
-  database: letshire_test
+  database: letshire_ci
 
 production:
   <<: *common
