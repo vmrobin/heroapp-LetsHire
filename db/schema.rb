@@ -73,10 +73,10 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
     t.integer  "department_id"
     t.integer  "hiring_manager_id"
     t.integer  "recruiter_id"
-    t.text     "description",       :limit => 255
-    t.integer  "status",                           :default => 0
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.text     "description"
+    t.integer  "status",            :default => 0
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "city"
   end
 
