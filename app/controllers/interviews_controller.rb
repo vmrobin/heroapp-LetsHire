@@ -3,7 +3,7 @@ class InterviewsController < AuthenticatedController
 
   def index
     authorize! :read, Interview
-    @interviews = Interview.all
+    @interviews = Interview.order 'candidate_id', 'scheduled_at ASC'
   end
 
   def show
