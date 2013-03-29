@@ -1,4 +1,7 @@
+require 'yaml'
+
+desc 'Run Travis CI job'
 task :ci do
-  ENV['RAILS_ENV'] = 'ci'
+  Rails.env = 'ci'
   Rake::Task['spec'].invoke
 end
