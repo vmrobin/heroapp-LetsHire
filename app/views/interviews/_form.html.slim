@@ -19,21 +19,18 @@
     .controls
       = f.text_area :description
   .control-group
-    = f.label :scheduled_at, :class => 'control-label'
+    = label_tag :scheduled_at, 'Scheduled At', :class => 'control-label'
     .controls
-      #datetimepicker class='input-append'
-        = f.text_field :scheduled_at, :data => { :format => 'dd/MM/yyyy hh:mm:ss' }
-        span.add-on
-          i data-time-icon='icon-time' data-date-icon='icon-calendar'
+      = text_field_tag :scheduled_at, nil, :class => 'datetimepicker'
   .control-group
     = f.label :duration, :class => 'control-label'
     .controls
       = f.text_field :duration
-  .control-group
+  .control-group.toggle-phone
     = f.label :phone, :class => 'control-label'
     .controls
       = f.phone_field :phone
-  .control-group
+  .control-group.toggle-location
     = f.label :location, :class => 'control-label'
     .controls
       = f.text_field :location
@@ -41,3 +38,5 @@
     .controls
       .actions
         = f.submit 'Save', :class => 'btn'
+
+  = f.hidden_field :scheduled_at_iso
