@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328082843) do
+ActiveRecord::Schema.define(:version => 20130328112519) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -50,6 +50,14 @@ ActiveRecord::Schema.define(:version => 20130328082843) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "opening_candidates", :force => true do |t|
+    t.integer "opening_id"
+    t.integer "candidate_id"
+  end
+
+  add_index "opening_candidates", ["candidate_id"], :name => "index_opening_candidates_on_candidate_id"
+  add_index "opening_candidates", ["opening_id"], :name => "index_opening_candidates_on_opening_id"
+
   create_table "opening_participants", :id => false, :force => true do |t|
     t.integer "user_id"
     t.integer "opening_id"
@@ -65,10 +73,10 @@ ActiveRecord::Schema.define(:version => 20130328082843) do
     t.integer  "department_id"
     t.integer  "hiring_manager_id"
     t.integer  "recruiter_id"
-    t.string   "description"
-    t.integer  "status",            :default => 0
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.text     "description",       :limit => 255
+    t.integer  "status",                           :default => 0
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.string   "city"
     t.integer  "creator_id"
   end

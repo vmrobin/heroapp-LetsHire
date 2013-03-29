@@ -29,10 +29,14 @@ end
 group :assets do
   gem 'sass-rails',   '3.2.5'
   gem 'uglifier', '1.2.3'
-  gem 'bootstrap-datetimepicker-rails', '0.0.10'
+  gem 'jquery-rails', '2.0.2'
+  gem 'jquery-ui-rails', '4.0.2'
+  gem 'jquery-timepicker-addon-rails', '1.2.2'
 end
 
 gem 'jquery-rails', '2.0.2'
+
+gem 'pg', '0.12.2'
 
 group :test do
   gem 'capybara', '1.1.2'
@@ -44,7 +48,3 @@ group :test do
 end
 
 gem 'carmen-rails', '~> 1.0.0.beta3'
-
-group :production do
-  gem 'pg', '0.12.2'
-end

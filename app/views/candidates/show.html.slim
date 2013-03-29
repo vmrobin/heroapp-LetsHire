@@ -1,19 +1,29 @@
 h3 Candidate Information
 
-address
-  strong= @candidate.name
-  br
-  abbr title="Email" Email:
+p
+  b Name:
+  = @candidate.name
+p
+  b Email:
   a href="mailto:#{@candidate.email}" = @candidate.email
-  br
-  abbr title="Phone" Phone:
+p
+  b Phone:
   = @candidate.phone
-
-dl class="dl-horizontal"
-  dt From
-  dd= @candidate.source
-  dt Description
-  dd= @candidate.description
+p
+  b Sources:
+  = @candidate.source
+p
+  b Description:
+  = @candidate.description
+p
+  b Resume:
+  - if not @resume.nil?
+    = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+p
+  b Assigned Positions:
+  - @candidate.openings.each do |opening|
+    ul
+      li = link_to "#{opening.title}", opening_path({:id => opening.id})
 
 br
 
@@ -41,3 +51,6 @@ table
 
 - if can? :manage, Interview
   = link_to 'New Interview', new_candidate_interview_path(@candidate)
+
+br
+= link_to 'Back', candidates_path

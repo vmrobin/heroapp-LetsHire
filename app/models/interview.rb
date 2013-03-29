@@ -2,7 +2,7 @@ class Interview < ActiveRecord::Base
   belongs_to :candidate
 
   attr_accessible :candidate, :candidate_id
-  attr_accessible :title, :modality, :scheduled_at, :duration, :phone, :location, :description
+  attr_accessible :title, :modality, :scheduled_at, :scheduled_at_iso, :duration, :phone, :location, :description
   attr_accessible :status, :score, :assessment
   attr_accessible :created_at, :updated_at
 
@@ -24,4 +24,12 @@ class Interview < ActiveRecord::Base
   validates :modality, :title, :scheduled_at, :presence => true
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
+
+  def scheduled_at_iso
+    scheduled_at.iso8601
+  end
+
+  def scheduled_at_iso=(val)
+    self.scheduled_at = Time.parse val
+  end
 end
