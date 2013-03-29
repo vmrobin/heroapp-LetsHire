@@ -1,6 +1,10 @@
-h3 Candidates
+div style="float: left"
+  h3 Candidates
+div style="float: right"
+  a.btn.btn-primary href=new_candidate_path Add a Candidate
 
 table class='table table-hover'
+ thead
   tr
     th Name
     th Email
@@ -13,9 +17,6 @@ table class='table table-hover'
       td
         a href="mailto:#{candidate.email}" = candidate.email
       td= candidate.phone
-      td= link_to 'Edit', edit_candidate_path(candidate)
-      td= link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete
-
-br
-
-= link_to 'New Candidate', new_candidate_path
+      td
+        a.btn href=edit_candidate_path(candidate) Edit
+        = link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'

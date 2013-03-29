@@ -9,17 +9,23 @@ html
   body
     = render 'layouts/header'
     .container
-      - if user_signed_in?
-        .navbar
-          .navbar-inner
-            ul.nav
-              li = link_to 'Openings', openings_path
-              li = link_to 'Applicants', candidates_path
-              li = link_to 'Interviews', interviews_path
-              li = link_to 'Users', users_path
-              li = link_to 'Profile', profile_path
-
       - flash.each do |name, msg|
         = content_tag :div, msg, :id => "flash_#{name}", :class => "alert flash-#{name}" if msg.is_a?(String)
-      == yield
+      - if user_signed_in?
+        .container-fluid
+          .row-fluid
+            .span2
+              ul.nav.nav-list
+                li style="margin-bottom: 12px" = link_to 'Home', root_path
+                li = link_to 'Openings', openings_path
+                li = link_to 'Applicants', candidates_path
+                li = link_to 'Interviews', interviews_path
+                li style="margin-bottom: 12px" = link_to 'Users', users_path
+                li = link_to 'Profile', profile_path
+                li = link_to "Help", help_path
+
+            .span10
+              == yield
+      - else
+        ==yield
       = render 'layouts/footer'
