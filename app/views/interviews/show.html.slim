@@ -2,19 +2,21 @@ h3 Interview Information for #{@candidate.name}
 
 dl.dl-horizontal
   dt Title
-  dd= @interview.title
+  dd #{@interview.title.html_safe}&nbsp;
   dt Modality
-  dd= @interview.modality
+  dd #{@interview.modality.html_safe}&nbsp;
   dt Description
-  dd= @interview.description
+  dd #{@interview.description.html_safe}&nbsp;
   dt Scheduled At
-  dd= @interview.scheduled_at
+  dd.iso-time= @interview.scheduled_at_iso.html_safe
   dt Duration
-  dd= @interview.duration
-  dt Phone
-  dd= @interview.phone
-  dt Location
-  dd= @interview.location
+  dd #{@interview.duration}&nbsp;
+  - if @interview.modality.include?("phone")
+    dt Phone
+    dd #{@interview.phone.html_safe}&nbsp;
+  - if @interview.modality.include?("onsite")
+    dt Location
+    dd #{@interview.location.html_safe}&nbsp;
   dt Status
   dd= @interview.status
 
