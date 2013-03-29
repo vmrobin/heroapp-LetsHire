@@ -34,6 +34,8 @@ end
 
 gem 'jquery-rails', '2.0.2'
 
+gem 'pg', '0.12.2'
+
 group :test do
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
@@ -44,7 +46,3 @@ group :test do
 end
 
 gem 'carmen-rails', '~> 1.0.0.beta3'
-
-group :production do
-  gem 'pg', '0.12.2'
-end
