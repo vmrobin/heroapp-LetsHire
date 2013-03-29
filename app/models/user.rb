@@ -21,6 +21,22 @@ class User < ActiveRecord::Base
     read_attribute :admin
   end
 
+  def hiringManager?
+    (roles_mask & 2**ROLES.index('hiringmanager') ) != 0
+  end
+
+  def can_hire?
+    admin? || hiringManager?
+  end
+
+  def recruiter?
+    (roles_mask & 2**ROLES.index('recruiter') ) != 0
+  end
+
+  def can_recruit?
+    admin? || recruiter?
+  end
+
   # The class method used in seed.rb to create the only admin user
   def self.new_admin(options = {})
     user = self.new options
@@ -28,10 +44,8 @@ class User < ActiveRecord::Base
     user
   end
 
-
   def self.hiringManagers
-    #fixme  Need narrow down the scope once Role is ready
-    all
+    all.select { |user|  user.can_hire? }
   end
 
   def roles=(roles)

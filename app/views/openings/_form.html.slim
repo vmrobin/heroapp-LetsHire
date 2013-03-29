@@ -30,7 +30,7 @@
     .control-group
       label.control-label State/Province
       div.controls
-        = render 'subregion_select', { :opening_form => f, :country_code => f.object.country}
+        = render 'utilities/subregion_select', { :opening_form => f, :country_code => f.object.country, :container => 'opening'}
 
     .control-group
       label.control-label City

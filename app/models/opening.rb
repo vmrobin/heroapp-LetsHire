@@ -3,7 +3,7 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :creator_id
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
 
   belongs_to :department
@@ -15,6 +15,9 @@ class Opening < ActiveRecord::Base
 
   validates :title, :presence => true
 
+  validate :select_valid_owners_if_active
+
+  self.per_page = 20
 
   def status_str
     STATUS_STRINGS[status]
@@ -42,7 +45,34 @@ class Opening < ActiveRecord::Base
     status == STATUSES[:published]
   end
 
+  def closed?
+    status == STATUSES[:closed]
+  end
+
+
+  def owned_openings(user_id)
+    if user_id.nil?
+      []
+    else
+      where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id).page(params[:page]).order('hiring_manager_id asc')
+    end
+  end
+
   private
+  def select_valid_owners_if_active
+    if status != STATUSES[:closed]
+      if hiring_manager_id && hiring_manager_id.to_i > 0
+        hiring_manager = User.find(hiring_manager_id)
+        errors.add(:hiring_manager_id, "isn't a hiring manager") unless hiring_manager && hiring_manager.can_hire?
+      end
+      if recruiter_id && recruiter_id.to_i > 0
+        recruiter = User.find(recruiter_id)
+        errors.add(:recruiter_id, "isn't a recruiter") unless recruiter && recruiter.can_recruit?
+      end
+    end
+  end
+
+
   STATUSES = { :draft => 0, :published => 1, :closed => -1 }
   STATUS_STRINGS = STATUSES.invert
 end

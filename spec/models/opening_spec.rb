@@ -9,4 +9,8 @@ describe Opening do
     FactoryGirl.build(:opening, :title => nil).should_not be_valid
   end
 
+  it 'requires a valid hiring manager if set' do
+    FactoryGirl.build(:opening, :hiring_manager_id => 100).should_not be_valid
+  end
+
 end

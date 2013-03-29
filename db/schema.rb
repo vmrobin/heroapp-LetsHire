@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130325132846) do
+ActiveRecord::Schema.define(:version => 20130328082843) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -70,7 +70,12 @@ ActiveRecord::Schema.define(:version => 20130325132846) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.string   "city"
+    t.integer  "creator_id"
   end
+
+  add_index "openings", ["creator_id"], :name => "index_openings_on_creator_id"
+  add_index "openings", ["hiring_manager_id"], :name => "index_openings_on_hiring_manager_id"
+  add_index "openings", ["recruiter_id"], :name => "index_openings_on_recruiter_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",              :default => "",    :null => false

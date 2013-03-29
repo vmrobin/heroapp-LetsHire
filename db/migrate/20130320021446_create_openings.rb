@@ -13,5 +13,7 @@ class CreateOpenings < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :openings, :hiring_manager_id
+    add_index :openings, :recruiter_id
   end
 end

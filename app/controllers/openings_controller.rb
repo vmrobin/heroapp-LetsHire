@@ -6,7 +6,11 @@ class OpeningsController < ApplicationController
   # GET /openings
   # GET /openings.json
   def index
-    @openings = Opening.paginate(:page => params[:page], :per_page => 20)
+    if current_user.admin? || params.has_key?(:all)
+      @openings = Opening.order('department_id ASC').page(params[:page])
+    else
+      @openings = Opening.owned_openings(current_user.id)
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -48,6 +52,9 @@ class OpeningsController < ApplicationController
   # POST /openings
   # POST /openings.json
   def create
+    if params[:opening].is_a?(Hash)
+      params[:opening][:creator_id] = current_user.id
+    end
     @opening = Opening.new(params[:opening])
 
     respond_to do |format|
@@ -91,12 +98,9 @@ class OpeningsController < ApplicationController
     end
   end
 
-
   def subregion_options
-    render partial: 'subregion_select'
+    render :partial => 'utilities/subregion_select', :locals => { :container => 'opening' }
   end
-
-
 
   private
   def description_template
