@@ -34,13 +34,10 @@ group :assets do
   gem 'jquery-timepicker-addon-rails', '1.2.2'
 end
 
-<<<<<<< HEAD
 gem 'jquery-rails', '2.0.2'
 
 gem 'pg', '0.12.2'
 
-=======
->>>>>>> vmw-tmpst/master
 group :test do
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
