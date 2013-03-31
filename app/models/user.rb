@@ -21,20 +21,13 @@ class User < ActiveRecord::Base
     read_attribute :admin
   end
 
-  def hiringManager?
-    (roles_mask & 2**ROLES.index('hiringmanager') ) != 0
+  def self.name2role(name)
+    offset = ROLES.index(name.to_s)
+    offset ? 2**offset : 0
   end
 
-  def can_hire?
-    admin? || hiringManager?
-  end
-
-  def recruiter?
-    (roles_mask & 2**ROLES.index('recruiter') ) != 0
-  end
-
-  def can_recruit?
-    admin? || recruiter?
+  def has_role?(role_name)
+    admin? || (roles_mask & User::name2role(role_name) ) != 0
   end
 
   # The class method used in seed.rb to create the only admin user
@@ -44,8 +37,9 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.hiringManagers
-    all.select { |user|  user.can_hire? }
+  def self.users_with_role(role_name)
+    role_mask = name2role(role_name)
+    all.select { |user|  user.admin? || (user.roles_mask & role_mask) != 0}
   end
 
   def roles=(roles)

@@ -20,7 +20,12 @@
     .control-group
       label.control-label Hiring Manager
       div.controls
-        = f.select :hiring_manager_id, User.hiringManagers.map { |user| [ user.name, user.id ] }
+        = f.select :hiring_manager_id, User.users_with_role(:hiringmanager).map { |user| [ user.name, user.id ] }
+
+    .control-group
+      label.control-label Recruiter
+      div.controls
+        = f.select :recruiter_id, User.users_with_role(:recruiter).map { |user| [ user.name, user.id ] }
 
     .control-group
       label.control-label Country

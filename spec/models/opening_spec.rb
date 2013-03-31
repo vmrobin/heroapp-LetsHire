@@ -10,7 +10,15 @@ describe Opening do
   end
 
   it 'requires a valid hiring manager if set' do
-    FactoryGirl.build(:opening, :hiring_manager_id => 100).should_not be_valid
+    opening = FactoryGirl.build(:opening, :hiring_manager_id => 100)
+    opening.should_not be_valid
+    opening.errors[:hiring_manager_id].join("; ").should == "isn't a hiring manager"
+  end
+
+  it 'requires a valid recruiter if set' do
+    opening = FactoryGirl.build(:opening, :recruiter_id => 100)
+    opening.should_not be_valid
+    opening.errors[:recruiter_id].join("; ").should == "isn't a recruiter"
   end
 
 end

@@ -9,20 +9,23 @@ p
 p
   b Status:
   = @opening.status_str
-p
-  b HiringManager:
-  = @opening.hiring_manager.try(:name)
+-if user_signed_in?
+  p
+    b Recruiter:
+    = @opening.recruiter.try(:name)
+  p
+    b HiringManager:
+    = @opening.hiring_manager.try(:name)
+  p
+    b Potential Interviewers:
+    = (@opening.participants.map { | user | user.email}).join(',')
 p
   b Address:
   = @opening.full_address
 p
   b Description:
   = simple_format(@opening.description)
-
-p
-  b Potential Interviewers:
-  = (@opening.participants.map { | user | user.email}).join(',')
-
-= link_to 'Edit', edit_opening_path(@opening)
-= '|'
+-if user_signed_in? && (can? :manage, @opening)
+  = link_to 'Edit', edit_opening_path(@opening)
+  = '|'
 = link_to 'Back', openings_path

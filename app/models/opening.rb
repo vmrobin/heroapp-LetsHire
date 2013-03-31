@@ -9,6 +9,7 @@ class Opening < ActiveRecord::Base
   belongs_to :department
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
+  belongs_to :creator, :class_name => "User", :foreign_key => :creator_id, :readonly => true
 
   has_many :opening_participants, :class_name => "OpeningParticipant", :readonly => true
   has_many :participants, :class_name => "User", :through => :opening_participants
@@ -21,6 +22,10 @@ class Opening < ActiveRecord::Base
   validate :select_valid_owners_if_active
 
   self.per_page = 20
+
+  STATUSES = { :draft => 0, :published => 1, :closed => -1 }
+  scope :published, where(:status => 1)
+
 
   def status_str
     STATUS_STRINGS[status]
@@ -53,7 +58,7 @@ class Opening < ActiveRecord::Base
   end
 
 
-  def owned_openings(user_id)
+  def self.owned_openings(user_id, params)
     if user_id.nil?
       []
     else
@@ -65,17 +70,25 @@ class Opening < ActiveRecord::Base
   def select_valid_owners_if_active
     if status != STATUSES[:closed]
       if hiring_manager_id && hiring_manager_id.to_i > 0
-        hiring_manager = User.find(hiring_manager_id)
-        errors.add(:hiring_manager_id, "isn't a hiring manager") unless hiring_manager && hiring_manager.can_hire?
+        begin
+          user = User.find(hiring_manager_id)
+          valid = user && user.has_role?(:hiringmanager)
+        rescue
+        end
+        errors.add(:hiring_manager_id, "isn't a hiring manager") unless valid
       end
       if recruiter_id && recruiter_id.to_i > 0
-        recruiter = User.find(recruiter_id)
-        errors.add(:recruiter_id, "isn't a recruiter") unless recruiter && recruiter.can_recruit?
+        valid = nil
+        begin
+          user = User.find(recruiter_id)
+          valid = user && user.has_role?(:recruiter)
+        rescue
+        end
+        errors.add(:recruiter_id, "isn't a recruiter") unless valid
       end
     end
   end
 
 
-  STATUSES = { :draft => 0, :published => 1, :closed => -1 }
   STATUS_STRINGS = STATUSES.invert
 end

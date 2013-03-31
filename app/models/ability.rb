@@ -33,28 +33,27 @@ class Ability
     if user.admin?
       can :manage, :all
     else
+      can :read, :all
       user.roles.each do |role|
-        send role
+        send role, user
       end
     end
   end
 
-  def recruiter
+  def recruiter(user)
+    can :create, Opening
+    can :manage, Opening, :recruiter_id => user.id
     can :manage, Interview
-    can :manage, Opening
   end
 
-  def hiringmanager
-    can :update, Interview
-    can :manage, Opening
-  end
-
-  def interviewer
+  def hiringmanager(user)
+    can :create, Opening
+    can :manage, Opening, :hiring_manager_id => user.id
     can :update, Interview
   end
 
-  def user
-    can :read, :all
+  def interviewer(user)
+    can :update, Interview
   end
 
   def is?(role)
