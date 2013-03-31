@@ -1,4 +1,4 @@
 #!/bin/sh
 
-rake db:migrate
-rake
+RAILS_ENV=ci rake db:migrate
+rake ci

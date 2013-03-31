@@ -29,7 +29,7 @@ describe CandidatesController do
     it "assigns all candidates as @candidates" do
       candidate = Candidate.create! valid_candidate
       get :index, {}
-      assigns(:candidates).should eq([candidate])
+      assigns(:candidates).should include(candidate)
     end
   end
 
