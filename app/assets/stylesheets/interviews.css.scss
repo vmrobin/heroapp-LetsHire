@@ -1,3 +1,17 @@
 // Place all the styles related to the Interview controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.interviewer-line {
+  line-height: 20px;
+  vertical-align: middle;
+
+  .name {
+    font-weight: bold;
+  }
+
+  .email {
+    font-style: italic;
+    padding-left: 4px;
+  }
+}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328112519) do
+ActiveRecord::Schema.define(:version => 0) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -19,9 +19,9 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
     t.string   "phone"
     t.string   "source"
     t.text     "description"
+    t.string   "resume"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.string   "resume"
   end
 
   add_index "candidates", ["email"], :name => "index_candidates_on_email"
@@ -34,21 +34,33 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
+  create_table "interviewers", :force => true do |t|
+    t.integer  "interview_id"
+    t.integer  "user_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "interviewers", ["interview_id"], :name => "index_interviewers_on_interview_id"
+  add_index "interviewers", ["user_id"], :name => "index_interviewers_on_user_id"
+
   create_table "interviews", :force => true do |t|
-    t.integer  "candidate_id"
-    t.string   "modality",     :null => false
-    t.string   "title",        :null => false
+    t.integer  "opening_candidate_id"
+    t.string   "modality",             :null => false
+    t.string   "title",                :null => false
     t.text     "description"
     t.string   "status"
     t.float    "score"
     t.text     "assessment"
-    t.datetime "scheduled_at", :null => false
+    t.datetime "scheduled_at",         :null => false
     t.integer  "duration"
     t.string   "phone"
     t.string   "location"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
+
+  add_index "interviews", ["opening_candidate_id"], :name => "index_interviews_on_opening_candidate_id"
 
   create_table "opening_candidates", :force => true do |t|
     t.integer "opening_id"
@@ -70,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
     t.string   "title"
     t.string   "country"
     t.string   "province"
+    t.string   "city"
     t.integer  "department_id"
     t.integer  "hiring_manager_id"
     t.integer  "recruiter_id"
@@ -77,7 +90,6 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
     t.integer  "status",            :default => 0
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.string   "city"
   end
 
   create_table "users", :force => true do |t|
@@ -85,10 +97,10 @@ ActiveRecord::Schema.define(:version => 20130328112519) do
     t.string   "encrypted_password", :default => "",    :null => false
     t.string   "name"
     t.boolean  "admin",              :default => false, :null => false
+    t.integer  "role_mask",          :default => 1
+    t.integer  "department_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
-    t.integer  "department_id"
-    t.integer  "roles_mask",         :default => 1
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
