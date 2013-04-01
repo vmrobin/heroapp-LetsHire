@@ -32,6 +32,7 @@ h4 Arranged Interviews
 table
   tr
     th Title
+    th Position
     th Modality
     th Scheduled At
     th Duration
@@ -42,6 +43,7 @@ table
   - @interviews.each do |interview|
     tr
       td= link_to interview.title, interview
+      td= interview.opening_candidate.opening.title
       td= interview.modality
       td= interview.scheduled_at
       td= interview.duration

@@ -10,9 +10,16 @@ describe InterviewsController do
     }
   end
 
-  def valid_interview
+  let :valid_opening_candidate do
     {
       :candidate_id => @candidate.id,
+      :opening_id => 1
+    }
+  end
+
+  def valid_interview
+    {
+      :opening_candidate_id => @opening.id,
       :modality     => Interview::MODALITY_PHONE,
       :title        => "interview for David",
       :description  => "30 minutes discussion",
@@ -26,6 +33,7 @@ describe InterviewsController do
 
   before :all do
     @candidate = Candidate.create! valid_candidate
+    @opening = OpeningCandidate.create! valid_opening_candidate
   end
 
   before :each  do
@@ -51,7 +59,7 @@ describe InterviewsController do
 
   describe "GET new" do
     it "assigns a new interview as @interview" do
-      get :new, { :candidate_id => @candidate.id }
+      get :new, { :candidate_id => @opening.candidate_id }
       assigns(:interview).should be_a_new(Interview)
     end
   end
@@ -68,12 +76,12 @@ describe InterviewsController do
     describe "with valid params" do
       it "creates a new Interview" do
         expect do
-          post :create, { :interview => valid_interview, :candidate_id => @candidate.id }
+          post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
         end.to change(Interview, :count).by(1)
       end
 
       it "assigns a newly created interview as @interview" do
-        post :create, { :interview => valid_interview, :candidate_id => @candidate.id }
+        post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
         assigns(:interview).should be_a(Interview)
         assigns(:interview).should be_persisted
       end
@@ -82,13 +90,13 @@ describe InterviewsController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved interview as @interview" do
         Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {}, :candidate_id => @candidate.id }
+        post :create, { :interview => {}, :opening_candidate_id => @opening.id }
         assigns(:interview).should be_a_new(Interview)
       end
 
       it "re-renders the 'edit' template" do
         Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {}, :candidate_id => @candidate.id }
+        post :create, { :interview => {}, :opening_candidate_id => @opening.id }
         response.should render_template("edit")
       end
     end
