@@ -43,12 +43,16 @@ class Ability
   def recruiter(user)
     can :create, Opening
     can :manage, Opening, :recruiter_id => user.id
+    can :create, Candidate
+    can :manage, Candidate
+    can :create, Interview
     can :manage, Interview
   end
 
   def hiringmanager(user)
     can :create, Opening
     can :manage, Opening, :hiring_manager_id => user.id
+    can :create, Interview
     can :update, Interview
   end
 

@@ -28,4 +28,4 @@ p
 -if user_signed_in? && (can? :manage, @opening)
   = link_to 'Edit', edit_opening_path(@opening)
   = '|'
-= link_to 'Back', openings_path
+= link_to 'Back', :back
