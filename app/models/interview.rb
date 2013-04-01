@@ -1,7 +1,11 @@
 class Interview < ActiveRecord::Base
-  belongs_to :candidate
+  belongs_to :opening_candidate
+  has_many :interviewers
 
-  attr_accessible :candidate, :candidate_id
+  accepts_nested_attributes_for :interviewers, :allow_destroy => true, :reject_if => proc { |interviewers| interviewers.empty? }
+
+  attr_accessible :opening_candidate, :opening_candidate_id
+  attr_accessible :interviewers, :interviewer_ids
   attr_accessible :title, :modality, :scheduled_at, :scheduled_at_iso, :duration, :phone, :location, :description
   attr_accessible :status, :score, :assessment
   attr_accessible :created_at, :updated_at
@@ -20,16 +24,38 @@ class Interview < ActiveRecord::Base
 
   STATUS = [STATUS_NEW, STATUS_PROGRESS, STATUS_PENDING, STATUS_CLOSED]
 
-  validates :candidate_id, :presence => true
+  validates :opening_candidate_id, :presence => true
   validates :modality, :title, :scheduled_at, :presence => true
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
 
   def scheduled_at_iso
-    scheduled_at.iso8601
+    if scheduled_at
+      scheduled_at.iso8601
+    else
+      nil
+    end
   end
 
   def scheduled_at_iso=(val)
     self.scheduled_at = Time.parse val
+  end
+
+  def interviewer_ids=(ids)
+    removes = []
+    interviewers.each do |interviewer|
+      unless ids.include?(interviewer.user_id)
+        removes << interviewer
+      end
+      ids.delete interviewer.user_id
+    end
+    Interviewer.transaction do
+      removes.each do |interviewer|
+        interviewer.destroy
+      end
+      ids.each do |id|
+        Interviewer.create! :interview_id => self.id, :user_id => id
+      end
+    end
   end
 end

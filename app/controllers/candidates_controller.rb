@@ -7,7 +7,11 @@ class CandidatesController < AuthenticatedController
 
   def show
     @candidate = Candidate.find params[:id]
-    @interviews = @candidate.interviews.order('scheduled_at ASC')
+    @interviews = []
+    @candidate.opening_candidates.each do |opening_candidates|
+      @interviews.concat opening_candidates.interviews.all.to_a
+    end
+    @interviews.sort_by! { |interview| interview.scheduled_at }
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
   end
 
