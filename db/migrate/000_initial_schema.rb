@@ -36,7 +36,7 @@ class InitialSchema < ActiveRecord::Migration
 
       t.string  :name                     # display name
       t.boolean :admin, :null => false, :default => false # whether is system administrator
-      t.integer :role_mask, :default => 1
+      t.integer :roles_mask, :default => 1
       t.integer :department_id
 
       t.timestamps

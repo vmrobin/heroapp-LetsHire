@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string   "encrypted_password", :default => "",    :null => false
     t.string   "name"
     t.boolean  "admin",              :default => false, :null => false
-    t.integer  "role_mask",          :default => 1
+    t.integer  "roles_mask",         :default => 1
     t.integer  "department_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false

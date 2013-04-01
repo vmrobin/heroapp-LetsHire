@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :interview do
-    candidate_id 1
+    opening_candidate_id 1
     modality     "phone interview"
     title        "phone interview for Raymond Williamson"
     description  Faker::Lorem.paragraph
