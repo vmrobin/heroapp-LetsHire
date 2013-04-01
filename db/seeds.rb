@@ -10,8 +10,16 @@ User.new_admin(:email => 'admin@local.com',
                :password => 'admin',
                :name => 'System Administrator').save
 
-User.create([{ :email => 'test1@local.com', :password => 'test1', :name => 'test1'},
-             { :email => 'test2@local.com', :password => 'test2', :name => 'test2'}])
+# For test convinience temporarily
+user = User.new({ :email => 'i1@local.com', :password => 'i1', :name => 'interviewer1' })
+user.roles = ['interviewer']
+user.save
+user = User.new({ :email => 'r1@local.com', :password => 'r1', :name => 'recruiter1' })
+user.roles = ['recruiter']
+user.save
+user = User.new({ :email => 'h1@local.com', :password => 'h1', :name => 'recruiting hiring manager 1' })
+user.roles = ['hiringmanager','recruiter']
+user.save
 
 Department.delete_all
 Department.create([ { name: 'Administration', description: 'Administration & Facility Department'},

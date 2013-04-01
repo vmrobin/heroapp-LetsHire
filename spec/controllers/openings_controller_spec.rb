@@ -23,8 +23,15 @@ describe OpeningsController do
   # This should return the minimal set of attributes required to create a valid
   # Opening. As you add validations to Opening, be sure to
   # update the return value of this method accordingly.
+  let(:hiring_manager1) { FactoryGirl.create(:hiring_manager) }
+  let(:recruiter1) { FactoryGirl.create(:recruiter) }
+  let(:user1) { FactoryGirl.create(:user) }
   def valid_attributes
-    { :title => 'Marketing Manager' }
+    { :title => 'Marketing Manager',
+      :department_id => 1,
+      :hiring_manager_id => hiring_manager1.id,
+      :recruiter_id => recruiter1.id,
+      :status => 1}
   end
 
   # This should return the minimal set of values that should be in the session
@@ -35,134 +42,167 @@ describe OpeningsController do
 
   before :each  do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    sign_in_as_admin
+    Opening.any_instance.stub(:select_valid_owners_if_active).and_return(true)
   end
 
-
-  describe "GET index" do
-    it "assigns all openings as @openings" do
-      opening = Opening.create! valid_attributes
-      get :index, {}
-      assigns(:openings).should eq([opening])
-    end
-  end
-
-  describe "GET show" do
-    it "assigns the requested opening as @opening" do
-      opening = Opening.create! valid_attributes
-      get :show, {:id => opening.to_param} 
-      assigns(:opening).should eq(opening)
-    end
-  end
-
-  describe "GET new" do
-    it "assigns a new opening as @opening" do
-      get :new, {} 
-      assigns(:opening).should be_a_new(Opening)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested opening as @opening" do
-      opening = Opening.create! valid_attributes
-      get :edit, {:id => opening.to_param} 
-      assigns(:opening).should eq(opening)
-    end
-  end
-
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Opening" do
-        expect {
-          post :create, {:opening => valid_attributes} 
-        }.to change(Opening, :count).by(1)
-      end
-
-      it "assigns a newly created opening as @opening" do
-        post :create, {:opening => valid_attributes} 
-        assigns(:opening).should be_a(Opening)
-        assigns(:opening).should be_persisted
-      end
-
-      it "redirects to the created opening" do
-        post :create, {:opening => valid_attributes} 
-        response.should redirect_to(Opening.last)
+  describe 'Anonymous User' do
+    describe "GET index" do
+      it "return opening list correctly based on ownership" do
+        opening1 = Opening.create! valid_attributes
+        opening2 = Opening.create! valid_attributes.merge(:status => 0)
+        get :index, {}
+        assigns(:openings).should eq([opening1])
       end
     end
 
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved opening as @opening" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Opening.any_instance.stub(:save).and_return(false)
-        post :create, {:opening => {}} 
-        assigns(:opening).should be_a_new(Opening)
-      end
-
-      it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Opening.any_instance.stub(:save).and_return(false)
-        post :create, {:opening => {}}
-        response.should render_template("new")
-      end
-    end
-  end
-
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested opening" do
-        opening = Opening.create! valid_attributes
-        # Assuming there are no other openings in the database, this
-        # specifies that the Opening created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Opening.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, {:id => opening.to_param, :opening => {'these' => 'params'}} 
-      end
-
+    describe "GET show" do
       it "assigns the requested opening as @opening" do
         opening = Opening.create! valid_attributes
-        put :update, {:id => opening.to_param, :opening => valid_attributes} 
+        get :show, {:id => opening.to_param}
         assigns(:opening).should eq(opening)
-      end
-
-      it "redirects to the opening" do
-        opening = Opening.create! valid_attributes
-        put :update, {:id => opening.to_param, :opening => valid_attributes}
-        response.should redirect_to(opening)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns the opening as @opening" do
-        opening = Opening.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Opening.any_instance.stub(:save).and_return(false)
-        put :update, {:id => opening.to_param, :opening => {}} 
-        assigns(:opening).should eq(opening)
-      end
-
-      it "re-renders the 'edit' template" do
-        opening = Opening.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Opening.any_instance.stub(:save).and_return(false)
-        put :update, {:id => opening.to_param, :opening => {}} 
-        response.should render_template("edit")
       end
     end
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested opening" do
-      opening = Opening.create! valid_attributes
-      expect {
-        delete :destroy, {:id => opening.to_param} 
-      }.to change(Opening, :count).by(-1)
+  describe 'Registered User' do
+    before :each  do
+      sign_in_as_admin
     end
 
-    it "redirects to the openings list" do
-      opening = Opening.create! valid_attributes
-      delete :destroy, {:id => opening.to_param} 
-      response.should redirect_to(openings_url)
+
+    describe "GET index" do
+      it "return opening list correctly based on ownership" do
+        opening1 = Opening.create! valid_attributes
+        opening2 = Opening.create! valid_attributes, :status => 0
+        all_openings = [opening1, opening2]
+        get :index, {}
+        assigns(:openings).should eq([])
+        get :index, { :all => true}
+        assigns(:openings).should eq(all_openings)
+
+        sign_in user1
+        get :index, { :all => true}
+        assigns(:openings).should eq(all_openings)
+
+        Opening.stub(:owned_openings).and_return(all_openings)
+        sign_in hiring_manager1
+        get :index, {}
+        assigns(:openings).should eq(all_openings)
+        get :index, { :all => true}
+        assigns(:openings).should eq(all_openings)
+      end
+    end
+
+
+    describe "GET new" do
+      it "assigns a new opening as @opening" do
+        get :new, {}
+        assigns(:opening).should be_a_new(Opening)
+      end
+    end
+
+    describe "GET edit" do
+      it "assigns the requested opening as @opening" do
+        opening = Opening.create! valid_attributes
+        get :edit, {:id => opening.to_param}
+        assigns(:opening).should eq(opening)
+      end
+    end
+
+    describe "POST create" do
+      describe "with valid params" do
+        it "creates a new Opening" do
+          expect {
+            post :create, {:opening => valid_attributes}
+          }.to change(Opening, :count).by(1)
+        end
+
+        it "assigns a newly created opening as @opening" do
+          post :create, {:opening => valid_attributes}
+          assigns(:opening).should be_a(Opening)
+          assigns(:opening).should be_persisted
+        end
+
+        it "redirects to the created opening" do
+          post :create, {:opening => valid_attributes}
+          response.should redirect_to(Opening.last)
+        end
+      end
+
+      describe "with invalid params" do
+        it "assigns a newly created but unsaved opening as @opening" do
+          # Trigger the behavior that occurs when invalid params are submitted
+          Opening.any_instance.stub(:save).and_return(false)
+          post :create, {:opening => {}}
+          assigns(:opening).should be_a_new(Opening)
+        end
+
+        it "re-renders the 'new' template" do
+          # Trigger the behavior that occurs when invalid params are submitted
+          Opening.any_instance.stub(:save).and_return(false)
+          post :create, {:opening => {}}
+          response.should render_template("new")
+        end
+      end
+    end
+
+    describe "PUT update" do
+      describe "with valid params" do
+        it "updates the requested opening" do
+          opening = Opening.create! valid_attributes
+          # Assuming there are no other openings in the database, this
+          # specifies that the Opening created on the previous line
+          # receives the :update_attributes message with whatever params are
+          # submitted in the request.
+          Opening.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+          put :update, {:id => opening.to_param, :opening => {'these' => 'params'}}
+        end
+
+        it "assigns the requested opening as @opening" do
+          opening = Opening.create! valid_attributes
+          put :update, {:id => opening.to_param, :opening => valid_attributes}
+          assigns(:opening).should eq(opening)
+        end
+
+        it "redirects to the opening" do
+          opening = Opening.create! valid_attributes
+          put :update, {:id => opening.to_param, :opening => valid_attributes}
+          response.should redirect_to(opening)
+        end
+      end
+
+      describe "with invalid params" do
+        it "assigns the opening as @opening" do
+          opening = Opening.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          Opening.any_instance.stub(:save).and_return(false)
+          put :update, {:id => opening.to_param, :opening => {}}
+          assigns(:opening).should eq(opening)
+        end
+
+        it "re-renders the 'edit' template" do
+          opening = Opening.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          Opening.any_instance.stub(:save).and_return(false)
+          put :update, {:id => opening.to_param, :opening => {}}
+          response.should render_template("edit")
+        end
+      end
+    end
+
+    describe "DELETE destroy" do
+      it "destroys the requested opening" do
+        opening = Opening.create! valid_attributes
+        expect {
+          delete :destroy, {:id => opening.to_param}
+        }.to change(Opening, :count).by(-1)
+      end
+
+      it "redirects to the openings list" do
+        opening = Opening.create! valid_attributes
+        delete :destroy, {:id => opening.to_param}
+        response.should redirect_to(openings_url)
+      end
     end
   end
 

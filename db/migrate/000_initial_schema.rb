@@ -84,6 +84,9 @@ class InitialSchema < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :openings, :hiring_manager_id
+    add_index :openings, :recruiter_id
+
     create_table :opening_participants, :id => false do |t|
       t.belongs_to :user
       t.belongs_to :opening

@@ -1,5 +1,12 @@
 h3 openings
 
+- if user_signed_in?
+  .pull-right
+    - all ||= params[:all]
+    - unless all
+      = link_to 'View All', openings_path(:all => true)
+    - else
+      = link_to 'View Mine', openings_path(:mine => true)
 table class='table table-hover'
   tr
     th Title
@@ -17,11 +24,15 @@ table class='table table-hover'
       td= opening.hiring_manager.try(:name)
       td= opening.status_str
       td= link_to 'Details', opening
-      td= link_to 'Edit', edit_opening_path(opening)
-      td= link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete
+      - if can? :update, opening
+        td= link_to 'Edit', edit_opening_path(opening)
+        td= link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete
+      - else
+        td=
+        td=
 
 = will_paginate @openings
 
-br
-
-= link_to 'New Opening', new_opening_path
+-if user_signed_in? && (can? :create, Opening)
+  br
+  = link_to 'New Opening', new_opening_path

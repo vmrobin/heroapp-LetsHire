@@ -23,4 +23,3 @@ ci:
 production:
   <<: *common
   database: letshire_production
-
