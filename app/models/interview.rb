@@ -42,19 +42,17 @@ class Interview < ActiveRecord::Base
   end
 
   def interviewer_ids=(ids)
+    ids.map! { |id| id.to_i }
     removes = []
     interviewers.each do |interviewer|
-      unless ids.include?(interviewer.user_id)
-        removes << interviewer
-      end
-      ids.delete interviewer.user_id
+      removes << interviewer if ids.delete(interviewer.user_id).nil?
     end
-    Interviewer.transaction do
+    transaction do
       removes.each do |interviewer|
-        interviewer.destroy
+        interviewers.delete interviewer
       end
       ids.each do |id|
-        Interviewer.create! :interview_id => self.id, :user_id => id
+        interviewers << Interviewer.new(:user_id => id)
       end
     end
   end

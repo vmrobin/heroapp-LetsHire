@@ -1,9 +1,12 @@
-class InterviewsController < AuthenticatedController
-  authorize_resource :class => false
-
+class InterviewsController < AuthorizedController
   def index
     authorize! :read, Interview
     @interviews = Interview.all.to_a.sort_by! { |interview| interview.opening_candidate.candidate.name }
+    unless can? :create, Interview
+      @interviews.reject! do |interview|
+        not interview.users.any? { |user| user.id == current_user.id }
+      end
+    end
   end
 
   def show
