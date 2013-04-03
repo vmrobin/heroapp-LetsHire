@@ -30,3 +30,8 @@ Department.create([ { name: 'Administration', description: 'Administration & Fac
                     { name: 'Marketing', description: 'Marketing'},
                     { name: 'R&D', description: 'Rearch and Development'},
                     ])
+
+candidate = Candidate.new({ :name => 'Jason', :email => 'jason@local.com', :phone => '021-111', :source => 'internal referral', :description => 'xxx' })
+candidate.save
+candidate = Candidate.new({ :name => 'Tom', :email => 'tom@local.com', :phone => '021-222', :source => 'internal referral', :description => 'xxx' })
+candidate.save
