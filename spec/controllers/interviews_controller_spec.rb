@@ -17,8 +17,8 @@ describe InterviewsController do
     }
   end
 
-  def valid_interview
-    {
+  def valid_interview(users = nil)
+    hash = {
       :opening_candidate_id => @opening.id,
       :modality     => Interview::MODALITY_PHONE,
       :title        => "interview for David",
@@ -29,11 +29,18 @@ describe InterviewsController do
       :duration     => 1,
       :location     => Faker::Address.building_number
     }
+    hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
+    hash
   end
 
   before :all do
     @candidate = Candidate.create! valid_candidate
     @opening = OpeningCandidate.create! valid_opening_candidate
+    @users = []
+    3.times do
+      @users << User.create!(:name => Faker::Name.name, :email => Faker::Internet.email + UUIDTools::UUID.random_create.to_s)
+    end
+    @user_ids = @users.map { |user| user.id }
   end
 
   before :each  do
@@ -100,6 +107,14 @@ describe InterviewsController do
         response.should render_template("edit")
       end
     end
+
+    describe "with interviewers" do
+      it "create a new Interview with interviewers" do
+        post :create, { :interview => valid_interview(@users), :opening_candidate_id => @opening.id }
+        assigns(:interview).should be_a(Interview)
+        assigns(:interview).should have(@users.size).interviewers
+      end
+    end
   end
 
   describe "PUT update" do
@@ -130,6 +145,29 @@ describe InterviewsController do
         Interview.any_instance.stub(:save).and_return(false)
         put :update, { :id => interview.to_param, :interview => {} } 
         response.should render_template("edit")
+      end
+    end
+
+    describe "with interviewers" do
+      it "adds interviewers" do
+        interview = Interview.create! valid_interview
+        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids } }
+        assigns(:interview).should have(@users.size).interviewers
+      end
+
+      it "removes interviewers" do
+        interview = Interview.create! valid_interview(@users)
+        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[1..-1] } }
+        assigns(:interview).should have(@users.size - 1).interviewers
+        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[0])
+      end
+
+      it "adds and removes interviewers" do
+        interview = Interview.create! valid_interview(@users[1..-1])
+        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[0..-2] } }
+        assigns(:interview).should have(@users.size - 1).interviewers
+        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should include(@user_ids[0])
+        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[-1])
       end
     end
   end
