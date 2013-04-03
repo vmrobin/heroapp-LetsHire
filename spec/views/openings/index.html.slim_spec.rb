@@ -26,16 +26,15 @@ describe "openings/index" do
     assert_select "tr>td", :text => "Title".to_s, :count => 2
     expect(rendered).not_to include "View Mine"
     expect(rendered).not_to include "View All"
-    expect(rendered).to include "Detail"
     expect(rendered).not_to include "Edit"
     expect(rendered).not_to include "Delete"
-    expect(rendered).not_to include "New Opening"
+    expect(rendered).not_to include "New"
   end
 
   it "renders a list of openings and give write access if suitable" do
     sign_in_as_admin
     render
-    expect(rendered).to include "New Opening"
+    expect(rendered).to include "New"
     expect(rendered).to include "Edit"
     expect(rendered).to include "Delete"
   end

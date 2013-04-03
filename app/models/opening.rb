@@ -23,7 +23,7 @@ class Opening < ActiveRecord::Base
 
   self.per_page = 20
 
-  STATUSES = { :draft => 0, :published => 1, :closed => -1 }
+  STATUS_LIST = { :draft => 0, :published => 1, :closed => -1 }
   scope :published, where(:status => 1)
 
 
@@ -50,11 +50,11 @@ class Opening < ActiveRecord::Base
   end
 
   def published?
-    status == STATUSES[:published]
+    status == STATUS_LIST[:published]
   end
 
   def closed?
-    status == STATUSES[:closed]
+    status == STATUS_LIST[:closed]
   end
 
 
@@ -68,7 +68,7 @@ class Opening < ActiveRecord::Base
 
   private
   def select_valid_owners_if_active
-    if status != STATUSES[:closed]
+    if status != STATUS_LIST[:closed]
       if hiring_manager_id && hiring_manager_id.to_i > 0
         begin
           user = User.find(hiring_manager_id)
@@ -90,5 +90,5 @@ class Opening < ActiveRecord::Base
   end
 
 
-  STATUS_STRINGS = STATUSES.invert
+  STATUS_STRINGS = STATUS_LIST.invert
 end

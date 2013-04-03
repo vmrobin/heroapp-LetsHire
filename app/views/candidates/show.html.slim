@@ -1,5 +1,11 @@
 h3 Candidate Information
 
+.pull-right
+  -if can? :manage, @candidate
+    = link_to 'Edit', edit_candidate_path(@candidate)
+    = '|'
+  = link_to 'Back', candidates_path
+br
 p
   b Name:
   = @candidate.name
@@ -53,6 +59,3 @@ table
 
 - if can? :manage, Interview
   = link_to 'New Interview', new_candidate_interview_path(@candidate)
-
-br
-= link_to 'Back', candidates_path

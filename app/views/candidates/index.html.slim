@@ -1,11 +1,15 @@
 h3 Candidates
 
+.pull-right
+  -if can? :create, Candidate
+    = link_to 'New', new_candidate_path
+br
 table class='table table-hover'
   tr
     th Name
     th Email
     th Phone
-    th
+    th Actions
 
   - @candidates.each do |candidate|
     tr
@@ -13,9 +17,8 @@ table class='table table-hover'
       td
         a href="mailto:#{candidate.email}" = candidate.email
       td= candidate.phone
-      td= link_to 'Edit', edit_candidate_path(candidate)
-      td= link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete
+      td
+        =link_to 'Edit', edit_candidate_path(candidate) , :class => 'btn btn-link'
+        =link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-link'
 
 br
-
-= link_to 'New Candidate', new_candidate_path
