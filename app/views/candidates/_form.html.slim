@@ -35,19 +35,21 @@
   .control-group
     = f.label :opening, "Assign to this JD", :class => "control-label"
     .controls
-      table
-        tr
-          td
-            - if (not @departments.nil?) and @departments.size > 0
+      - if (not @departments.nil?) and @departments.size > 0
+        table
+          tr
+            td
               select id="department_ids" name="candidate[department_ids]"
                 - @departments.each do |department|
                   -if (not @assigned_departments.nil?) && @assigned_departments.size > 0 && @assigned_departments[0].id == department.id
                     option selected=true value="#{department.id}" ="#{department.name}"
                   -else
                     option value="#{department.id}" ="#{department.name}"
-          td
-          td
-            = render partial: 'opening_select'
+            td
+            td
+              = render partial: 'opening_select'
+      - else
+        label No openings
   .control-group
     .controls
       .actions
