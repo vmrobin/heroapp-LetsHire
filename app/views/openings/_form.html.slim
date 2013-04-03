@@ -1,67 +1,56 @@
 = form_for @opening, :html => {:class => 'form-horizontal'} do |f|
-  -if @opening.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@opening.errors.count, "error")} prohibited this opening from being saved:"
-      ul
-        - @opening.errors.full_messages.each do |msg|
-          li= msg
+  = f.error_messages
+  .control-group
+    =f.label :title, :class => 'control-label'
+    .controls
+      = f.text_field :title
 
-  fieldset
+  .control-group
+    =f.label :department, :class => 'control-label'
+    .controls
+      = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
+
+  .control-group
+    =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
+    .controls
+      = f.select :hiring_manager_id, User.users_with_role(:hiringmanager).map { |user| [ user.name, user.id ] }
+
+  .control-group
+    =f.label :recruiter, :class => 'control-label'
+    .controls
+      = f.select :recruiter_id, User.users_with_role(:recruiter).map { |user| [ user.name, user.id ] }
+
+  .control-group
+    =f.label :country, :class => 'control-label'
+    .controls
+      = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
+      = render 'utilities/subregion_select', { :opening_form => f, :country_code => f.object.country, :container => 'opening'}
+
+  .control-group
+    =f.label :city, :class => 'control-label'
+    .controls
+      = f.text_field :city
+
+  .control-group
+    =f.label :description, :class => 'control-label'
+    .controls
+      = f.text_area :description, :class => 'span8'
+
+  -if @opening.id
     .control-group
-      label.control-label Title
-      div.controls
-        = f.text_field :title
+      =f.label :status, :class => 'control-label'
+      .controls
+        = f.select :status, Opening::STATUS_LIST
 
-    .control-group
-      label.control-label Department
-      div.controls
-        = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
-
-    .control-group
-      label.control-label Hiring Manager
-      div.controls
-        = f.select :hiring_manager_id, User.users_with_role(:hiringmanager).map { |user| [ user.name, user.id ] }
-
-    .control-group
-      label.control-label Recruiter
-      div.controls
-        = f.select :recruiter_id, User.users_with_role(:recruiter).map { |user| [ user.name, user.id ] }
-
-    .control-group
-      label.control-label Country
-      div.controls
-        = f.country_select :country, { :priority => ['US', 'CN'], :prompt => 'Please select a country' }
-
-    .control-group
-      label.control-label State/Province
-      div.controls
-        = render 'utilities/subregion_select', { :opening_form => f, :country_code => f.object.country, :container => 'opening'}
-
-    .control-group
-      label.control-label City
-      div.controls
-        = f.text_field :city
-
-    .control-group
-      label.control-label Description
-      div.controls
-        = f.text_area :description
-
-    -if @opening.id
+    -if @opening.published?
       .control-group
-        label.control-label Status
-        div.controls
-          = f.select :status, Opening::STATUSES
-
-      -if @opening.published?
-        .control-group
-          label.control-label Potential Interviewers
-          div.controls
-            = f.select :participant_ids, User.all.collect {|x| [x.email, x.id]}, {}, { :multiple => true}
-    -else
-      = f.label :status, :class => 'checkbox' do
-        span Activate it right now
-        = f.check_box :status
+        =f.label :participants, "Favorite Interviewers", :class => 'control-label'
+        .controls
+          = f.select :participant_ids, User.all.collect {|x| [x.email, x.id]}, {}, { :multiple => true}
+  -else
+    =f.label :status, :class => 'checkbox' do
+      span Activate it right now
+      = f.check_box :status
 
 
   .actions

@@ -7,32 +7,32 @@ h3 openings
       = link_to 'View All', openings_path(:all => true)
     - else
       = link_to 'View Mine', openings_path(:mine => true)
+    -if user_signed_in? && (can? :create, Opening)
+      = ' | '
+      = link_to 'New', new_opening_path
+
 table class='table table-hover'
   tr
     th Title
     th Department
     th Hiring Manager
     th Status
-    th
-    th
-    th
+    th Candidates No.
+    th Actions
 
   - @openings.each do |opening|
     tr
-      td= opening.title
+      td= link_to opening.title, opening
       td= opening.department.try(:name)
       td= opening.hiring_manager.try(:name)
       td= opening.status_str
-      td= link_to 'Details', opening
+      td= opening.candidates.count
       - if can? :update, opening
-        td= link_to 'Edit', edit_opening_path(opening)
-        td= link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete
+        td
+          = link_to 'Edit', edit_opening_path(opening), :class => 'btn btn-link'
+          = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-link'
       - else
-        td=
-        td=
+        td
 
 = will_paginate @openings
 
--if user_signed_in? && (can? :create, Opening)
-  br
-  = link_to 'New Opening', new_opening_path
