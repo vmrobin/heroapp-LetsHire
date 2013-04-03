@@ -1,6 +1,6 @@
 class Interview < ActiveRecord::Base
   belongs_to :opening_candidate
-  has_many :interviewers
+  has_many :interviewers, :dependent => :destroy
 
   accepts_nested_attributes_for :interviewers, :allow_destroy => true, :reject_if => proc { |interviewers| interviewers.empty? }
 
@@ -39,6 +39,7 @@ class Interview < ActiveRecord::Base
 
   def scheduled_at_iso=(val)
     self.scheduled_at = Time.parse val
+  rescue
   end
 
   def interviewer_ids=(ids)

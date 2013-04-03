@@ -33,6 +33,10 @@ class InterviewsController < AuthorizedController
 
   def create
     authorize! :manage, Interview
+    if params[:opening_candidate_id].nil?
+      redirect_to candidates_path, :notice => "No opening is selected for the candidate"
+      return
+    end
     @opening = OpeningCandidate.find params[:opening_candidate_id]
     @interview = Interview.new params[:interview]
     @interview.opening_candidate = @opening

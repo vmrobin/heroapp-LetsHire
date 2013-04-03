@@ -4,7 +4,7 @@ class OpeningCandidate < ActiveRecord::Base
   belongs_to :candidate
   belongs_to :opening
 
-  has_many :interviews
+  has_many :interviews, :dependent => :destroy
 
   validates :candidate_id, :opening_id, :presence => true
 end
