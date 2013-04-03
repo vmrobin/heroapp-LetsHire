@@ -11,10 +11,10 @@ class Opening < ActiveRecord::Base
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
   belongs_to :creator, :class_name => "User", :foreign_key => :creator_id, :readonly => true
 
-  has_many :opening_participants, :class_name => "OpeningParticipant", :readonly => true
+  has_many :opening_participants, :class_name => "OpeningParticipant", :dependent => :destroy
   has_many :participants, :class_name => "User", :through => :opening_participants
 
-  has_many :opening_candidates, :class_name => "OpeningCandidate", :readonly => true
+  has_many :opening_candidates, :class_name => "OpeningCandidate", :dependent => :destroy
   has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
 
   validates :title, :presence => true

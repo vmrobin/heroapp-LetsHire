@@ -128,22 +128,14 @@ class CandidatesController < AuthenticatedController
 
   def destroy
     @candidate = Candidate.find(params[:id])
+    @candidate.destroy
 
-    error = true
-    ActiveRecord::Base.transaction do
-      if @candidate.opening_candidates.clear and @candidate.interviews.clear and @candidate.destroy
-        error = false
-      else
-        raise ActiveRecord::Rollback
-      end
-    end
-
-    if not error
-      remove_file(@candidate.resume)
-      redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully deleted."
-    else
-      redirect_to candidates_url, :error => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) cannot be deleted."
-    end
+    remove_file(@candidate.resume)
+    redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully deleted."
+  rescue ActiveRecord::RecordNotFound
+    redirect_to users_url, notice: 'Invalid user'
+  rescue
+    redirect_to candidates_url, :error => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) cannot be deleted."
   end
 
   def opening_options
