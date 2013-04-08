@@ -23,15 +23,9 @@ class CandidatesController < AuthenticatedController
 
   def edit
     @candidate = Candidate.find params[:id]
-    @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-    @opening_candidates = @candidate.opening_candidates
-    # NOTE: Currently one candidate cannot be assigned to multiple opening jobs on web UI
-    @assigned_departments = []
-    if @opening_candidates.size > 0
-      @opening_id = @opening_candidates[0].opening_id
-      @assigned_departments = Department.joins(:openings).where( "openings.id = ?", @opening_id )
-    end
     @departments = Department.with_at_least_n_openings
+    @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+    @assigned_departments = get_assigned_departments(@candidate)
     @selected_department_id = @assigned_departments[0].id if @assigned_departments.size > 0
     @selected_department_id ||= @departments[0].id if @departments.size > 0
   end
@@ -68,6 +62,7 @@ class CandidatesController < AuthenticatedController
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
       @departments = Department.with_at_least_n_openings
+      @selected_department_id = @departments[0].id if @departments.size > 0
       render :action => 'new'
     end
   end
@@ -122,6 +117,10 @@ class CandidatesController < AuthenticatedController
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated."
     else
       @departments = Department.with_at_least_n_openings
+      @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+      @assigned_departments = get_assigned_departments(@candidate)
+      @selected_department_id = @assigned_departments[0].id if @assigned_departments.size > 0
+      @selected_department_id ||= @departments[0].id if @departments.size > 0
       render :action => 'edit'
     end
   end
@@ -149,6 +148,17 @@ class CandidatesController < AuthenticatedController
   end
 
 private
+  def get_assigned_departments(candidate)
+    opening_candidates = candidate.opening_candidates
+    # NOTE: Currently one candidate cannot be assigned to multiple opening jobs on web UI
+    assigned_departments = []
+    if opening_candidates.size > 0
+      opening_id = opening_candidates[0].opening_id
+      assigned_departments = Department.joins(:openings).where( "openings.id = ?", opening_id )
+    end
+    return assigned_departments
+  end
+
   def upload_file(iostream, subfolder)
     begin
       # TODO list
