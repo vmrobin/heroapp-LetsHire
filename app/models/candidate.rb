@@ -10,7 +10,7 @@ class Candidate < ActiveRecord::Base
 
   validates :name, :presence => true
   validates :email, :email_format => { :message => 'format error'}
-  validates :phone, :format => { :with => phone_format, :on => :create, :message => 'format error' }
+  validates :phone, :format => { :with => phone_format, :message => 'format error' }
 
   has_many :opening_candidates, :class_name => "OpeningCandidate", :dependent => :destroy
   has_many :openings, :class_name => "Opening", :through => :opening_candidates
