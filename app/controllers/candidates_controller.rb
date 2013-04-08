@@ -7,13 +7,17 @@ class CandidatesController < AuthenticatedController
 
   def show
     @candidate = Candidate.find params[:id]
-    @interviews = @candidate.interviews.order('scheduled_at ASC')
+    @interviews = []
+    @candidate.opening_candidates.each do |opening_candidates|
+      @interviews.concat opening_candidates.interviews.all.to_a
+    end
+    @interviews.sort_by! { |interview| interview.scheduled_at }
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
   end
 
   def new
     @candidate = Candidate.new
-    @departments = Department.all
+    @departments = Department.with_at_least_n_openings
     @selected_department_id = @departments[0].id if @departments.size > 0
   end
 
@@ -27,7 +31,7 @@ class CandidatesController < AuthenticatedController
       @opening_id = @opening_candidates[0].opening_id
       @assigned_departments = Department.joins(:openings).where( "openings.id = ?", @opening_id )
     end
-    @departments = Department.all
+    @departments = Department.with_at_least_n_openings
     @selected_department_id = @assigned_departments[0].id if @assigned_departments.size > 0
     @selected_department_id ||= @departments[0].id if @departments.size > 0
   end
@@ -63,6 +67,7 @@ class CandidatesController < AuthenticatedController
     if not error
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
+      @departments = Department.with_at_least_n_openings
       render :action => 'new'
     end
   end
@@ -116,28 +121,21 @@ class CandidatesController < AuthenticatedController
     if not error
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated."
     else
+      @departments = Department.with_at_least_n_openings
       render :action => 'edit'
     end
   end
 
   def destroy
     @candidate = Candidate.find(params[:id])
+    @candidate.destroy
 
-    error = true
-    ActiveRecord::Base.transaction do
-      if @candidate.opening_candidates.clear and @candidate.interviews.clear and @candidate.destroy
-        error = false
-      else
-        raise ActiveRecord::Rollback
-      end
-    end
-
-    if not error
-      remove_file(@candidate.resume)
-      redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully deleted."
-    else
-      redirect_to candidates_url, :error => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) cannot be deleted."
-    end
+    remove_file(@candidate.resume)
+    redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully deleted."
+  rescue ActiveRecord::RecordNotFound
+    redirect_to users_url, notice: 'Invalid user'
+  rescue
+    redirect_to candidates_url, :error => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) cannot be deleted."
   end
 
   def opening_options

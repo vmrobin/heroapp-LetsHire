@@ -3,6 +3,9 @@ h3 Interview Information for #{@candidate.name}
 dl.dl-horizontal
   dt Title
   dd #{@interview.title.html_safe}&nbsp;
+  dt Position
+  dd
+    = link_to @opening.opening.title, opening_path(@opening.opening)
   dt Modality
   dd #{@interview.modality.html_safe}&nbsp;
   dt Description
@@ -17,6 +20,13 @@ dl.dl-horizontal
   - if @interview.modality.include?("onsite")
     dt Location
     dd #{@interview.location.html_safe}&nbsp;
+  dt Interviewers
+  dd
+    - @interview.interviewers.each do |interviewer|
+      .interviewer-line
+        span.name= interviewer.user.name
+        span.email= interviewer.user.email
+    span &nbsp;
   dt Status
   dd= @interview.status
 

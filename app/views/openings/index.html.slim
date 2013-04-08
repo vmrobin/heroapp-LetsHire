@@ -1,8 +1,16 @@
-div style="float: left"
+.pull-left
   h3 Openings
-div style="float: right"
-  a.btn.btn-primary href=new_opening_path Add a Job Opening
-    
+
+- if user_signed_in?
+  .pull-right
+    - all ||= params[:all]
+    - unless all
+      = link_to 'View All', openings_path(:all => true)
+    - else
+      = link_to 'View Mine', openings_path(:mine => true)
+    -if user_signed_in? && (can? :create, Opening)
+      = ' | '
+      = link_to 'Add a Job Opening', new_opening_path, :class => 'btn btn-primary'
 
 table class='table table-hover'
  thead
@@ -11,19 +19,23 @@ table class='table table-hover'
     th Department
     th Hiring Manager
     th Status
-    th
-    th
-    th
-
+    th Candidates No.
+    th Actions
+ tbody
   - @openings.each do |opening|
     tr
-      td= opening.title
+      td= link_to opening.title, opening
       td= opening.department.try(:name)
       td= opening.hiring_manager.try(:name)
       td= opening.status_str
-      td
-        a.btn href=opening Details
-        a.btn href=edit_opening_path(opening) Edit
-        = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
+      td= opening.candidates.count
+      - if can? :update, opening
+        td
+          a.btn href=opening Details
+          a.btn href=edit_opening_path(opening) Edit
+          = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
+      - else
+        td
 
 = will_paginate @openings
+

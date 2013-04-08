@@ -6,10 +6,19 @@ class OpeningsController < ApplicationController
   # GET /openings
   # GET /openings.json
   def index
-    @openings = Opening.paginate(:page => params[:page], :per_page => 20)
+    unless user_signed_in?
+      #published openings are returned only
+      @openings = Opening.published.paginate(:page => params[:page]).order('department_id asc')
+    else
+      if params.has_key?(:all)
+        @openings = Opening.order('department_id ASC').page(params[:page])
+      else
+        @openings = Opening.owned_openings(current_user.id, params)
+      end
+    end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.slim
       format.json { render json: @openings }
     end
   end
@@ -20,7 +29,7 @@ class OpeningsController < ApplicationController
     @opening = Opening.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @opening }
     end
   rescue ActiveRecord::RecordNotFound
@@ -31,9 +40,11 @@ class OpeningsController < ApplicationController
   # GET /openings/new.json
   def new
     @opening = Opening.new(:title => '', :description => description_template)
+    @opening.recruiter = current_user if current_user.has_role?(:recruiter)
+    @opening.hiring_manager = current_user if current_user.has_role?(:hiringmanager)
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.slim
       format.json { render json: @opening }
     end
   end
@@ -41,6 +52,7 @@ class OpeningsController < ApplicationController
   # GET /openings/1/edit
   def edit
     @opening = Opening.find(params[:id])
+
   rescue ActiveRecord::RecordNotFound
     redirect_to openings_url, notice: 'Invalid opening'
   end
@@ -50,6 +62,7 @@ class OpeningsController < ApplicationController
   def create
     @opening = Opening.new(params[:opening])
 
+    @opening.creator = current_user
     respond_to do |format|
       if @opening.save
         format.html { redirect_to @opening, notice: 'Opening was successfully created.' }
@@ -91,12 +104,9 @@ class OpeningsController < ApplicationController
     end
   end
 
-
   def subregion_options
-    render partial: 'subregion_select'
+    render :partial => 'utilities/subregion_select', :locals => { :container => 'opening' }
   end
-
-
 
   private
   def description_template

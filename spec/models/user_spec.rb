@@ -32,7 +32,7 @@ describe User do
     let(:ability) { Ability.new(user) }
     let(:user) { nil }
 
-    context 'amdin user' do
+    context 'admin user' do
       let(:user) { User.new_admin }
       it{ should be_able_to(:manage, Interview.new)}
       it{ should be_able_to(:manage, User.new)}

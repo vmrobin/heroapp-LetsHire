@@ -1,4 +1,4 @@
-#source 'https://rubygems.org'
+source 'https://rubygems.org'
 source 'http://ruby.taobao.org'
 
 gem 'mime-types', '1.21'
@@ -7,10 +7,12 @@ gem 'slim-rails', '0.2.0'
 gem 'bootstrap-sass', '2.1'
 gem 'devise', '2.2.3'
 gem 'cancan', '1.6.9'
-gem 'will_paginate', '~> 3.0'
-gem 'validates_email_format_of'
-gem 'dynamic_form'
-gem 'binding_of_caller'
+gem 'will_paginate', '3.0.4'
+gem 'validates_email_format_of', '1.5.3'
+gem 'dynamic_form', '1.1.4'
+gem 'binding_of_caller', '0.7.1'
+gem 'pg', '0.12.2'
+gem 'carmen-rails', '1.0.0.beta3'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
@@ -27,24 +29,19 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '3.2.5'
+  gem 'sass-rails', '3.2.5'
   gem 'uglifier', '1.2.3'
   gem 'jquery-rails', '2.0.2'
   gem 'jquery-ui-rails', '4.0.2'
   gem 'jquery-timepicker-addon-rails', '1.2.2'
 end
 
-group :test do
+group :test, :ci do
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'
   gem 'factory_girl_rails', '4.2.1'
   gem 'faker', '1.1.2'
-  gem 'libnotify'
-end
-
-gem 'carmen-rails', '~> 1.0.0.beta3'
-
-group :production do
-  gem 'pg', '0.12.2'
+  gem 'libnotify', '0.8.0'
+  gem 'uuidtools', '2.1.3'
 end

@@ -3,20 +3,28 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :creator_id
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
 
-  belongs_to :department
+  belongs_to :department, :counter_cache => true
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
+  belongs_to :creator, :class_name => "User", :foreign_key => :creator_id, :readonly => true
 
-  has_many :opening_participants, :class_name => "OpeningParticipant", :readonly => true
+  has_many :opening_participants, :class_name => "OpeningParticipant", :dependent => :destroy
   has_many :participants, :class_name => "User", :through => :opening_participants
 
-  has_many :opening_candidates, :class_name => "OpeningCandidate", :readonly => true
+  has_many :opening_candidates, :class_name => "OpeningCandidate", :dependent => :destroy
   has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
 
   validates :title, :presence => true
+
+  validate :select_valid_owners_if_active
+
+  self.per_page = 20
+
+  STATUS_LIST = { :draft => 0, :published => 1, :closed => -1 }
+  scope :published, where(:status => 1)
 
 
   def status_str
@@ -42,10 +50,45 @@ class Opening < ActiveRecord::Base
   end
 
   def published?
-    status == STATUSES[:published]
+    status == STATUS_LIST[:published]
+  end
+
+  def closed?
+    status == STATUS_LIST[:closed]
+  end
+
+
+  def self.owned_openings(user_id, params)
+    if user_id.nil?
+      []
+    else
+      where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id).page(params[:page]).order('hiring_manager_id asc')
+    end
   end
 
   private
-  STATUSES = { :draft => 0, :published => 1, :closed => -1 }
-  STATUS_STRINGS = STATUSES.invert
+  def select_valid_owners_if_active
+    if status != STATUS_LIST[:closed]
+      if hiring_manager_id && hiring_manager_id.to_i > 0
+        begin
+          user = User.find(hiring_manager_id)
+          valid = user && user.has_role?(:hiringmanager)
+        rescue
+        end
+        errors.add(:hiring_manager_id, "isn't a hiring manager") unless valid
+      end
+      if recruiter_id && recruiter_id.to_i > 0
+        valid = nil
+        begin
+          user = User.find(recruiter_id)
+          valid = user && user.has_role?(:recruiter)
+        rescue
+        end
+        errors.add(:recruiter_id, "isn't a recruiter") unless valid
+      end
+    end
+  end
+
+
+  STATUS_STRINGS = STATUS_LIST.invert
 end

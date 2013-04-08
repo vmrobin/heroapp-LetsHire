@@ -21,6 +21,15 @@ class User < ActiveRecord::Base
     read_attribute :admin
   end
 
+  def self.name2role(name)
+    offset = ROLES.index(name.to_s)
+    offset ? 2**offset : 0
+  end
+
+  def has_role?(role_name)
+    admin? || (roles_mask & User::name2role(role_name) ) != 0
+  end
+
   # The class method used in seed.rb to create the only admin user
   def self.new_admin(options = {})
     user = self.new options
@@ -28,10 +37,9 @@ class User < ActiveRecord::Base
     user
   end
 
-
-  def self.hiringManagers
-    #fixme  Need narrow down the scope once Role is ready
-    all
+  def self.users_with_role(role_name)
+    role_mask = name2role(role_name)
+    all.select { |user|  user.admin? || (user.roles_mask & role_mask) != 0}
   end
 
   def roles=(roles)
