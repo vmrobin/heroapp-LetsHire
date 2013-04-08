@@ -13,3 +13,11 @@
  *= require_self
  *= require_tree .
  */
+
+.btn {                                                      
+  margin: 0 2px 0 2px;                                      
+}
+
+.lastli {
+  margin-bottom: 12px
+}

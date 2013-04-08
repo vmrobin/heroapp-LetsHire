@@ -28,13 +28,13 @@ describe "openings/index" do
     expect(rendered).not_to include "View All"
     expect(rendered).not_to include "Edit"
     expect(rendered).not_to include "Delete"
-    expect(rendered).not_to include "New"
+    expect(rendered).not_to include "Add a Job Opening"
   end
 
   it "renders a list of openings and give write access if suitable" do
     sign_in_as_admin
     render
-    expect(rendered).to include "New"
+    expect(rendered).to include "Add a Job Opening"
     expect(rendered).to include "Edit"
     expect(rendered).to include "Delete"
   end
