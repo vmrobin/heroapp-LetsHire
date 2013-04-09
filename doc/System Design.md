@@ -5,7 +5,7 @@ The scope of this project is to create a self-contained Recruiting system, which
 including:
 
 * Job opening’s creation and management;
-* Applicant's one-stop management;
+* Candidate's one-stop management;
 * Smooth and customizable recruiting workflow;  
 * Hiring team interview collaboration support;
 * All recruitment information & talent pool in one place.

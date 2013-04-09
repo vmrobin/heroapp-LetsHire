@@ -2,14 +2,14 @@
   h3 Openings
 
 - if user_signed_in?
-  .pull-right
+  .pull-right.align-to-title
     - all ||= params[:all]
     - unless all
       = link_to 'View All', openings_path(:all => true)
     - else
       = link_to 'View Mine', openings_path(:mine => true)
     -if user_signed_in? && (can? :create, Opening)
-      = ' | '
+      = '  '
       = link_to 'Add a Job Opening', new_opening_path, :class => 'btn btn-primary'
 
 table class='table table-hover'
@@ -19,8 +19,8 @@ table class='table table-hover'
     th Department
     th Hiring Manager
     th Status
-    th Candidates No.
-    th Actions
+    th # of Candidates
+    th
  tbody
   - @openings.each do |opening|
     tr
@@ -30,8 +30,8 @@ table class='table table-hover'
       td= opening.status_str
       td= opening.candidates.count
       - if can? :update, opening
-        td
-          a.btn href=opening Details
+        td.actions
+          = link_to 'Details', opening, :class => "btn"
           a.btn href=edit_opening_path(opening) Edit
           = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
       - else

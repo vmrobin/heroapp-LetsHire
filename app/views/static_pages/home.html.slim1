@@ -1,0 +1,11 @@
+.row-fluid
+  .span8
+    .center.hero-unit
+      h1.home-title Welcome to LetsHire
+  .span4
+    /form action=session_path
+    label "Email"
+    input type="text"
+    label "Password"
+    input type="text"
+    input Sign type="submit" class="btn"
