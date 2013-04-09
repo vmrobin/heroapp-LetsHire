@@ -50,6 +50,10 @@ h2 {
   color: $grayLight;
 }
 
+h3 {
+  margin-bottom: 15px;
+}
+
 p {
   font-size:  1.1em;
   line-height: 1.7em;
@@ -107,4 +111,29 @@ footer {
 
 .flash-notice {
   @extend .alert-success;
+}
+
+.container {
+  width: 1050px;
+}
+
+.navbar-fixed-top .container {
+  width: 1050px;
+}
+
+.table .actions {
+  text-align: right;
+}
+
+.navbar .nav {
+  margin: 0;
+}
+
+.inline-label {
+  width: 120px;
+  display: inline;
+}
+
+.nav-list-no-padding {
+  padding-left: 0;
 }

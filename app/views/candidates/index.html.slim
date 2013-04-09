@@ -1,7 +1,7 @@
 .pull-left
   h3 Candidates
 
-.pull-right
+.pull-right.align-to-title
   -if can? :create, Candidate
     = link_to 'Add a Candidate', new_candidate_path, :class => 'btn btn-primary'
 br
@@ -11,7 +11,7 @@ table class='table table-hover'
     th Name
     th Email
     th Phone
-    th Actions
+    th
 
   - @candidates.each do |candidate|
     tr
@@ -19,7 +19,7 @@ table class='table table-hover'
       td
         a href="mailto:#{candidate.email}" = candidate.email
       td= candidate.phone
-      td
+      td.actions
         =link_to 'Edit', edit_candidate_path(candidate) , :class => 'btn'
         =link_to 'Delete', candidate, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
 
