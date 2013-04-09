@@ -8,15 +8,16 @@ class OpeningsController < ApplicationController
   def index
     unless user_signed_in?
       #published openings are returned only
-      @openings = Opening.published.paginate(:page => params[:page]).order('department_id asc')
+      @search = Opening.published.paginate(:page => params[:page]).search(params[:q])
     else
       if params.has_key?(:all)
-        @openings = Opening.order('department_id ASC').page(params[:page])
+        @search = Opening.paginate(:page => params[:page]).search(params[:q])
       else
-        @openings = Opening.owned_openings(current_user.id, params)
+        @search = Opening.owned(current_user.id).paginate(:page => params[:page]).search(params[:q])
       end
     end
 
+    @openings = @search.result
     respond_to do |format|
       format.html # index.html.slim
       format.json { render json: @openings }
