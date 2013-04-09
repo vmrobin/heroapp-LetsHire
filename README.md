@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire.png?branch=master)](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire) [![Code Climate](https://codeclimate.com/github/vmw-tmpst/heroapp-LetsHire.png)](https://codeclimate.com/github/vmw-tmpst/heroapp-LetsHire)
+[![Build Status](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire.png?branch=master)](https://travis-ci.org/vmw-tmpst/heroapp-LetsHire) [![Code Climate](https://codeclimate.com/github/vmw-tmpst/heroapp-LetsHire.png)](https://codeclimate.com/github/vmw-tmpst/heroapp-LetsHire)[![Dependency Status](https://gemnasium.com/vmw-tmpst/heroapp-LetsHire.png)](https://gemnasium.com/vmw-tmpst/heroapp-LetsHire)
 
 # Lets Hire: a hero application
 
