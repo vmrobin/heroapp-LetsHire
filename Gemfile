@@ -13,6 +13,7 @@ gem 'dynamic_form', '1.1.4'
 gem 'binding_of_caller', '0.7.1'
 gem 'pg', '0.12.2'
 gem 'carmen-rails', '1.0.0.beta3'
+gem 'ransack', '0.7.2'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
@@ -37,6 +38,7 @@ group :assets do
 end
 
 group :test, :ci do
+  gem 'coveralls', :require => false
   gem 'capybara', '1.1.2'
   gem 'rb-fsevent', '0.9.1', :require => false
   gem 'growl', '1.0.3'

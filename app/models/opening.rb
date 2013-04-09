@@ -25,7 +25,7 @@ class Opening < ActiveRecord::Base
 
   STATUS_LIST = { :draft => 0, :published => 1, :closed => -1 }
   scope :published, where(:status => 1)
-
+  scope :owned,  ->(user_id) { where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id) }
 
   def status_str
     STATUS_STRINGS[status]
@@ -55,15 +55,6 @@ class Opening < ActiveRecord::Base
 
   def closed?
     status == STATUS_LIST[:closed]
-  end
-
-
-  def self.owned_openings(user_id, params)
-    if user_id.nil?
-      []
-    else
-      where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id).page(params[:page]).order('hiring_manager_id asc')
-    end
   end
 
   private

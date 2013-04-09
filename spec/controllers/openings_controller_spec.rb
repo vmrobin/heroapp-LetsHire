@@ -47,12 +47,24 @@ describe OpeningsController do
 
   describe 'Anonymous User' do
     describe "GET index" do
-      it "return opening list correctly based on ownership" do
+      it "only returns published openings for anonymous user" do
         opening1 = Opening.create! valid_attributes
         opening2 = Opening.create! valid_attributes.merge(:status => 0)
         get :index, {}
         assigns(:openings).should eq([opening1])
       end
+
+      it "search works properly" do
+        opening1 = Opening.create! valid_attributes
+        opening2 = Opening.create! valid_attributes.merge(:title => 'Sales Manager')
+        get :index, { :q => {}}
+        assigns(:openings).should eq([opening1, opening2])
+        get :index, { :q => { :title_cont => 'Manager' }}
+        assigns(:openings).should eq([opening1, opening2])
+        get :index, { :q => { :title_cont => 'Marketing' }}
+        assigns(:openings).should eq([opening1])
+      end
+
     end
 
     describe "GET show" do
@@ -62,6 +74,7 @@ describe OpeningsController do
         assigns(:opening).should eq(opening)
       end
     end
+
   end
 
   describe 'Registered User' do
@@ -84,7 +97,7 @@ describe OpeningsController do
         get :index, { :all => true}
         assigns(:openings).should eq(all_openings)
 
-        Opening.stub(:owned_openings).and_return(all_openings)
+        Opening.stub(:owned).and_return(Opening)
         sign_in hiring_manager1
         get :index, {}
         assigns(:openings).should eq(all_openings)
