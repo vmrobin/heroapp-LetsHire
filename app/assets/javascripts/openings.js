@@ -14,16 +14,13 @@ $ ->
     url = "/addresses/subregion_options?country_code=#{country_code}"
     select_wrapper.load(url)
 */
-
-(function() {
-    $(function() {
-        return $('select#opening_country').change(function(event) {
-            var country_code, select_wrapper, url;
-            select_wrapper = $('#opening_state_wrapper');
-            $('select', select_wrapper).attr('disabled', true);
-            country_code = $(this).val();
-            url = "/addresses/subregion_options?country_code=" + country_code;
-            return select_wrapper.load(url);
-        });
+$(function() {
+    $('select#opening_country').change(function(event) {
+        var country_code, select_wrapper, url;
+        select_wrapper = $('#opening_state_wrapper');
+        $('select', select_wrapper).attr('disabled', true);
+        country_code = $(this).val();
+        url = "/addresses/subregion_options?country_code=" + country_code;
+        return select_wrapper.load(url);
     });
-}).call(this);
+})

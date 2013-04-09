@@ -4,6 +4,7 @@ require 'will_paginate/array'
 
 describe "openings/index" do
   before(:each) do
+    assign(:search, Opening.search(:title_cont => 'Title'))
     assign(:openings, [
       stub_model(Opening,
         :title => "Title"
@@ -22,7 +23,8 @@ describe "openings/index" do
 
   it "renders a list of openings and give readonly access button" do
     render
-    # Run the generator again with the --webrat flag if you want to use webrat matchers
+
+    expect(rendered).to include "Search"
     assert_select "tr>td", :text => "Title".to_s, :count => 2
     expect(rendered).not_to include "View Mine"
     expect(rendered).not_to include "View All"
