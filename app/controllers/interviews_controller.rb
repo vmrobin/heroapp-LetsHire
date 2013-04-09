@@ -4,7 +4,7 @@ class InterviewsController < AuthorizedController
     @interviews = Interview.all.to_a.sort_by! { |interview| interview.opening_candidate.candidate.name }
     unless can? :create, Interview
       @interviews.reject! do |interview|
-        not interview.users.any? { |user| user.id == current_user.id }
+        not interview.interviewers.any? { |interviewer| interviewer.user_id == current_user.id }
       end
     end
   end

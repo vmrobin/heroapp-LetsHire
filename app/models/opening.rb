@@ -3,7 +3,7 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :creator_id
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
 
   belongs_to :department, :counter_cache => true
