@@ -18,7 +18,8 @@ html
                 li = link_to_unless_current 'Openings', openings_path
                 li = link_to_unless_current 'Candidates', candidates_path
                 li = link_to_unless_current 'Interviews', interviews_path
-                li.lastli = link_to_unless_current 'Users', users_path
+                - if current_user.admin?
+                  li.lastli = link_to_unless_current 'Users', users_path
 
             .span10
               == yield

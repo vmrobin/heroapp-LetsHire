@@ -23,7 +23,7 @@ LetsHire::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   match '/addresses/subregion_options' => 'openings#subregion_options'
-  match '/positions/opening_options' => 'candidates#opening_options'
+  match '/positions/opening_options' => 'openings#opening_options'
 
   get "candidates/resume"
 

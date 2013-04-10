@@ -15,4 +15,8 @@ class Candidate < ActiveRecord::Base
   has_many :opening_candidates, :class_name => "OpeningCandidate", :dependent => :destroy
   has_many :openings, :class_name => "Opening", :through => :opening_candidates
 
+  def opening(index)
+    opening_candidates[index].opening if opening_candidates.size > index
+  end
+
 end
