@@ -19,5 +19,29 @@
 }
 
 .lastli {
-  margin-bottom: 12px
+  margin-bottom: 12px;
+}
+
+.align-to-title {
+  margin: 10px 8px;
+}
+
+.home-title {
+  margin: 0;
+}
+
+.sign-in {
+  margin-left: 20px;
+}
+
+.full-input {
+  width: 95%;
+}
+
+#login_div {
+  margin-top: 8px;
+}
+
+#login_checkbox {
+  margin: 0 5px 0 0;
 }
