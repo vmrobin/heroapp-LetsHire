@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
-source 'http://ruby.taobao.org'
+#please comment out the following line before submit
+#source 'http://ruby.taobao.org'
 
 gem 'mime-types', '1.21'
 gem 'rails', '3.2.12'

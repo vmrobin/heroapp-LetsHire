@@ -12,7 +12,7 @@ h3 Openings
       = link_to 'Add a Job Opening', new_opening_path, :class => 'btn btn-primary'
 
 = search_form_for @search, :html => { :class => 'form-horizontal' }  do |f|
-  = f.text_field :title_cont, :placeholder => "Please input to filter Title"
+  = f.text_field :title_cont
   = ' '
   = f.submit
 
