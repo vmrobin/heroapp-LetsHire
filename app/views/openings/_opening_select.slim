@@ -1,14 +1,15 @@
 #openingid_select_wrapper
-  -if not @selected_department_id.nil?
-    -department = Department.find(@selected_department_id.to_i)
+  - selected_department_id ||= params[:selected_department_id]
+  -if !selected_department_id.nil? && selected_department_id.to_i > 0
+    -department = Department.find(selected_department_id.to_i)
     -if department.nil?
       em Please select a department
     -else
-      -openings = Opening.where(:department_id => @selected_department_id.to_i)
+      -openings = Opening.where(:department_id => selected_department_id.to_i)
       -if not openings.nil?
         select id="openings_ids" name="candidate[opening_ids]"
           -openings.each do |opening|
-            -if (not @opening_id.nil?) && @opening_id == opening.id
+            -if (params[:selected_department_id].nil? && (!opening_id.nil? && opening_id == opening.id))
               option selected=true value="#{opening.id}" ="#{opening.title}"
             -else
               option value="#{opening.id}" ="#{opening.title}"
