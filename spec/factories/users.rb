@@ -4,6 +4,7 @@ FactoryGirl.define do
     name Faker::Name.name
     password (Random.rand * 10000).to_i.to_s
     admin false
+    roles_mask 1
   end
 
   factory :recruiter, :class => :User, :parent => :user do
