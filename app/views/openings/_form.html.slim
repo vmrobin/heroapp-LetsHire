@@ -11,6 +11,16 @@
       = f.select :department_id, Department.all.map { |d| [ d.name, d.id ] }
 
   .control-group
+      =f.label :total_no, 'Total Seats', :class => 'control-label'
+      .controls
+        = f.number_field :total_no, :in => 1..1000
+
+  .control-group
+      =f.label :filled_no, 'Filled Seats', :class => 'control-label'
+      .controls
+              = f.number_field :filled_no, :in => 0..1000
+
+  .control-group
     =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
     .controls
       = f.select :hiring_manager_id, User.users_with_role(:hiringmanager).map { |user| [ user.name, user.id ] }

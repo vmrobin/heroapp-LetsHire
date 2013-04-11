@@ -22,7 +22,7 @@ describe "openings/index" do
   end
 
   it "renders a list of openings and give readonly access button" do
-    render
+    render :template => "openings/index_anonymous"
 
     expect(rendered).to include "Search"
     assert_select "tr>td", :text => "Title".to_s, :count => 2

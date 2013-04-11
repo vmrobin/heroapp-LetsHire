@@ -65,16 +65,18 @@ class InterviewsController < AuthorizedController
     @interviewers = []
     interviewers_hash = {}
     @openings.each do |opening|
-      interviewers = []
-      OpeningParticipant.find_all_by_opening_id(opening.opening_id).each do |participant|
-        @interviewers << { :opening => opening, :interviewer => participant.participant }
-        interviewers << {
-            id: participant.participant.id,
-            name: participant.participant.name,
-            email: participant.participant.email
-        }
+      if can? :manage, opening
+        interviewers = []
+        OpeningParticipant.find_all_by_opening_id(opening.opening_id).each do |participant|
+          @interviewers << { :opening => opening, :interviewer => participant.participant }
+          interviewers << {
+              id: participant.participant.id,
+              name: participant.participant.name,
+              email: participant.participant.email
+          }
+        end
+        interviewers_hash[opening.id] = interviewers
       end
-      interviewers_hash[opening.id] = interviewers
     end
     @interviewers_json = interviewers_hash.to_json
   end

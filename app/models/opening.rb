@@ -3,7 +3,7 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :total_no, :filled_no
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
 
   belongs_to :department, :counter_cache => true
@@ -19,7 +19,8 @@ class Opening < ActiveRecord::Base
 
   validates :title, :presence => true
 
-  validate :select_valid_owners_if_active
+  validate :select_valid_owners_if_active,
+           :total_no_should_ge_than_filled_no
 
   self.per_page = 20
 
@@ -57,6 +58,10 @@ class Opening < ActiveRecord::Base
     status == STATUS_LIST[:closed]
   end
 
+  def available_no
+    total_no - filled_no
+  end
+
   private
   def select_valid_owners_if_active
     if status != STATUS_LIST[:closed]
@@ -78,6 +83,11 @@ class Opening < ActiveRecord::Base
         errors.add(:recruiter_id, "isn't a recruiter") unless valid
       end
     end
+  end
+
+
+  def total_no_should_ge_than_filled_no
+    errors.add(:filled_no, "is larger than total no.") if filled_no > total_no
   end
 
 

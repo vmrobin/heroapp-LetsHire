@@ -7,10 +7,6 @@
           li= msg
 
   .control-group
-    = f.label :title, :class => 'control-label'
-    .controls
-      = f.text_field :title
-  .control-group
     = label_tag :opening_candidate_id, 'Position', :class => 'control-label'
     .controls
       #position= select_tag :opening_candidate_id, @openings.map { |opening| "<option value='#{opening.id}' #{'selected' if @opening && opening.id == @opening.id}>#{opening.opening.title}</option>" }.join.html_safe
@@ -18,6 +14,10 @@
     = f.label :modality, :class => 'control-label'
     .controls
       = f.select :modality, Interview::MODALITIES
+  .control-group
+    = f.label :title, :class => 'control-label'
+    .controls
+      = f.text_field :title
   .control-group
     = f.label :description, :class => 'control-label'
     .controls
@@ -27,9 +27,9 @@
     .controls
       = text_field_tag :scheduled_at, nil, :class => 'datetimepicker'
   .control-group
-    = f.label :duration, :class => 'control-label'
+    = f.label :duration, 'Duration(Minutes)', :class => 'control-label'
     .controls
-      = f.text_field :duration
+      = f.number_field :duration, :in => 30..180, :step => 10
   .control-group.toggle-phone
     = f.label :phone, :class => 'control-label'
     .controls
