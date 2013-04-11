@@ -23,15 +23,19 @@ describe OpeningsController do
   # This should return the minimal set of attributes required to create a valid
   # Opening. As you add validations to Opening, be sure to
   # update the return value of this method accordingly.
-  let(:hiring_manager1) { FactoryGirl.create(:hiring_manager) }
-  let(:recruiter1) { FactoryGirl.create(:recruiter) }
-  let(:user1) { FactoryGirl.create(:user) }
   def valid_attributes
     { :title => 'Marketing Manager',
       :department_id => 1,
-      :hiring_manager_id => hiring_manager1.id,
-      :recruiter_id => recruiter1.id,
+      :hiring_manager_id => @hiring_manager1.id,
+      :recruiter_id => @recruiter1.id,
       :status => 1}
+  end
+
+  def create_user(role)
+    attrs = FactoryGirl.attributes_for(role)
+    attrs.delete(:admin)
+    attrs.delete(:roles_mask)
+    User.create! attrs
   end
 
   # This should return the minimal set of values that should be in the session
@@ -41,6 +45,10 @@ describe OpeningsController do
   end
 
   before :each  do
+    @hiring_manager1 = create_user(:hiring_manager)
+    @recruiter1 = create_user(:recruiter)
+    @user1 = create_user(:user)
+
     request.env["devise.mapping"] = Devise.mappings[:user]
     Opening.any_instance.stub(:select_valid_owners_if_active).and_return(true)
   end
@@ -49,7 +57,7 @@ describe OpeningsController do
     describe "GET index" do
       it "only returns published openings for anonymous user" do
         opening1 = Opening.create! valid_attributes
-        opening2 = Opening.create! valid_attributes.merge(:status => 0)
+        Opening.create! valid_attributes.merge(:status => 0)
         get :index, {}
         assigns(:openings).should eq([opening1])
       end
@@ -93,12 +101,12 @@ describe OpeningsController do
         get :index, { :all => true}
         assigns(:openings).should eq(all_openings)
 
-        sign_in user1
+        sign_in @user1
         get :index, { :all => true}
         assigns(:openings).should eq(all_openings)
 
         Opening.stub(:owned).and_return(Opening)
-        sign_in hiring_manager1
+        sign_in @hiring_manager1
         get :index, {}
         assigns(:openings).should eq(all_openings)
         get :index, { :all => true}

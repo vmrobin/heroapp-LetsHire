@@ -33,23 +33,22 @@
           td
             = f.file_field :resume
   .control-group
-    = f.label :opening, "Assign to this JD", :class => "control-label"
+    = f.label :opening, "Department", :class => "control-label"
     .controls
       - if (not @departments.nil?) and @departments.size > 0
-        table
-          tr
-            td
-              select id="department_ids" name="candidate[department_ids]"
-                - @departments.each do |department|
-                  -if (not @assigned_departments.nil?) && @assigned_departments.size > 0 && @assigned_departments[0].id == department.id
-                    option selected=true value="#{department.id}" ="#{department.name}"
-                  -else
-                    option value="#{department.id}" ="#{department.name}"
-            td
-            td
-              = render partial: 'opening_select'
+        select id="department_ids" name="candidate[department_ids]"
+          option value="0" ="Assign to department..."
+          - @departments.each do |department|
+            -if @selected_department_id == department.id
+              option selected=true value="#{department.id}" ="#{department.name}"
+            -else
+              option value="#{department.id}" ="#{department.name}"
       - else
         label No openings
+  .control-group
+    = f.label :opening, "Assign to this JD", :class => "control-label"
+    .controls
+      = render partial: 'openings/opening_select', :locals => { :selected_department_id => @selected_department_id, :opening_id => @candidate.opening(0).try(:id) }
   .control-group
     .controls
       .actions

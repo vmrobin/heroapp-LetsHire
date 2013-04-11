@@ -18,16 +18,14 @@ class CandidatesController < AuthenticatedController
   def new
     @candidate = Candidate.new
     @departments = Department.with_at_least_n_openings
-    @selected_department_id = @departments[0].id if @departments.size > 0
   end
 
   def edit
     @candidate = Candidate.find params[:id]
     @departments = Department.with_at_least_n_openings
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-    @assigned_departments = get_assigned_departments(@candidate)
-    @selected_department_id = @assigned_departments[0].id if @assigned_departments.size > 0
-    @selected_department_id ||= @departments[0].id if @departments.size > 0
+    assigned_departments = get_assigned_departments(@candidate)
+    @selected_department_id = assigned_departments[0].try(:id)
   end
 
   def create
@@ -62,7 +60,6 @@ class CandidatesController < AuthenticatedController
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
       @departments = Department.with_at_least_n_openings
-      @selected_department_id = @departments[0].id if @departments.size > 0
       render :action => 'new'
     end
   end
@@ -80,8 +77,7 @@ class CandidatesController < AuthenticatedController
 
     @candidate = Candidate.find params[:id]
     @opening_candidates = @candidate.opening_candidates
-    old_opening_id = nil
-    old_opening_id = @opening_candidates[0].opening_id if @opening_candidates.size > 0
+    old_opening_id = @candidate.opening(0).try(:id)
 
     error = true
     ActiveRecord::Base.transaction do
@@ -118,9 +114,8 @@ class CandidatesController < AuthenticatedController
     else
       @departments = Department.with_at_least_n_openings
       @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-      @assigned_departments = get_assigned_departments(@candidate)
-      @selected_department_id = @assigned_departments[0].id if @assigned_departments.size > 0
-      @selected_department_id ||= @departments[0].id if @departments.size > 0
+      assigned_departments = get_assigned_departments(@candidate)
+      @selected_department_id = assigned_departments[0].try(:id)
       render :action => 'edit'
     end
   end
@@ -135,11 +130,6 @@ class CandidatesController < AuthenticatedController
     redirect_to users_url, notice: 'Invalid user'
   rescue
     redirect_to candidates_url, :error => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) cannot be deleted."
-  end
-
-  def opening_options
-    @selected_department_id = params[:selected_department_id]
-    render :partial => 'opening_select'
   end
 
   def resume

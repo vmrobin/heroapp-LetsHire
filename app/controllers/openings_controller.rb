@@ -109,6 +109,11 @@ class OpeningsController < ApplicationController
     render :partial => 'utilities/subregion_select', :locals => { :container => 'opening' }
   end
 
+
+  def opening_options
+    render :partial => 'opening_select'
+  end
+
   private
   def description_template
         #Fixme: need load from 'setting' page

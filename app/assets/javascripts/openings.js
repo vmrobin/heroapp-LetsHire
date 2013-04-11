@@ -4,10 +4,10 @@
 // below : http://jashkenas.github.com/coffee-script/
 /*
 $ ->
-  $('select#opening_country').change (event) ->
-    select_wrapper = $('#opening_state_wrapper')
+  $("select#opening_country").change (event) ->
+    select_wrapper = $("#opening_state_wrapper")
 
-    $('select', select_wrapper).attr('disabled', true)
+    $("select", select_wrapper).attr("disabled", true)
 
     country_code = $(this).val()
 
@@ -15,12 +15,12 @@ $ ->
     select_wrapper.load(url)
 */
 $(function() {
-    $('select#opening_country').change(function(event) {
+    $("select#opening_country").change(function(event) {
         var country_code, select_wrapper, url;
-        select_wrapper = $('#opening_state_wrapper');
-        $('select', select_wrapper).attr('disabled', true);
+        select_wrapper = $("#opening_state_wrapper");
+        $("select", select_wrapper).attr("disabled", true);
         country_code = $(this).val();
         url = "/addresses/subregion_options?country_code=" + country_code;
         return select_wrapper.load(url);
     });
-})
+});

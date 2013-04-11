@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe InterviewsController do
-
   let :valid_candidate do
     {
       :name => Faker::Name.name,
@@ -45,129 +44,148 @@ describe InterviewsController do
 
   before :each  do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    sign_in_as_admin
   end
 
-  describe "GET index" do
-    it "assigns all interviews as @interviews" do
-      interview = Interview.create! valid_interview
-      get :index, {} 
-      assigns(:interviews).should eq([interview])
-    end
-  end
-
-  describe "GET show" do
-    it "assigns the requested interview as @interview" do
-      interview = Interview.create! valid_interview
-      get :show, { :id => interview.to_param } 
-      assigns(:interview).should eq(interview)
-    end
-  end
-
-  describe "GET new" do
-    it "assigns a new interview as @interview" do
-      get :new, { :candidate_id => @opening.candidate_id }
-      assigns(:interview).should be_a_new(Interview)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested interview as @interview" do
-      interview = Interview.create! valid_interview
-      get :edit, { :id => interview.to_param } 
-      assigns(:interview).should eq(interview)
-    end
-  end
-
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Interview" do
-        expect do
-          post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
-        end.to change(Interview, :count).by(1)
-      end
-
-      it "assigns a newly created interview as @interview" do
-        post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
-        assigns(:interview).should be_a(Interview)
-        assigns(:interview).should be_persisted
-      end
+  describe "Admin user" do
+    before :each  do
+      sign_in_as_admin
     end
 
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved interview as @interview" do
-        Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {}, :opening_candidate_id => @opening.id }
-        assigns(:interview).should be_a_new(Interview)
-      end
-
-      it "re-renders the 'edit' template" do
-        Interview.any_instance.stub(:save).and_return(false)
-        post :create, { :interview => {}, :opening_candidate_id => @opening.id }
-        response.should render_template("edit")
-      end
-    end
-
-    describe "with interviewers" do
-      it "create a new Interview with interviewers" do
-        post :create, { :interview => valid_interview(@users), :opening_candidate_id => @opening.id }
-        assigns(:interview).should be_a(Interview)
-        assigns(:interview).should have(@users.size).interviewers
-      end
-    end
-  end
-
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested interview" do
+    describe "GET index" do
+      it "assigns all interviews as @interviews" do
         interview = Interview.create! valid_interview
-        Interview.any_instance.should_receive(:update_attributes).with({ 'these' => 'params' })
-        put :update, { :id => interview.to_param, :interview => { 'these' => 'params' } } 
+        get :index, {}
+        assigns(:interviews).should eq([interview])
       end
+    end
 
+    describe "GET show" do
       it "assigns the requested interview as @interview" do
         interview = Interview.create! valid_interview
-        put :update, { :id => interview.to_param, :interview => valid_interview } 
+        get :show, { :id => interview.to_param }
         assigns(:interview).should eq(interview)
       end
     end
 
-    describe "with invalid params" do
-      it "assigns the interview as @interview" do
-        interview = Interview.create! valid_interview
-        Interview.any_instance.stub(:save).and_return(false)
-        put :update, { :id => interview.to_param, :interview => {} } 
-        assigns(:interview).should eq(interview)
-      end
-
-      it "re-renders the 'edit' template" do
-        interview = Interview.create! valid_interview
-        Interview.any_instance.stub(:save).and_return(false)
-        put :update, { :id => interview.to_param, :interview => {} } 
-        response.should render_template("edit")
+    describe "GET new" do
+      it "assigns a new interview as @interview" do
+        get :new, { :candidate_id => @opening.candidate_id }
+        assigns(:interview).should be_a_new(Interview)
       end
     end
 
-    describe "with interviewers" do
-      it "adds interviewers" do
+    describe "GET edit" do
+      it "assigns the requested interview as @interview" do
         interview = Interview.create! valid_interview
-        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids } }
-        assigns(:interview).should have(@users.size).interviewers
+        get :edit, { :id => interview.to_param }
+        assigns(:interview).should eq(interview)
+      end
+    end
+
+    describe "POST create" do
+      describe "with valid params" do
+        it "creates a new Interview" do
+          expect do
+            post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
+          end.to change(Interview, :count).by(1)
+        end
+
+        it "assigns a newly created interview as @interview" do
+          post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
+          assigns(:interview).should be_a(Interview)
+          assigns(:interview).should be_persisted
+        end
       end
 
-      it "removes interviewers" do
+      describe "with invalid params" do
+        it "assigns a newly created but unsaved interview as @interview" do
+          Interview.any_instance.stub(:save).and_return(false)
+          post :create, { :interview => {}, :opening_candidate_id => @opening.id }
+          assigns(:interview).should be_a_new(Interview)
+        end
+
+        it "re-renders the 'edit' template" do
+          Interview.any_instance.stub(:save).and_return(false)
+          post :create, { :interview => {}, :opening_candidate_id => @opening.id }
+          response.should render_template("edit")
+        end
+      end
+
+      describe "with interviewers" do
+        it "create a new Interview with interviewers" do
+          post :create, { :interview => valid_interview(@users), :opening_candidate_id => @opening.id }
+          assigns(:interview).should be_a(Interview)
+          assigns(:interview).should have(@users.size).interviewers
+        end
+      end
+    end
+
+    describe "PUT update" do
+      describe "with valid params" do
+        it "updates the requested interview" do
+          interview = Interview.create! valid_interview
+          Interview.any_instance.should_receive(:update_attributes).with({ 'these' => 'params' })
+          put :update, { :id => interview.to_param, :interview => { 'these' => 'params' } }
+        end
+
+        it "assigns the requested interview as @interview" do
+          interview = Interview.create! valid_interview
+          put :update, { :id => interview.to_param, :interview => valid_interview }
+          assigns(:interview).should eq(interview)
+        end
+      end
+
+      describe "with invalid params" do
+        it "assigns the interview as @interview" do
+          interview = Interview.create! valid_interview
+          Interview.any_instance.stub(:save).and_return(false)
+          put :update, { :id => interview.to_param, :interview => {} }
+          assigns(:interview).should eq(interview)
+        end
+
+        it "re-renders the 'edit' template" do
+          interview = Interview.create! valid_interview
+          Interview.any_instance.stub(:save).and_return(false)
+          put :update, { :id => interview.to_param, :interview => {} }
+          response.should render_template("edit")
+        end
+      end
+
+      describe "with interviewers" do
+        it "adds interviewers" do
+          interview = Interview.create! valid_interview
+          put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids } }
+          assigns(:interview).should have(@users.size).interviewers
+        end
+
+        it "removes interviewers" do
+          interview = Interview.create! valid_interview(@users)
+          put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[1..-1] } }
+          assigns(:interview).should have(@users.size - 1).interviewers
+          assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[0])
+        end
+
+        it "adds and removes interviewers" do
+          interview = Interview.create! valid_interview(@users[1..-1])
+          put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[0..-2] } }
+          assigns(:interview).should have(@users.size - 1).interviewers
+          assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should include(@user_ids[0])
+          assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[-1])
+        end
+      end
+    end
+  end
+
+  describe "Interviewer" do
+    before :each  do
+      sign_in @users[0]
+    end
+
+    describe "GET index" do
+      it "assigns all interviews as @interviews" do
         interview = Interview.create! valid_interview(@users)
-        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[1..-1] } }
-        assigns(:interview).should have(@users.size - 1).interviewers
-        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[0])
-      end
-
-      it "adds and removes interviewers" do
-        interview = Interview.create! valid_interview(@users[1..-1])
-        put :update, { :id => interview.to_param, :interview => { :interviewer_ids => @user_ids[0..-2] } }
-        assigns(:interview).should have(@users.size - 1).interviewers
-        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should include(@user_ids[0])
-        assigns(:interview).interviewers.map { |interviewer| interviewer.user_id }.should_not include(@user_ids[-1])
+        get :index, {}
+        assigns(:interviews).should eq([interview])
       end
     end
   end

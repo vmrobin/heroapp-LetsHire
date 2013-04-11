@@ -1,6 +1,5 @@
 h3 Openings
 
-
 - if user_signed_in?
   .pull-right.align-to-title
     - all ||= params[:all]
@@ -13,34 +12,39 @@ h3 Openings
       = link_to 'Add a Job Opening', new_opening_path, :class => 'btn btn-primary'
 
 = search_form_for @search, :html => { :class => 'form-horizontal' }  do |f|
-    = f.text_field :title_cont, :placeholder => "Please input to filter Title"
-    = ' '
-    = f.submit
+  = f.text_field :title_cont
+  = ' '
+  = f.submit
 
 table class='table table-hover'
- thead
-  tr
-    th = sort_link @search, :title, "Title"
-    th = sort_link @search, :department
-    th = sort_link @search, :hiring_manager_id, "Hiring Manager"
-    th = sort_link @search, :status
-    th # of Candidates
-    th
- tbody
+  thead
+    tr
+      th = sort_link @search, :title, "Title"
+      th = sort_link @search, :department
+      -if user_signed_in?
+        th = sort_link @search, :hiring_manager_id, "Hiring Manager"
+        th = sort_link @search, :status
+        th # of Candidates
+      -else
+        th = sort_link @search, :recruiter_id, "Recruiter"
+      th
+  tbody
   - @openings.each do |opening|
     tr
       td= link_to opening.title, opening
       td= opening.department.try(:name)
-      td= opening.hiring_manager.try(:name)
-      td= opening.status_str
-      td= opening.candidates.count
-      - if can? :update, opening
-        td.actions
-          = link_to 'Details', opening, :class => "btn"
+      -if user_signed_in?
+        td= opening.hiring_manager.try(:name)
+        td= opening.status_str
+        td= opening.candidates.count
+      -else
+        td= opening.recruiter.try(:name)
+
+      td.actions
+        = link_to 'Details', opening, :class => "btn"
+        - if can? :update, opening
           a.btn href=edit_opening_path(opening) Edit
           = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
-      - else
-        td
 
 = will_paginate @openings
 
