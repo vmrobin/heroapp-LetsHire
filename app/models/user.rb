@@ -3,13 +3,13 @@ class User < ActiveRecord::Base
   # :registerable, :recoverable, :rememberable, :trackable, :validatable
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable
+  devise :database_authenticatable, :rememberable
 
   validates_confirmation_of :password
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles
+  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me
 
   ROLES = %w[interviewer recruiter hiringmanager]
 
