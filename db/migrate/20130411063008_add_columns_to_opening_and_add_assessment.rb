@@ -1,4 +1,4 @@
-class AddCountsToOpening < ActiveRecord::Migration
+class AddColumnsToOpeningAndAddAssessment < ActiveRecord::Migration
   def change
     add_column :openings, :total_no, :integer, :default => 1
     add_column :openings, :filled_no, :integer, :default => 0
