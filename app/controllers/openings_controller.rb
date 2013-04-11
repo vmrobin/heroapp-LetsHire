@@ -8,6 +8,7 @@ class OpeningsController < ApplicationController
   def index
     unless user_signed_in?
       #published openings are returned only
+      #TODO: need exclude certain fields from anonymous access, such as 'Hiring Manager'
       @search = Opening.published.paginate(:page => params[:page]).search(params[:q])
     else
       if params.has_key?(:all)
@@ -19,7 +20,13 @@ class OpeningsController < ApplicationController
 
     @openings = @search.result
     respond_to do |format|
-      format.html # index.html.slim
+      format.html  do
+        if user_signed_in?
+          render "openings/index"
+        else
+          render "openings/index_anonymous"
+        end
+      end
       format.json { render json: @openings }
     end
   end

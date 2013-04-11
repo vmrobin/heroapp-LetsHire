@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403074727) do
+ActiveRecord::Schema.define(:version => 20130411063008) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -47,25 +47,34 @@ ActiveRecord::Schema.define(:version => 20130403074727) do
 
   create_table "interviews", :force => true do |t|
     t.integer  "opening_candidate_id"
-    t.string   "modality",             :null => false
-    t.string   "title",                :null => false
+    t.string   "modality",                             :null => false
+    t.string   "title",                                :null => false
     t.text     "description"
     t.string   "status"
     t.float    "score"
     t.text     "assessment"
-    t.datetime "scheduled_at",         :null => false
-    t.integer  "duration"
+    t.datetime "scheduled_at",                         :null => false
+    t.integer  "duration",             :default => 30
     t.string   "phone"
     t.string   "location"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   add_index "interviews", ["opening_candidate_id"], :name => "index_interviews_on_opening_candidate_id"
 
+  create_table "opening_candidate_assessments", :force => true do |t|
+    t.integer  "opening_candidate_id"
+    t.integer  "creator"
+    t.text     "comment"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
   create_table "opening_candidates", :force => true do |t|
     t.integer "opening_id"
     t.integer "candidate_id"
+    t.integer "status"
   end
 
   add_index "opening_candidates", ["candidate_id"], :name => "index_opening_candidates_on_candidate_id"
@@ -92,6 +101,8 @@ ActiveRecord::Schema.define(:version => 20130403074727) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "creator_id"
+    t.integer  "total_no",          :default => 1
+    t.integer  "filled_no",         :default => 0
   end
 
   add_index "openings", ["creator_id"], :name => "index_openings_on_creator_id"

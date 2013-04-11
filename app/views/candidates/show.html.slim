@@ -25,37 +25,51 @@ p
   b Resume:
   - if not @resume.nil?
     = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
-p
-  b Assigned Positions:
-  - @candidate.openings.each do |opening|
-    ul
-      li = link_to "#{opening.title}", opening_path({:id => opening.id})
 
 br
+h4 Assigned Positions
 
-h4 Arranged Interviews
+- @candidate.opening_candidates.each do |opening_candidate|
+  - opening = opening_candidate.opening
+  h5 = link_to "#{opening.title}", opening_path({:id => opening.id})
+  p
+    b Status:
+    = opening_candidate.status
 
-table
-  tr
-    th Title
-    th Position
-    th Modality
-    th Scheduled At
-    th Duration
-    th Phone
-    th Location
-    th Status
-
-  - @interviews.each do |interview|
+  h5 Assessments
+  table
     tr
-      td= link_to interview.title, interview
-      td= interview.opening_candidate.opening.title
-      td= interview.modality
-      td= interview.scheduled_at
-      td= interview.duration
-      td= interview.phone
-      td= interview.location
-      td= interview.status
+      th Commmentor
+      th Assessment
+      th Date
+    -opening_candidate.opening_candidate_assessments.each do |assessment|
+      tr
+        td= assessment.creator.try(:name)
+        td= simple_format assessment.comment
+        td= assessment.updated_at
 
-- if can? :manage, Interview
-  = link_to 'New Interview', new_candidate_interview_path(@candidate)
+  h5 Interviews
+  .pull-right
+    -if can? :manage, Interview
+      = link_to 'New Interview', new_candidate_interview_path(@candidate)
+  br
+  table
+    tr
+      th Title
+      th Modality
+      th Scheduled At
+      th Duration
+      th Phone
+      th Location
+      th Status
+
+    - opening_candidate.interviews.each do |interview|
+      tr
+        td= link_to interview.title, interview
+        td= interview.modality
+        td= interview.scheduled_at
+        td= interview.duration
+        td= interview.phone
+        td= interview.location
+        td= interview.status
+
