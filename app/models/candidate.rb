@@ -1,5 +1,5 @@
 class Candidate < ActiveRecord::Base
-  attr_accessible :name, :email, :phone, :source, :description, :resume
+  attr_accessible :name, :email, :phone, :source, :description, :resume, :opening_ids
 
   # valid phone number examples
   # 754-647-0105 x6950

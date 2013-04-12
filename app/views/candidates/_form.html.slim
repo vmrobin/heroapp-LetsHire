@@ -1,55 +1,31 @@
-= form_for @candidate, :html => { :class => 'form-horizontal' }  do |f|
-  = f.error_messages
-
-  .control-group
-    = f.label :name, :class => 'control-label'
-    .controls
-      = f.text_field :name
-  .control-group
-    = f.label :email, :class => 'control-label'
-    .controls
-      = f.text_field :email
-  .control-group
-    = f.label :phone, :class => 'control-label'
-    .controls
-      = f.text_field :phone
-  .control-group
-    = f.label :source, :class => 'control-label'
-    .controls
-      = f.text_field :source
-  .control-group
-    = f.label :description, :class => 'control-label'
-    .controls
-      = f.text_area :description, :class => 'span8'
-  .control-group
-    = f.label :resume, "Upload Resume", :class => 'control-label'
-    .controls
-      table
-        tr
-          td
-            - if not @resume.nil?
-              = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
-          td
-          td
-            = f.file_field :resume
-  .control-group
-    = f.label :opening, "Department", :class => "control-label"
-    .controls
-      - if (not @departments.nil?) and @departments.size > 0
-        select id="department_ids" name="candidate[department_ids]"
-          option value="0" ="Assign to department..."
-          - @departments.each do |department|
-            -if @selected_department_id == department.id
-              option selected=true value="#{department.id}" ="#{department.name}"
-            -else
-              option value="#{department.id}" ="#{department.name}"
-      - else
-        label No openings
-  .control-group
-    = f.label :opening, "Assign to this JD", :class => "control-label"
-    .controls
-      = render partial: 'openings/opening_select', :locals => { :selected_department_id => @selected_department_id, :opening_id => @candidate.opening(0).try(:id) }
-  .control-group
-    .controls
-      .actions
-        = f.submit 'Save', :class => 'btn'
+.control-group
+  = f.label :name, :class => 'control-label'
+  .controls
+    = f.text_field :name
+.control-group
+  = f.label :email, :class => 'control-label'
+  .controls
+    = f.text_field :email
+.control-group
+  = f.label :phone, :class => 'control-label'
+  .controls
+    = f.text_field :phone
+.control-group
+  = f.label :source, :class => 'control-label'
+  .controls
+    = f.text_field :source
+.control-group
+  = f.label :description, :class => 'control-label'
+  .controls
+    = f.text_area :description, :class => 'span8'
+.control-group
+  = f.label :resume, "Upload Resume", :class => 'control-label'
+  .controls
+    table
+      tr
+        td
+          - if not @resume.nil?
+            = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+        td
+        td
+          = f.file_field :resume

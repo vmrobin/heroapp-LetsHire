@@ -3,4 +3,11 @@ h3 Editing Candidate
 .pull-right
   = link_to 'Back', :back
 br
-== render 'form'
+= form_for @candidate, :html => { :class => 'form-horizontal' }  do |f|
+  = f.error_messages
+  = render 'form', :f => f
+
+  .control-group
+      .controls
+        .actions
+          = f.submit 'Save', :class => 'btn'

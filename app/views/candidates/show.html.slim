@@ -29,47 +29,12 @@ p
 br
 h4 Assigned Positions
 
+.pull-right
+  -if can? :manage, @candidate
+    = link_to 'Assign Opening', :controller => "candidates", :action => "assign_opening", :id=> @candidate
+
+br
+
 - @candidate.opening_candidates.each do |opening_candidate|
-  - opening = opening_candidate.opening
-  h5 = link_to "#{opening.title}", opening_path({:id => opening.id})
-  p
-    b Status:
-    = opening_candidate.status
-
-  h5 Assessments
-  table
-    tr
-      th Commmentor
-      th Assessment
-      th Date
-    -opening_candidate.opening_candidate_assessments.each do |assessment|
-      tr
-        td= assessment.creator.try(:name)
-        td= simple_format assessment.comment
-        td= assessment.updated_at
-
-  h5 Interviews
-  .pull-right
-    -if can? :manage, Interview
-      = link_to 'New Interview', new_candidate_interview_path(@candidate)
-  br
-  table
-    tr
-      th Title
-      th Modality
-      th Scheduled At
-      th Duration
-      th Phone
-      th Location
-      th Status
-
-    - opening_candidate.interviews.each do |interview|
-      tr
-        td= link_to interview.title, interview
-        td= interview.modality
-        td= interview.scheduled_at
-        td= interview.duration
-        td= interview.phone
-        td= interview.location
-        td= interview.status
+  =render 'show_assign_opening', { :candidate => @candidate, :opening_candidate => opening_candidate }
 

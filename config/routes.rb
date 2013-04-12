@@ -24,14 +24,22 @@ LetsHire::Application.routes.draw do
   #   resources :products
   match '/addresses/subregion_options' => 'openings#subregion_options'
   match '/positions/opening_options' => 'openings#opening_options'
+  match '/participants' => 'users#index_for_tokens'
 
   get "candidates/resume"
+
+  get "candidates/assign_opening"
 
   resources :users
   resources :openings
   resources :candidates do
     resources :interviews
   end
+
+  resources :opening_candidates do
+    resources :assessments
+  end
+
   resources :interviews
 
   # Sample resource route with options:

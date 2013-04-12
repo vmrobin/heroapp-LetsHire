@@ -21,7 +21,7 @@
   .control-group
     = f.label :description, :class => 'control-label'
     .controls
-      = f.text_area :description
+      = f.text_area :description, :class => 'span9'
   .control-group
     = label_tag :scheduled_at, 'Scheduled At', :class => 'control-label'
     .controls
@@ -41,8 +41,15 @@
   .control-group
     = label 'interviewers-text', 'Interviewers', :class => 'control-label'
     .controls
-      = text_field_tag 'interviewers-text', nil, :readonly => 'readonly', :id => 'interviewers-text'
-      #interviewer-select.hide
+      #interviewer-select
+  .control-group
+    = f.label :status, :Status, :class => 'control-label'
+    .controls
+      = f.select :status, Interview::STATUS
+  .control-group
+    = label_tag :assessment, 'Feedback', :class => 'control-label'
+    .controls
+      = f.text_area :assessment, :class => 'span9', :readonly => !(is_interviewer? @interview.interviewers)
   .control-group
     .controls
       .actions

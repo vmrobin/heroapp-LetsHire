@@ -23,4 +23,8 @@ $(function() {
         url = "/addresses/subregion_options?country_code=" + country_code;
         return select_wrapper.load(url);
     });
+    $("#opening_participant_tokens").tokenInput("/participants.json", {
+        crossDomain: false,
+        prePopulate: $("#opening_participant_tokens").data("pre")
+    });
 });

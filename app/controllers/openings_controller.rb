@@ -14,7 +14,11 @@ class OpeningsController < ApplicationController
       if params.has_key?(:all)
         @search = Opening.paginate(:page => params[:page]).search(params[:q])
       else
-        @search = Opening.owned(current_user.id).paginate(:page => params[:page]).search(params[:q])
+        if can? :manage, Opening
+          @search = Opening.owned_by(current_user.id).paginate(:page => params[:page]).search(params[:q])
+        else
+          @search = current_user.openings
+        end
       end
     end
 
@@ -113,7 +117,7 @@ class OpeningsController < ApplicationController
   end
 
   def subregion_options
-    render :partial => 'utilities/subregion_select', :locals => { :container => 'opening' }
+    render :partial => 'utilities/province_select', :locals => { :container => 'opening' }
   end
 
 

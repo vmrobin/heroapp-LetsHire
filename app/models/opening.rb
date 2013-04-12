@@ -6,6 +6,9 @@ class Opening < ActiveRecord::Base
   attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :total_no, :filled_no
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
 
+  attr_accessible :participant_tokens
+  attr_reader :participant_tokens
+
   belongs_to :department, :counter_cache => true
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
   belongs_to :recruiter, :class_name => "User", :foreign_key => :recruiter_id, :readonly => true
@@ -26,7 +29,7 @@ class Opening < ActiveRecord::Base
 
   STATUS_LIST = { :draft => 0, :published => 1, :closed => -1 }
   scope :published, where(:status => 1)
-  scope :owned,  ->(user_id) { where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id) }
+  scope :owned_by,  ->(user_id) { where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id) }
 
   def status_str
     STATUS_STRINGS[status]
@@ -48,6 +51,10 @@ class Opening < ActiveRecord::Base
         end
       }
     end
+  end
+
+  def participant_tokens=(ids)
+    self.participant_ids = ids.split(',')
   end
 
   def published?

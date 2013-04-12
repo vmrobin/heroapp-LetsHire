@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
   validates :email, :presence => true, :uniqueness => true
   validates :email, :email_format => { :message => 'email format error'}
 
+
+  has_many :openings_to_be_interviewed, :through => :opening_participants
+  has_many :opening_participants, :dependent => :destroy
+
   def admin?
     read_attribute :admin
   end

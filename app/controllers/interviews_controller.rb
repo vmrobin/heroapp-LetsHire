@@ -26,9 +26,7 @@ class InterviewsController < AuthorizedController
   def edit
     @interview = Interview.find params[:id]
     authorize! :update, @interview
-    @candidate = @interview.opening_candidate.candidate
-    @opening = @interview.opening_candidate
-    load_openings
+    prepare_edit
   end
 
   def create
@@ -38,12 +36,19 @@ class InterviewsController < AuthorizedController
       return
     end
     @opening = OpeningCandidate.find params[:opening_candidate_id]
+    if @opening.nil?
+      redirect_to candidates_path, :notice => "No opening is selected for the candidate"
+      return
+    end
     @interview = Interview.new params[:interview]
     @interview.opening_candidate = @opening
     @interview.status = Interview::STATUS_NEW
     if @interview.save
+      @opening.status = OpeningCandidate::STATUS_LIST[:interview_loop]
+      @opening.save
       redirect_to candidate_path(@opening.candidate), :notice => "Interview created"
     else
+      prepare_edit
       render :action => 'edit'
     end
   end
@@ -54,11 +59,18 @@ class InterviewsController < AuthorizedController
     if @interview.update_attributes(params[:interview])
       redirect_to interview_path(@interview), :notice => "Interview updated"
     else
+      prepare_edit
       render :action => 'edit'
     end
   end
 
   private
+
+  def prepare_edit
+    @candidate = @interview.opening_candidate.candidate
+    @opening = @interview.opening_candidate
+    load_openings
+  end
 
   def load_openings
     @openings = OpeningCandidate.find_all_by_candidate_id @candidate.id

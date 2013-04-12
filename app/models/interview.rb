@@ -29,6 +29,12 @@ class Interview < ActiveRecord::Base
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
 
+
+  def self.overall_status(interviews)
+    interview_counts = interviews.group(:status).count
+    (interview_counts.collect { | key, value | "#{value} #{key} interviews" }).join(",")
+  end
+
   def scheduled_at_iso
     if scheduled_at
       scheduled_at.iso8601

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411063008) do
+ActiveRecord::Schema.define(:version => 20130411101023) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(:version => 20130411063008) do
     t.integer "opening_id"
     t.integer "candidate_id"
     t.integer "status"
+    t.boolean "hold"
   end
 
   add_index "opening_candidates", ["candidate_id"], :name => "index_opening_candidates_on_candidate_id"
