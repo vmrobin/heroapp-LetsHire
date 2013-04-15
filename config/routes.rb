@@ -1,4 +1,6 @@
 LetsHire::Application.routes.draw do
+  get "stub_dashboard/overview"
+
   devise_for :users
 
   root to: 'static_pages#home'
