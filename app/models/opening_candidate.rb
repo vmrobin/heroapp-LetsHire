@@ -6,11 +6,12 @@ class OpeningCandidate < ActiveRecord::Base
 
   has_many :interviews, :dependent => :destroy
   
-  has_many :opening_candidate_assessments, :dependent => :destroy
+  has_many :assessments, :dependent => :destroy
 
   validates :candidate_id, :opening_id, :presence => true
 
 
+  #Don't change order randomly. order matters.
   STATUS_LIST = { :interview_loop => 1,
                   :fail => 2,
                   :quit => 3,
@@ -20,12 +21,6 @@ class OpeningCandidate < ActiveRecord::Base
                   :offer_accepted => 10}
 
   STATUS_STRINGS = STATUS_LIST.invert
-
-  NORMAL_STATUS_CONVERSION_HASH = {
-      :interview_loop => [:fail, :quit, :offer_pending],
-      :offer_pending => [:offer_sent, :interview_loop],
-      :offer_sent => [:offer_declined, :offer_accepted]
-  }
 
   def status_str
     if status.nil?
@@ -39,6 +34,15 @@ class OpeningCandidate < ActiveRecord::Base
     else
       STATUS_STRINGS[status]
     end
+  end
+
+  def next_status_options
+    STATUS_LIST
+  end
+
+
+  def in_interview_loop?
+    status == OpeningCandidate::STATUS_LIST[:interview_loop]
   end
 
 end

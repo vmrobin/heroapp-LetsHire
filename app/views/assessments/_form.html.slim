@@ -1,0 +1,12 @@
+
+
+= form_for [@opening_candidate, @assessment], :html => {:class => 'form-horizontal'} do |f|
+  = f.error_messages
+
+  = label_tag "Status"
+  = select :opening_candidate, :status, @opening_candidate.next_status_options
+
+  = label_tag "Comment"
+  = f.text_area :comment, :class => 'span8'
+  .actions
+    = f.submit 'Save'

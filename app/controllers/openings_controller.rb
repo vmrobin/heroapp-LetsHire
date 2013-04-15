@@ -41,7 +41,7 @@ class OpeningsController < ApplicationController
     @opening = Opening.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.slim
+      format.html # _assessment.html.slim
       format.json { render json: @opening }
     end
   rescue ActiveRecord::RecordNotFound

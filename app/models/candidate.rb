@@ -1,5 +1,5 @@
 class Candidate < ActiveRecord::Base
-  attr_accessible :name, :email, :phone, :source, :description, :resume, :opening_ids
+  attr_accessible :name, :email, :phone, :source, :description, :resume
 
   # valid phone number examples
   # 754-647-0105 x6950
@@ -11,6 +11,8 @@ class Candidate < ActiveRecord::Base
   validates :name, :presence => true
   validates :email, :email_format => { :message => 'format error'}
   validates :phone, :format => { :with => phone_format, :message => 'format error' }
+
+  self.per_page = 20
 
   has_many :opening_candidates, :class_name => "OpeningCandidate", :dependent => :destroy
   has_many :openings, :class_name => "Opening", :through => :opening_candidates

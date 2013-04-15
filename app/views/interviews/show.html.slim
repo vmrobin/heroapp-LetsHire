@@ -1,4 +1,6 @@
-h3 Interview Information for #{@candidate.name}
+h3
+  = "Interview Information for "
+  span =link_to @candidate.name , @candidate
 br
 .pull-right
  - if can? :update, Interview

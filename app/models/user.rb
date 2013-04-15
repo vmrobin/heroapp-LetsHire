@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 
 
   has_many :openings_to_be_interviewed, :through => :opening_participants
-  has_many :opening_participants, :dependent => :destroy
+  has_many :opening_participants, :inverse_of => :participant, :dependent => :destroy
 
   def admin?
     read_attribute :admin

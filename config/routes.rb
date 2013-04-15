@@ -1,5 +1,7 @@
 LetsHire::Application.routes.draw do
   get "stub_dashboard/overview"
+  resources :AssessmentsController
+
 
   devise_for :users
 
@@ -28,18 +30,19 @@ LetsHire::Application.routes.draw do
   match '/positions/opening_options' => 'openings#opening_options'
   match '/participants' => 'users#index_for_tokens'
 
-  get "candidates/resume"
-
-  get "candidates/assign_opening"
 
   resources :users
   resources :openings
   resources :candidates do
     resources :interviews
+    member do
+      get 'resume'
+      get 'assign_opening'
+    end
   end
 
   resources :opening_candidates do
-    resources :assessments
+    resource :assessments
   end
 
   resources :interviews

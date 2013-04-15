@@ -2,27 +2,42 @@ require 'spec_helper'
 
 describe Interview do
   it 'has a valid interview' do
-    FactoryGirl.build(:interview).should be_valid
+    @user = FactoryGirl.create(:user)
+    @user.should be_valid
+    FactoryGirl.build(:interview, :interviewer_ids => [@user.id]).should be_valid
   end
 
-  it 'requires modality to be present' do
-    FactoryGirl.build(:interview, :modality => nil).should_not be_valid
+  it 'requires modality to be valid' do
+    result = FactoryGirl.build(:interview, :modality => nil)
+    result.should_not be_valid
+    result.errors.messages.has_key?(:modality).should be_true
+    result = FactoryGirl.build(:interview, :modality => 'Invalid Value')
+    result.should_not be_valid
+    result.errors.messages.has_key?(:modality).should be_true
+  end
+
+  it 'requires interviewers to be present' do
+    result = FactoryGirl.build(:interview)
+    result.should_not be_valid
+    result.errors.messages.has_key?(:interviewer_ids).should be_true
   end
 
   it 'requires title to be present' do
-    FactoryGirl.build(:interview, :title => nil).should_not be_valid
+    result = FactoryGirl.build(:interview, :title => nil)
+    result.should_not be_valid
+    result.errors.messages.has_key?(:title).should be_true
   end
 
   it 'requires scheduled_at to be present' do
-    FactoryGirl.build(:interview, :scheduled_at => nil).should_not be_valid
-  end
-
-  it 'requires modality to be valid values' do
-    FactoryGirl.build(:interview, :modality => 'Invalid Value').should_not be_valid
+    result = FactoryGirl.build(:interview, :scheduled_at => nil)
+    result.should_not be_valid
+    result.errors.messages.has_key?(:scheduled_at).should be_true
   end
 
   it 'requires status to be valid values' do
-    FactoryGirl.build(:interview, :status => 'Invalid Status').should_not be_valid
+    result = FactoryGirl.build(:interview, :status => 'Invalid Status')
+    result.should_not be_valid
+    result.errors.messages.has_key?(:status).should be_true
   end
 
   describe 'interviewers' do
@@ -50,7 +65,8 @@ describe Interview do
           :status       => Interview::STATUS_NEW,
           :phone        => Faker::PhoneNumber.phone_number,
           :scheduled_at => DateTime.now.to_s,
-          :duration     => 1
+          :duration     => 1,
+          :interviewer_ids => [@users[0].id]
       }
     end
 

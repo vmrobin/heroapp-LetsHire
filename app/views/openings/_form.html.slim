@@ -46,7 +46,7 @@
     .controls
       = f.text_area :description, :class => 'span8'
 
-  -if @opening.id
+  -if @opening.id && @opening.status != Opening::STATUS_LIST[:draft]
     .control-group
       =f.label :status, :class => 'control-label'
       .controls
@@ -60,7 +60,7 @@
           = link_to 'List(ToDo...)', :controller => "users", :action => 'index_for_tokens', "format" => "json"
   -else
     =f.label :status, :class => 'checkbox' do
-      span Activate it right now
+      span Publish it right now
       = f.check_box :status
 
 

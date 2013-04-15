@@ -1,4 +1,5 @@
 - opening = opening_candidate.opening
+- candidate = opening_candidate.candidate
 h5 = link_to "#{opening.title}", opening_path({:id => opening.id})
 p
   b Status:
@@ -7,18 +8,10 @@ p
 h5 Assessments
 .pull-right
   -if can? :manage, candidate
-    = link_to 'Add Assessment', new_opening_candidate_assessment_path(opening_candidate)
+    = link_to 'Add Assessment', new_opening_candidate_assessments_path(opening_candidate)
 br
-table
-  tr
-    th Commentor
-    th Assessment
-    th Date
-  -opening_candidate.opening_candidate_assessments.each do |assessment|
-    tr
-      td= assessment.creator.try(:name)
-      td= simple_format assessment.comment
-      td= assessment.updated_at
+div[id="opening_candidate_#{opening_candidate.id}_assessments"]
+  =render opening_candidate.assessments
 
 h5 Interviews
 .pull-right

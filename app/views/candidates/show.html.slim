@@ -1,14 +1,10 @@
-h3 Candidate Information
-
+h3= "Information for #{@candidate.name}"
 .pull-right
   -if can? :manage, @candidate
     = link_to 'Edit', edit_candidate_path(@candidate)
     = '|'
   = link_to 'Back', candidates_path
 br
-p
-  b Name:
-  = @candidate.name
 p
   b Email:
   a href="mailto:#{@candidate.email}" = @candidate.email
@@ -35,6 +31,6 @@ h4 Assigned Positions
 
 br
 
-- @candidate.opening_candidates.each do |opening_candidate|
-  =render 'show_assign_opening', { :candidate => @candidate, :opening_candidate => opening_candidate }
+- @candidate.opening_candidates.reverse.each do |opening_candidate|
+  =render 'show_assign_opening', { :opening_candidate => opening_candidate }
 

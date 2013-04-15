@@ -26,19 +26,20 @@ describe InterviewsController do
       :phone        => Faker::PhoneNumber.phone_number,
       :scheduled_at => DateTime.now.to_s,
       :duration     => 1,
-      :location     => Faker::Address.building_number
+      :location     => Faker::Address.building_number,
+      :interviewer_ids => [@user_ids[0]]
     }
     hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
     hash
   end
 
   before :all do
-    @candidate = Candidate.create! valid_candidate
-    @opening = OpeningCandidate.create! valid_opening_candidate
     @users = []
     3.times do
       @users << User.create!(:name => Faker::Name.name, :email => Faker::Internet.email + UUIDTools::UUID.random_create.to_s)
     end
+    @candidate = Candidate.create! valid_candidate
+    @opening = OpeningCandidate.create! valid_opening_candidate
     @user_ids = @users.map { |user| user.id }
   end
 
@@ -83,6 +84,10 @@ describe InterviewsController do
     end
 
     describe "POST create" do
+      before :each do
+        OpeningCandidate.any_instance.stub(:in_interview_loop?).and_return(true)
+      end
+
       describe "with valid params" do
         it "creates a new Interview" do
           expect do

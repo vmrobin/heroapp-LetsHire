@@ -2,16 +2,19 @@ class CandidatesController < AuthenticatedController
   load_and_authorize_resource :except => [:create, :update]
 
   def index
-    @candidates = Candidate.all
+    opening = nil
+    if (params[:q] && params[:q][:opening_id])
+      opening = Opening.find(params[:q][:opening_id])
+    end
+    if opening
+      @candidates = opening.candidates.paginate(:page => params[:page])
+    else
+      @candidates = Candidate.paginate(:page => params[:page])
+    end
   end
 
   def show
     @candidate = Candidate.find params[:id]
-    @interviews = []
-    @candidate.opening_candidates.each do |opening_candidates|
-      @interviews.concat opening_candidates.interviews.all.to_a
-    end
-    @interviews.sort_by! { |interview| interview.scheduled_at }
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
   end
 
@@ -42,9 +45,14 @@ class CandidatesController < AuthenticatedController
     end
 
     params[:candidate].delete(:department_ids)
-
+    opening_id = params[:candidate][:opening_ids]
+    params[:candidate].delete(:opening_ids)
     @candidate = Candidate.new params[:candidate]
     if @candidate.save
+      if opening_id
+        @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+                                                                :opening_id => opening_id)
+      end
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
       @departments = Department.with_at_least_n_openings
@@ -53,6 +61,8 @@ class CandidatesController < AuthenticatedController
   end
 
   #TODO: split the jd-assignment logic from other attribute-modification
+  #Don't support remove JD assignment via update API
+  #To avoid removing a JD assignment accidentally, should use an independent API.
   def update
     unless params[:candidate][:resume].nil?
       # FIXME: how to handle error if exception between file io and database access?
@@ -60,16 +70,17 @@ class CandidatesController < AuthenticatedController
       params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
     end
 
-    params[:candidate].delete(:department_ids)
-
     @candidate = Candidate.find params[:id]
-
+    new_opening_id = params[:candidate][:opening_ids].to_i
+    opening_candidate = nil
+    unless @candidate.opening_ids.index(new_opening_id)
+      opening_candidate = @candidate.opening_candidates.build(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+          :opening_id => new_opening_id)
+    end
+    params[:candidate].delete(:department_ids)
+    params[:candidate].delete(:opening_ids)
     respond_to do |format|
-      if @candidate.update_attributes(params[:candidate])
-        @candidate.opening_candidates.each do |opening_candidate|
-          opening_candidate.status ||= OpeningCandidate::STATUS_LIST[:interview_loop]
-          opening_candidate.save
-        end
+      if @candidate.update_attributes(params[:candidate])  && ( opening_candidate.nil? || opening_candidate.save)
         format.html { redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated." }
         format.json { head :no_content }
       else
