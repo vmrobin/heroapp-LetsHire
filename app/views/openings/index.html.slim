@@ -19,7 +19,7 @@ table class='table table-hover'
   thead
     tr
       th = sort_link @search, :title, "Title"
-      th = sort_link @search, :department
+      th = sort_link @search, :department_id, "Department"
       -if user_signed_in?
         th = sort_link @search, :hiring_manager_id, "Hiring Manager"
         th = sort_link @search, :status
