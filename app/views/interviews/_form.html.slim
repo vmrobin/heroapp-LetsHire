@@ -9,7 +9,10 @@
   .control-group
     = label_tag :opening_candidate_id, 'Position', :class => 'control-label'
     .controls
-      #position= select_tag :opening_candidate_id, @openings.map { |opening| "<option value='#{opening.id}' #{'selected' if @opening && opening.id == @opening.id}>#{opening.opening.title}</option>" }.join.html_safe
+      - if @opening_candidates.size > 0
+        #position= select_tag :opening_candidate_id, @opening_candidates.map { |opening_candidate| "<option value='#{opening_candidate.id}' #{'selected' if @opening_candidate && opening_candidate.id == @opening_candidate.id}>#{opening_candidate.opening.title}</option>" }.join.html_safe
+      - else
+        = f.label 'set fail or offer-given already?'
   .control-group
     = f.label :modality, :class => 'control-label'
     .controls
@@ -42,6 +45,7 @@
     = label 'interviewers-text', 'Interviewers', :class => 'control-label'
     .controls
       #interviewer-select
+      = link_to 'Add more interviewers for JD...(ToDo)'
   .control-group
     = f.label :status, :Status, :class => 'control-label'
     .controls

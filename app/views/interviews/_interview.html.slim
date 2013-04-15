@@ -6,11 +6,7 @@ tr
   td= interview.modality
   td.iso-time= interview.scheduled_at_iso
   td= interview.duration
-  - if interview.modality.include?("phone")
-    td= interview.phone
-  - if interview.modality.include?("onsite")
-    td= interview.location
-  td= interview.interviewers.map { |interviewer| interviewer.user.name }.join(', ')
+  td= interview.interviewers.map { |interviewer| link_to interviewer.user.name, interviewer.user }.join(', ').html_safe
   td= interview.status
   td.actions
     = link_to 'Edit', edit_interview_path(interview)

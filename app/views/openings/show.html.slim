@@ -13,21 +13,24 @@ p
   = @opening.department.try(:name)
 p
   b Status:
-  = @opening.status_str
+  = link_to "#{@opening.status_str}, with #{pluralize(@opening.candidates.count, 'candidate')} assigned", candidates_path(:q => { :opening => @opening } )
 p
-  b Available:
+  b Available Seats:
   = @opening.available_no
 
 -if user_signed_in?
   p
     b Recruiter:
-    = @opening.recruiter.try(:name)
+    - if @opening.recruiter
+      = link_to @opening.recruiter.name, @opening.recruiter
   p
     b HiringManager:
-    = @opening.hiring_manager.try(:name)
+    - if @opening.hiring_manager
+      = link_to @opening.hiring_manager.name, @opening.hiring_manager
   p
     b Potential Interviewers:
-    = (@opening.participants.map { | user | user.name}).join(',')
+    = (@opening.participants.map { | user | link_to user.name, user}).join(', ').html_safe
+
 p
   b Address:
   = @opening.full_address

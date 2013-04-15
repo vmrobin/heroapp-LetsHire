@@ -1,7 +1,9 @@
 tr
   td= link_to opening.title, opening
   td= opening.department.try(:name)
-  td= opening.hiring_manager.try(:name)
+  td
+    - if opening.hiring_manager
+      = link_to opening.hiring_manager.name, opening.hiring_manager
   td= opening.status_str
   td= "#{opening.filled_no}/#{opening.total_no}"
   td= link_to "#{opening.candidates.count}", candidates_path(:q => { :opening_id => opening.id } )
