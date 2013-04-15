@@ -28,6 +28,7 @@ describe CandidatesController do
   describe "GET index" do
     it "assigns all candidates as @candidates" do
       candidate = Candidate.create! valid_candidate
+      Candidate.stub(:paginate).and_return([candidate])
       get :index, {}
       assigns(:candidates).should include(candidate)
     end

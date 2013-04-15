@@ -1,5 +1,7 @@
 LetsHire::Application.routes.draw do
   get "stub_dashboard/overview"
+  resources :AssessmentsController
+
 
   devise_for :users
 
@@ -26,14 +28,23 @@ LetsHire::Application.routes.draw do
   #   resources :products
   match '/addresses/subregion_options' => 'openings#subregion_options'
   match '/positions/opening_options' => 'openings#opening_options'
+  match '/participants' => 'users#index_for_tokens'
 
-  get "candidates/resume"
 
   resources :users
   resources :openings
   resources :candidates do
     resources :interviews
+    member do
+      get 'resume'
+      get 'assign_opening'
+    end
   end
+
+  resources :opening_candidates do
+    resource :assessments
+  end
+
   resources :interviews
 
   # Sample resource route with options:

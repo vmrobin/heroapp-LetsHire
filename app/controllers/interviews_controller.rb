@@ -26,9 +26,7 @@ class InterviewsController < AuthorizedController
   def edit
     @interview = Interview.find params[:id]
     authorize! :update, @interview
-    @candidate = @interview.opening_candidate.candidate
-    @opening = @interview.opening_candidate
-    load_openings
+    prepare_edit
   end
 
   def create
@@ -38,12 +36,23 @@ class InterviewsController < AuthorizedController
       return
     end
     @opening = OpeningCandidate.find params[:opening_candidate_id]
+    if @opening.nil?
+      redirect_to candidates_path, :notice => "No opening is selected for the candidate"
+      return
+    end
+    unless @opening.in_interview_loop?
+      redirect_to @opening.candidate, :notice => "The candidate isn't pending for interview."
+      return
+    end
     @interview = Interview.new params[:interview]
     @interview.opening_candidate = @opening
     @interview.status = Interview::STATUS_NEW
     if @interview.save
+      @opening.status = OpeningCandidate::STATUS_LIST[:interview_loop]
+      @opening.save
       redirect_to candidate_path(@opening.candidate), :notice => "Interview created"
     else
+      prepare_edit
       render :action => 'edit'
     end
   end
@@ -54,25 +63,46 @@ class InterviewsController < AuthorizedController
     if @interview.update_attributes(params[:interview])
       redirect_to interview_path(@interview), :notice => "Interview updated"
     else
+      prepare_edit
       render :action => 'edit'
+    end
+  end
+
+  # DELETE /interviews/1
+  # DELETE /interviews/1.json
+  def destroy
+    @interview = Interview.find params[:id]
+    @candidate = @interview.opening_candidate.candidate
+    @interview.destroy
+
+    respond_to do |format|
+      format.html { redirect_to candidate_path(@candidate), :notice => "Interview deleted" }
+      format.json { head :no_content }
     end
   end
 
   private
 
+  def prepare_edit
+    @candidate = @interview.opening_candidate.candidate
+    @opening = @interview.opening_candidate
+    load_openings
+  end
+
   def load_openings
-    @openings = OpeningCandidate.find_all_by_candidate_id @candidate.id
+    @openings = @candidate.opening_candidates.where(:status => OpeningCandidate::STATUS_LIST[:interview_loop])
     @interviewers = []
     interviewers_hash = {}
     @openings.each do |opening|
+      opening = opening.opening
       if can? :manage, opening
         interviewers = []
-        OpeningParticipant.find_all_by_opening_id(opening.opening_id).each do |participant|
-          @interviewers << { :opening => opening, :interviewer => participant.participant }
+        opening.participants.each do |participant|
+          @interviewers << { :opening => opening, :interviewer => participant }
           interviewers << {
-              id: participant.participant.id,
-              name: participant.participant.name,
-              email: participant.participant.email
+              id: participant.id,
+              name: participant.name,
+              email: participant.email
           }
         end
         interviewers_hash[opening.id] = interviewers

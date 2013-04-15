@@ -6,7 +6,7 @@ class StubDashboardController < ApplicationController
     @candidates = []
 
     if can? :manage, Opening
-      @openings = Opening.owned(current_user.id)
+      @openings = Opening.owned_by(current_user.id)
     end
 
     if can? :manage, Candidate

@@ -1,6 +1,6 @@
 class UsersController < AuthenticatedController
 
-  before_filter :require_admin
+  before_filter :require_admin, :except => [:index_for_tokens]
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 20)
@@ -8,6 +8,17 @@ class UsersController < AuthenticatedController
     respond_to do |format|
       format.html # index.html
       format.json { render :json => @users }
+    end
+  end
+
+  def index_for_tokens
+    unless user_signed_in?
+      redirect_to new_user_session_path, :notice => REQUIRE_LOGIN
+    end
+    @participants = User.select("id, name, email").where("name like ?", "%#{params[:q]}%")
+    respond_to do |format|
+      format.html
+      format.json { render :json => @participants.map(&:attributes) }
     end
   end
 

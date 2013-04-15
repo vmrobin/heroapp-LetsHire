@@ -1,4 +1,6 @@
-h3 Interview Information for #{@candidate.name}
+h3
+  = "Interview Information for "
+  span =link_to @candidate.name , @candidate
 br
 .pull-right
  - if can? :update, Interview
@@ -12,8 +14,6 @@ dl.dl-horizontal
   dd = link_to @opening.opening.title, opening_path(@opening.opening)
   dt Modality
   dd =@interview.modality
-  dt Description
-  dd =simple_format(@interview.description)
   dt Scheduled At
   dd.iso-time= @interview.scheduled_at_iso
   dt Duration(Minutes)
@@ -28,9 +28,19 @@ dl.dl-horizontal
   dd= @interview.status
   dt Interviewers
   dd
-    - @interview.interviewers.each do |interviewer|
-      .interviewer-line
-        span.name= interviewer.user.name
-        span.email= interviewer.user.email
+    div
+      - @interview.interviewers.each do |interviewer|
+        .interviewer-line
+          span.name= interviewer.user.name
+          span.email= interviewer.user.email
     span &nbsp;
-br
+  dt Description
+  dd = simple_format(@interview.description)
+  .pull-right
+    - if is_interviewer? @interview.interviewers
+      = link_to 'Update Feedback', edit_interview_path(@interview, :anchor => 'interview_assessment')
+  dt Feedback
+  dd= simple_format(@interview.assessment)
+
+
+

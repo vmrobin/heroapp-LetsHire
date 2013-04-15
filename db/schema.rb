@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130411063008) do
+ActiveRecord::Schema.define(:version => 20130413063854) do
+
+  create_table "assessments", :force => true do |t|
+    t.integer  "opening_candidate_id"
+    t.integer  "creator_id"
+    t.text     "comment"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
 
   create_table "candidates", :force => true do |t|
     t.string   "name",        :null => false
@@ -63,18 +71,11 @@ ActiveRecord::Schema.define(:version => 20130411063008) do
 
   add_index "interviews", ["opening_candidate_id"], :name => "index_interviews_on_opening_candidate_id"
 
-  create_table "opening_candidate_assessments", :force => true do |t|
-    t.integer  "opening_candidate_id"
-    t.integer  "creator"
-    t.text     "comment"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
-  end
-
   create_table "opening_candidates", :force => true do |t|
     t.integer "opening_id"
     t.integer "candidate_id"
     t.integer "status"
+    t.boolean "hold"
   end
 
   add_index "opening_candidates", ["candidate_id"], :name => "index_opening_candidates_on_candidate_id"

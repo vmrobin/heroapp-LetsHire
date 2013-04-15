@@ -5,7 +5,7 @@ class AddColumnsToOpeningAndAddAssessment < ActiveRecord::Migration
 
     create_table :opening_candidate_assessments do |t|
       t.belongs_to :opening_candidate
-      t.integer :creator
+      t.integer :creator_id
       t.text :comment
 
       t.timestamps

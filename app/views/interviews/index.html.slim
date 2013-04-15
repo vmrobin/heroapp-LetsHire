@@ -3,26 +3,14 @@ h3 Interviews
 table class='table table-hover'
   tr
     th Candidate
-    th Title
     th Position
+    th Title
     th Modality
     th Scheduled At
     th Duration
     th Phone/Location
     th Interviewers
     th Status
+    th
 
-  - @interviews.each do |interview|
-    tr
-      td= link_to interview.opening_candidate.candidate.name, interview.opening_candidate.candidate
-      td= link_to interview.title, interview
-      td= link_to interview.opening_candidate.opening.title, interview.opening_candidate.opening
-      td= interview.modality
-      td.iso-time= interview.scheduled_at_iso
-      td= interview.duration
-      - if interview.modality.include?("phone")
-        td= interview.phone
-      - if interview.modality.include?("onsite")
-        td= interview.location
-      td= interview.interviewers.map { |interviewer| interviewer.user.name }.join(', ')
-      td= interview.status
+  =render @interviews, :opening_candidate => false

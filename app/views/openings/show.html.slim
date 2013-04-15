@@ -1,3 +1,4 @@
+h3= "Information for #{@opening.title}"
 = notice
 
 .pull-right
@@ -7,9 +8,6 @@
   = link_to 'Back', openings_path
 
 br
-p
-  b Title:
-  = @opening.title
 p
   b Department:
   = @opening.department.try(:name)
@@ -29,7 +27,7 @@ p
     = @opening.hiring_manager.try(:name)
   p
     b Potential Interviewers:
-    = (@opening.participants.map { | user | user.email}).join(',')
+    = (@opening.participants.map { | user | user.name}).join(',')
 p
   b Address:
   = @opening.full_address
