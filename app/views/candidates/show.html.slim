@@ -1,9 +1,8 @@
-h3= "Information for #{@candidate.name}"
-.pull-right
+.pull-left
+  h3 = "Information for #{@candidate.name}"
+.pull-right.align-to-title
   -if can? :manage, @candidate
-    = link_to 'Edit', edit_candidate_path(@candidate)
-    = '|'
-  = link_to 'Back', candidates_path
+    = link_to 'Edit', edit_candidate_path(@candidate), :class => "btn btn-primary"
 br
 .form-horizontal
   .control-group 
