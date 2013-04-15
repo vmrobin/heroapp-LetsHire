@@ -1,3 +1,5 @@
-h3 Edit Interview for #{@candidate.name}
+h3
+  = 'Edit Interview for '
+  span =link_to @candidate.name , @candidate
 
 == render 'form'

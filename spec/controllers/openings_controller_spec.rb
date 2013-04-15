@@ -105,7 +105,7 @@ describe OpeningsController do
         get :index, { :all => true}
         assigns(:openings).should eq(all_openings)
 
-        Opening.stub(:owned).and_return(Opening)
+        Opening.stub(:owned_by).and_return(Opening)
         sign_in @hiring_manager1
         get :index, {}
         assigns(:openings).should eq(all_openings)

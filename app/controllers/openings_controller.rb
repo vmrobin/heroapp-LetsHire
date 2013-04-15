@@ -8,18 +8,29 @@ class OpeningsController < ApplicationController
   def index
     unless user_signed_in?
       #published openings are returned only
+      #TODO: need exclude certain fields from anonymous access, such as 'Hiring Manager'
       @search = Opening.published.paginate(:page => params[:page]).search(params[:q])
     else
       if params.has_key?(:all)
         @search = Opening.paginate(:page => params[:page]).search(params[:q])
       else
-        @search = Opening.owned(current_user.id).paginate(:page => params[:page]).search(params[:q])
+        if can? :manage, Opening
+          @search = Opening.owned_by(current_user.id).paginate(:page => params[:page]).search(params[:q])
+        else
+          @search = current_user.openings
+        end
       end
     end
 
     @openings = @search.result
     respond_to do |format|
-      format.html # index.html.slim
+      format.html  do
+        if user_signed_in?
+          render "openings/index"
+        else
+          render "openings/index_anonymous"
+        end
+      end
       format.json { render json: @openings }
     end
   end
@@ -30,7 +41,7 @@ class OpeningsController < ApplicationController
     @opening = Opening.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.slim
+      format.html # _assessment.html.slim
       format.json { render json: @opening }
     end
   rescue ActiveRecord::RecordNotFound
@@ -106,7 +117,7 @@ class OpeningsController < ApplicationController
   end
 
   def subregion_options
-    render :partial => 'utilities/subregion_select', :locals => { :container => 'opening' }
+    render :partial => 'utilities/province_select', :locals => { :container => 'opening' }
   end
 
 

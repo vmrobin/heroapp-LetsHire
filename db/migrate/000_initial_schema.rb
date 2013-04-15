@@ -113,7 +113,7 @@ class InitialSchema < ActiveRecord::Migration
       t.float :score
       t.text :assessment
       t.datetime :scheduled_at, :null => false
-      t.integer :duration
+      t.integer :duration, :default => 30
       t.string :phone
       t.string :location
 

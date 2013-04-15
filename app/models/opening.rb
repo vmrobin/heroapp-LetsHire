@@ -3,8 +3,11 @@ require 'carmen'
 class Opening < ActiveRecord::Base
   include Carmen
 
-  attr_accessible :title, :description,:department_id, :status, :country, :province, :city
+  attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :total_no, :filled_no
   attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
+
+  attr_accessible :participant_tokens
+  attr_reader :participant_tokens
 
   belongs_to :department, :counter_cache => true
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
@@ -19,13 +22,14 @@ class Opening < ActiveRecord::Base
 
   validates :title, :presence => true
 
-  validate :select_valid_owners_if_active
+  validate :select_valid_owners_if_active,
+           :total_no_should_ge_than_filled_no
 
   self.per_page = 20
 
   STATUS_LIST = { :draft => 0, :published => 1, :closed => -1 }
   scope :published, where(:status => 1)
-  scope :owned,  ->(user_id) { where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id) }
+  scope :owned_by,  ->(user_id) { where('hiring_manager_id = ? OR recruiter_id = ?', user_id, user_id) }
 
   def status_str
     STATUS_STRINGS[status]
@@ -49,12 +53,20 @@ class Opening < ActiveRecord::Base
     end
   end
 
+  def participant_tokens=(ids)
+    self.participant_ids = ids.split(',')
+  end
+
   def published?
     status == STATUS_LIST[:published]
   end
 
   def closed?
     status == STATUS_LIST[:closed]
+  end
+
+  def available_no
+    total_no - filled_no
   end
 
   private
@@ -78,6 +90,11 @@ class Opening < ActiveRecord::Base
         errors.add(:recruiter_id, "isn't a recruiter") unless valid
       end
     end
+  end
+
+
+  def total_no_should_ge_than_filled_no
+    errors.add(:filled_no, "is larger than total no.") if filled_no > total_no
   end
 
 

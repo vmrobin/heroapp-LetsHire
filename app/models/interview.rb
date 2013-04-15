@@ -5,7 +5,7 @@ class Interview < ActiveRecord::Base
   accepts_nested_attributes_for :interviewers, :allow_destroy => true, :reject_if => proc { |interviewers| interviewers.empty? }
 
   attr_accessible :opening_candidate, :opening_candidate_id
-  attr_accessible :interviewers, :interviewer_ids
+  attr_accessible :interviewer_ids
   attr_accessible :title, :modality, :scheduled_at, :scheduled_at_iso, :duration, :phone, :location, :description
   attr_accessible :status, :score, :assessment
   attr_accessible :created_at, :updated_at
@@ -28,6 +28,14 @@ class Interview < ActiveRecord::Base
   validates :modality, :title, :scheduled_at, :presence => true
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
+
+  validates :interviewer_ids, :presence => true
+
+
+  def self.overall_status(interviews)
+    interview_counts = interviews.group(:status).count
+    (interview_counts.collect { | key, value | "#{value} #{key} interviews" }).join(",")
+  end
 
   def scheduled_at_iso
     if scheduled_at

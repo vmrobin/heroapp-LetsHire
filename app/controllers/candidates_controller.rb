@@ -2,16 +2,19 @@ class CandidatesController < AuthenticatedController
   load_and_authorize_resource :except => [:create, :update]
 
   def index
-    @candidates = Candidate.all
+    opening = nil
+    if (params[:q] && params[:q][:opening_id])
+      opening = Opening.find(params[:q][:opening_id])
+    end
+    if opening
+      @candidates = opening.candidates.paginate(:page => params[:page])
+    else
+      @candidates = Candidate.paginate(:page => params[:page])
+    end
   end
 
   def show
     @candidate = Candidate.find params[:id]
-    @interviews = []
-    @candidate.opening_candidates.each do |opening_candidates|
-      @interviews.concat opening_candidates.interviews.all.to_a
-    end
-    @interviews.sort_by! { |interview| interview.scheduled_at }
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
   end
 
@@ -22,10 +25,16 @@ class CandidatesController < AuthenticatedController
 
   def edit
     @candidate = Candidate.find params[:id]
-    @departments = Department.with_at_least_n_openings
     @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+  end
+
+
+  def assign_opening
+    @candidate = Candidate.find params[:id]
+    @departments = Department.with_at_least_n_openings
     assigned_departments = get_assigned_departments(@candidate)
     @selected_department_id = assigned_departments[0].try(:id)
+    render "candidates/assign_opening"
   end
 
   def create
@@ -36,27 +45,14 @@ class CandidatesController < AuthenticatedController
     end
 
     params[:candidate].delete(:department_ids)
-    opening_id = params[:candidate].delete(:opening_ids)
-
+    opening_id = params[:candidate][:opening_ids]
+    params[:candidate].delete(:opening_ids)
     @candidate = Candidate.new params[:candidate]
-
-    error = true
-    ActiveRecord::Base.transaction do
-      if @candidate.save
-        # NOTE: There might be no opening positions.
-        unless opening_id.nil?
-          if not @candidate.opening_candidates.create(:opening_id => opening_id)
-            # exception will trigger transaction do rollback
-            raise ActiveRecord::Rollback
-          end
-        end
-        error = false
-      else
-        raise ActiveRecord::Rollback
+    if @candidate.save
+      if opening_id
+        @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+                                                                :opening_id => opening_id)
       end
-    end
-
-    if not error
       redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
       @departments = Department.with_at_least_n_openings
@@ -64,6 +60,9 @@ class CandidatesController < AuthenticatedController
     end
   end
 
+  #TODO: split the jd-assignment logic from other attribute-modification
+  #Don't support remove JD assignment via update API
+  #To avoid removing a JD assignment accidentally, should use an independent API.
   def update
     unless params[:candidate][:resume].nil?
       # FIXME: how to handle error if exception between file io and database access?
@@ -71,53 +70,29 @@ class CandidatesController < AuthenticatedController
       params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
     end
 
-    params[:candidate].delete(:department_ids)
-    # FIXME: Currently one candidate cannot be assigned to multiple opening positions on web UI.
-    new_opening_id = params[:candidate].delete(:opening_ids)
-
     @candidate = Candidate.find params[:id]
-    @opening_candidates = @candidate.opening_candidates
-    old_opening_id = @candidate.opening(0).try(:id)
-
-    error = true
-    ActiveRecord::Base.transaction do
-      if @candidate.update_attributes(params[:candidate])
-        # NOTE: Candidate might not have been assigned opening positions.
-        if old_opening_id.nil?
-          # assign a new opening position to candidate
-          if not new_opening_id.nil?
-            if not @candidate.opening_candidates.create(:opening_id => new_opening_id)
-              raise ActiveRecord::Rollback
-            end
-          end
-        else
-          if not new_opening_id.nil?
-            # update the assigned opening position
-            if not @candidate.opening_candidates.where(:opening_id => old_opening_id).update_all(:opening_id => new_opening_id)
-              raise ActiveRecord::Rollback
-            end
-          else
-            # delete the assigned opening position
-            if not @candidate.opening_candidates.delete(@opening_candidates[0])
-              raise ActiveRecord::Rollback
-            end
-          end
-        end
-        error = false
+    new_opening_id = params[:candidate][:opening_ids].to_i
+    opening_candidate = nil
+    unless @candidate.opening_ids.index(new_opening_id)
+      opening_candidate = @candidate.opening_candidates.build(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+          :opening_id => new_opening_id)
+    end
+    params[:candidate].delete(:department_ids)
+    params[:candidate].delete(:opening_ids)
+    respond_to do |format|
+      if @candidate.update_attributes(params[:candidate])  && ( opening_candidate.nil? || opening_candidate.save)
+        format.html { redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated." }
+        format.json { head :no_content }
       else
-        raise ActiveRecord::Rollback
+        @departments = Department.with_at_least_n_openings
+        @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+        assigned_departments = get_assigned_departments(@candidate)
+        @selected_department_id = assigned_departments[0].try(:id)
+        render :action => 'edit'
       end
     end
-
-    if not error
-      redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated."
-    else
-      @departments = Department.with_at_least_n_openings
-      @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-      assigned_departments = get_assigned_departments(@candidate)
-      @selected_department_id = assigned_departments[0].try(:id)
-      render :action => 'edit'
-    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to candidates_url, notice: 'Invalid Candidate'
   end
 
   def destroy

@@ -7,10 +7,6 @@
           li= msg
 
   .control-group
-    = f.label :title, :class => 'control-label'
-    .controls
-      = f.text_field :title
-  .control-group
     = label_tag :opening_candidate_id, 'Position', :class => 'control-label'
     .controls
       #position= select_tag :opening_candidate_id, @openings.map { |opening| "<option value='#{opening.id}' #{'selected' if @opening && opening.id == @opening.id}>#{opening.opening.title}</option>" }.join.html_safe
@@ -19,17 +15,21 @@
     .controls
       = f.select :modality, Interview::MODALITIES
   .control-group
+    = f.label :title, :class => 'control-label'
+    .controls
+      = f.text_field :title
+  .control-group
     = f.label :description, :class => 'control-label'
     .controls
-      = f.text_area :description
+      = f.text_area :description, :class => 'span9'
   .control-group
     = label_tag :scheduled_at, 'Scheduled At', :class => 'control-label'
     .controls
       = text_field_tag :scheduled_at, nil, :class => 'datetimepicker'
   .control-group
-    = f.label :duration, :class => 'control-label'
+    = f.label :duration, 'Duration(Minutes)', :class => 'control-label'
     .controls
-      = f.text_field :duration
+      = f.number_field :duration, :in => 30..180, :step => 10
   .control-group.toggle-phone
     = f.label :phone, :class => 'control-label'
     .controls
@@ -41,8 +41,15 @@
   .control-group
     = label 'interviewers-text', 'Interviewers', :class => 'control-label'
     .controls
-      = text_field_tag 'interviewers-text', nil, :readonly => 'readonly', :id => 'interviewers-text'
-      #interviewer-select.hide
+      #interviewer-select
+  .control-group
+    = f.label :status, :Status, :class => 'control-label'
+    .controls
+      = f.select :status, Interview::STATUS
+  .control-group
+    = label_tag :assessment, 'Feedback', :class => 'control-label'
+    .controls
+      = f.text_area :assessment, :class => 'span9', :readonly => !(is_interviewer? @interview.interviewers)
   .control-group
     .controls
       .actions

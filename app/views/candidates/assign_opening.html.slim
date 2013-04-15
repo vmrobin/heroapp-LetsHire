@@ -1,0 +1,11 @@
+h3 Assign Opening
+
+.pull-right
+  = link_to 'Back', :back
+br
+= form_for @candidate, :html => { :class => 'form-horizontal' }  do |f|
+  = render 'edit_opening_section', :f => f
+  .control-group
+        .controls
+          .actions
+            = f.submit 'Save', :class => 'btn'

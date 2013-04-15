@@ -1,5 +1,4 @@
-h3 Candidate Information
-
+h3= "Information for #{@candidate.name}"
 .pull-right
   -if can? :manage, @candidate
     = link_to 'Edit', edit_candidate_path(@candidate)
@@ -7,10 +6,6 @@ h3 Candidate Information
   = link_to 'Back', candidates_path
 br
 .form-horizontal
-  .control-group
-    label.control-label
-      b Name:
-    .controls = @candidate.name
   .control-group 
     label.control-label
       b Email:
@@ -34,39 +29,16 @@ br
     .controls
       - if not @resume.nil?
         = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
-  .control-group
-    label.control-label
-      b Assigned Positions:
-    .controls
-      - @candidate.openings.each do |opening|
-        ul
-          li = link_to "#{opening.title}", opening_path({:id => opening.id})
+
+br
+h4 Assigned Positions
+
+.pull-right
+  -if can? :manage, @candidate
+    = link_to 'Assign Opening', :controller => "candidates", :action => "assign_opening", :id=> @candidate
 
 br
 
-h4 Arranged Interviews
+- @candidate.opening_candidates.reverse.each do |opening_candidate|
+  =render 'show_assign_opening', { :opening_candidate => opening_candidate }
 
-table.table
-  tr
-    th Title
-    th Position
-    th Modality
-    th Scheduled At
-    th Duration
-    th Phone
-    th Location
-    th Status
-
-  - @interviews.each do |interview|
-    tr
-      td= link_to interview.title, interview
-      td= interview.opening_candidate.opening.title
-      td= interview.modality
-      td= interview.scheduled_at
-      td= interview.duration
-      td= interview.phone
-      td= interview.location
-      td= interview.status
-
-- if can? :manage, Interview
-  = link_to 'New Interview', new_candidate_interview_path(@candidate)

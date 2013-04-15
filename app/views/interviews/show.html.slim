@@ -1,36 +1,46 @@
-h3 Interview Information for #{@candidate.name}
+h3
+  = "Interview Information for "
+  span =link_to @candidate.name , @candidate
+br
+.pull-right
+ - if can? :update, Interview
+   = link_to 'Edit', edit_interview_path(@interview)
+
 
 dl.dl-horizontal
   dt Title
-  dd #{@interview.title.html_safe}&nbsp;
+  dd =@interview.title
   dt Position
-  dd
-    = link_to @opening.opening.title, opening_path(@opening.opening)
+  dd = link_to @opening.opening.title, opening_path(@opening.opening)
   dt Modality
-  dd #{@interview.modality.html_safe}&nbsp;
-  dt Description
-  dd #{@interview.description.html_safe}&nbsp;
+  dd =@interview.modality
   dt Scheduled At
-  dd.iso-time= @interview.scheduled_at_iso.html_safe
-  dt Duration
-  dd #{@interview.duration}&nbsp;
+  dd.iso-time= @interview.scheduled_at_iso
+  dt Duration(Minutes)
+  dd= @interview.duration
   - if @interview.modality.include?("phone")
     dt Phone
-    dd #{@interview.phone.html_safe}&nbsp;
+    dd= @interview.phone
   - if @interview.modality.include?("onsite")
     dt Location
-    dd #{@interview.location.html_safe}&nbsp;
-  dt Interviewers
-  dd
-    - @interview.interviewers.each do |interviewer|
-      .interviewer-line
-        span.name= interviewer.user.name
-        span.email= interviewer.user.email
-    span &nbsp;
+    dd= @interview.location
   dt Status
   dd= @interview.status
+  dt Interviewers
+  dd
+    div
+      - @interview.interviewers.each do |interviewer|
+        .interviewer-line
+          span.name= interviewer.user.name
+          span.email= interviewer.user.email
+    span &nbsp;
+  dt Description
+  dd = simple_format(@interview.description)
+  .pull-right
+    - if is_interviewer? @interview.interviewers
+      = link_to 'Update Feedback', edit_interview_path(@interview, :anchor => 'interview_assessment')
+  dt Feedback
+  dd= simple_format(@interview.assessment)
 
-br
-br
-- if can? :update, Interview
-  = link_to 'Edit', edit_interview_path(@interview)
+
+
