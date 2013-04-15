@@ -1,26 +1,33 @@
-h3= "Information for #{@candidate.name}"
-.pull-right
+.pull-left
+  h3 = "Information for #{@candidate.name}"
+.pull-right.align-to-title
   -if can? :manage, @candidate
-    = link_to 'Edit', edit_candidate_path(@candidate)
-    = '|'
-  = link_to 'Back', candidates_path
+    = link_to 'Edit', edit_candidate_path(@candidate), :class => "btn btn-primary"
 br
-p
-  b Email:
-  a href="mailto:#{@candidate.email}" = @candidate.email
-p
-  b Phone:
-  = @candidate.phone
-p
-  b Sources:
-  = @candidate.source
-p
-  b Description:
-  = @candidate.description
-p
-  b Resume:
-  - if not @resume.nil?
-    = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+.form-horizontal
+  .control-group 
+    label.control-label
+      b Email:
+    .controls
+      a href="mailto:#{@candidate.email}" = @candidate.email
+  .control-group 
+    label.control-label
+      b Phone:
+    .controls = @candidate.phone
+  .control-group 
+    label.control-label
+      b Sources:
+    .controls = @candidate.source
+  .control-group 
+    label.control-label
+      b Description:
+    .controls = @candidate.description
+  .control-group 
+    label.control-label
+      b Resume:
+    .controls
+      - if not @resume.nil?
+        = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
 
 br
 h4 Assigned Positions
