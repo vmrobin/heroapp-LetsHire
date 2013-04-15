@@ -1,7 +1,12 @@
 $(function () {
     $(".datetimepicker").datetimepicker().each(function (index, elem) {
         var isoTime = $("#interview_" + elem.name + "_iso").val();
-        $(elem).datetimepicker("setDate", new Date(isoTime));
+        if (isoTime == "") {
+            $(elem).datetimepicker("setDate", new Date());
+            $("#interview_" + this.name + "_iso").val(new Date(elem.value).toISOString());
+        } else {
+            $(elem).datetimepicker("setDate", new Date(isoTime));
+        }
     }).change(function () {
         $("#interview_" + this.name + "_iso").val(new Date(this.value).toISOString());
     });
