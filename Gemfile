@@ -14,7 +14,7 @@ gem 'dynamic_form', '1.1.4'
 gem 'binding_of_caller', '0.7.1'
 gem 'pg', '0.12.2'
 gem 'carmen-rails', '1.0.0.beta3'
-gem 'jquery-tokeninput-rails'
+gem 'jquery-tokeninput-rails', '1.6.0'
 gem 'ransack', '0.7.2'
 
 group :development, :test do
