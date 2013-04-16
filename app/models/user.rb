@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
   attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me
 
-  ROLES = %w[interviewer recruiter hiringmanager]
+  ROLES = %w[interviewer recruiter hiring_manager]
 
   validates :name,  :presence => true
   validates :email, :presence => true, :uniqueness => true
