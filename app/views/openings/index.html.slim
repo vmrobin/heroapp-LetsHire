@@ -1,4 +1,4 @@
-h3 Openings
+h3.pull-left Openings
 
 .pull-right.align-to-title
   - all ||= params[:all]
@@ -10,23 +10,28 @@ h3 Openings
     = '  '
     = link_to 'Add a Job Opening', new_opening_path, :class => 'btn btn-primary'
 
-= search_form_for @search, :html => { :class => 'form-horizontal' }  do |f|
-  = f.text_field :title_cont
-  = ' '
-  = f.submit
+/= search_form_for @search, :html => { :class => 'form-horizontal' }  do |f|
+/  = f.text_field :title_cont
+/  = ' '
+/  = f.submit
 
 table class='table table-hover'
   thead
     tr
-      th = sort_link @search, :title, "Title"
-      th = sort_link @search, :department_id, "Department"
+      /th = sort_link @search, :title, "Title"
+      /th = sort_link @search, :department_id, "Department"
+      th Title
+      th Department
       -if user_signed_in?
-        th = sort_link @search, :hiring_manager_id, "Hiring Manager"
-        th = sort_link @search, :status
+        /th = sort_link @search, :hiring_manager_id, "Hiring Manager"
+        /th = sort_link @search, :status
+        th Hiring Manager
+        th Status
         th Filled/Total
         th # of Candidates
       -else
-        th = sort_link @search, :recruiter_id, "Recruiter"
+        /th = sort_link @search, :recruiter_id, "Recruiter"
+        th Recruiter
       th
   tbody
     = render @openings
