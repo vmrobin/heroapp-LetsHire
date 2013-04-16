@@ -36,8 +36,8 @@ class AssessmentsController < ApplicationController
         format.html { redirect_to @candidate, notice: 'Assessment was successfully made.' }
         format.json { render json: @candidate, status: :created, location: @candidate }
       else
-        format.html { render action: "new" }
-        format.json { render json: @opening.errors, status: :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.json { render json: @candidate.errors, status: :unprocessable_entity }
       end
     end
 
