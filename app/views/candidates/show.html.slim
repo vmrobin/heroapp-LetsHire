@@ -27,17 +27,17 @@ br
       b Resume:
     .controls
       - if not @resume.nil?
-        = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+        = link_to "#{@resume}", resume_candidate_path({:id => @candidate.id})
 
 br
 h4 Assigned Positions
 
 .pull-right
   -if can? :manage, @candidate
-    = link_to 'Assign Opening', :controller => "candidates", :action => "assign_opening", :id=> @candidate
+    = link_to 'Assign Opening', :controller => "candidates", :action => "new_opening", :id=> @candidate
 
 br
 
-- @candidate.opening_candidates.reverse.each do |opening_candidate|
+-@candidate.opening_candidates.reverse.each do |opening_candidate|
   =render 'show_assign_opening', { :opening_candidate => opening_candidate }
 
