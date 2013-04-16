@@ -54,3 +54,7 @@ div.form-horizontal .control-label {
 .capitalized-text {
   text-transform: capitalize;
 }
+
+.clear-both {
+  clear: both;
+}
