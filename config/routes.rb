@@ -37,7 +37,8 @@ LetsHire::Application.routes.draw do
     resources :interviews
     member do
       get 'resume'
-      get 'assign_opening'
+      get 'new_opening'
+      put 'create_opening'
     end
   end
 

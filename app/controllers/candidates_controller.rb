@@ -29,12 +29,12 @@ class CandidatesController < AuthenticatedController
   end
 
 
-  def assign_opening
+  def new_opening
     @candidate = Candidate.find params[:id]
     @departments = Department.with_at_least_n_openings
     assigned_departments = get_assigned_departments(@candidate)
     @selected_department_id = assigned_departments[0].try(:id)
-    render "candidates/assign_opening"
+    render :action => :new_opening
   end
 
   def create
@@ -60,34 +60,59 @@ class CandidatesController < AuthenticatedController
     end
   end
 
-  #TODO: split the jd-assignment logic from other attribute-modification
+
+  def create_opening
+    @candidate = Candidate.find params[:id]
+    unless params[:candidate]
+      redirect_to @candidate, notice: 'Invalid attributes'
+      return
+    end
+    new_opening_id = params[:candidate][:opening_ids].to_i
+    if new_opening_id == 0
+      redirect_to @candidate, :notice => "Opening was not given."
+      return
+    end
+    if @candidate.opening_ids.index(new_opening_id)
+      redirect_to @candidate, :notice => "Opening was already assigned."
+      return
+    end
+    respond_to do |format|
+      if @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+                                                               :opening_id => new_opening_id)
+        format.html { redirect_to @candidate, :notice => "Opening was successfully assigned." }
+        format.json { head :no_content }
+      else
+        @departments = Department.with_at_least_n_openings
+        @selected_department_id = params[:candidate][:department_ids]
+        redirect_to @candidate, :notice => "Opening was already assigned or not given."
+      end
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to candidates_url, notice: 'Invalid Candidate'
+  end
+
   #Don't support remove JD assignment via update API
-  #To avoid removing a JD assignment accidentally, should use an independent API.
+  #To avoid removing a JD assignment accidentally, should use 'create_opening' instead.
   def update
+    @candidate = Candidate.find params[:id]
+    unless params[:candidate]
+      redirect_to @candidate, notice: 'Invalid attributes'
+      return
+    end
+    params[:candidate].delete(:department_ids)
+    params[:candidate].delete(:opening_ids)
     unless params[:candidate][:resume].nil?
       # FIXME: how to handle error if exception between file io and database access?
       upload_file(params[:candidate][:resume], params[:candidate][:name])
       params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
     end
 
-    @candidate = Candidate.find params[:id]
-    new_opening_id = params[:candidate][:opening_ids].to_i
-    opening_candidate = nil
-    unless @candidate.opening_ids.index(new_opening_id)
-      opening_candidate = @candidate.opening_candidates.build(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
-          :opening_id => new_opening_id)
-    end
-    params[:candidate].delete(:department_ids)
-    params[:candidate].delete(:opening_ids)
     respond_to do |format|
-      if @candidate.update_attributes(params[:candidate])  && ( opening_candidate.nil? || opening_candidate.save)
-        format.html { redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated." }
+      if @candidate.update_attributes(params[:candidate])
+        format.html { redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated." }
         format.json { head :no_content }
       else
-        @departments = Department.with_at_least_n_openings
         @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-        assigned_departments = get_assigned_departments(@candidate)
-        @selected_department_id = assigned_departments[0].try(:id)
         render :action => 'edit'
       end
     end
