@@ -50,3 +50,7 @@
 div.form-horizontal .control-label {
   padding-top: 0;
 }
+
+.capitalized-text {
+  text-transform: capitalize;
+}
