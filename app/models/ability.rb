@@ -49,7 +49,7 @@ class Ability
     can :manage, Interview
   end
 
-  def hiringmanager(user)
+  def hiring_manager(user)
     can :create, Opening
     can :manage, Opening, :hiring_manager_id => user.id
     can :create, Interview
