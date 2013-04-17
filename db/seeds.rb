@@ -6,18 +6,20 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 User.delete_all
+long_password = '123456789'
+
 User.new_admin(:email => 'admin@local.com',
-               :password => 'admin',
+               :password => long_password,
                :name => 'System Administrator').save
 
 # For test convinience temporarily
-user = User.new({ :email => 'i1@local.com', :password => 'i1', :name => 'interviewer1' })
+user = User.new({ :email => 'i1@local.com', :password => long_password, :name => 'interviewer1' })
 user.roles = ['interviewer']
 user.save
-user = User.new({ :email => 'r1@local.com', :password => 'r1', :name => 'recruiter1' })
+user = User.new({ :email => 'r1@local.com', :password => long_password, :name => 'recruiter1' })
 user.roles = ['recruiter']
 user.save
-user = User.new({ :email => 'h1@local.com', :password => 'h1', :name => 'recruiting hiring manager 1' })
+user = User.new({ :email => 'h1@local.com', :password => long_password, :name => 'recruiting hiring manager 1' })
 user.roles = ['hiringmanager','recruiter']
 user.save
 
