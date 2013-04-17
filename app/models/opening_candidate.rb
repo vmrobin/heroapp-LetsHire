@@ -10,6 +10,7 @@ class OpeningCandidate < ActiveRecord::Base
 
   validates :candidate_id, :opening_id, :presence => true
 
+  validates :candidate_id, :uniqueness => { :scope => :opening_id }
 
   #Don't change order randomly. order matters.
   STATUS_LIST = { :interview_loop => 1,
