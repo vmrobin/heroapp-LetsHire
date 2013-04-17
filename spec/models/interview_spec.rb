@@ -74,8 +74,9 @@ describe Interview do
       @candidate = Candidate.create! valid_candidate
       @opening = OpeningCandidate.create! valid_opening_candidate
       @users = []
+      user_password = '12345678'
       3.times do
-        @users << User.create!(:name => Faker::Name.name, :email => Faker::Internet.email + UUIDTools::UUID.random_create.to_s)
+        @users << User.create!(:name => Faker::Name.name, :email => Faker::Internet.email + UUIDTools::UUID.random_create.to_s, :password => user_password)
       end
     end
 
