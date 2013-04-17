@@ -19,7 +19,7 @@ html
                 li = link_to 'Candidates', candidates_path
                 li = link_to 'Interviews', interviews_path
                 - if current_user.admin?
-                  li.lastli = link_to 'Manage Users', users_path
+                  li.lastli = link_to 'Users + Rules', users_path
 
             .span10
               == yield
