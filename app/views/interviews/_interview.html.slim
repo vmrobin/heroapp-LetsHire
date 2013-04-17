@@ -1,7 +1,7 @@
 tr
   -unless opening_candidate
     td= link_to interview.opening_candidate.candidate.name + " for " + interview.opening_candidate.opening.title, interview
-  td= interview.modality
+  td.capitalized-text = interview.modality
   td.iso-time= interview.scheduled_at_iso
   td= interview.duration
   td.actions
