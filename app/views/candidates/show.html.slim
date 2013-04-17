@@ -27,7 +27,7 @@ br
       b Resume:
     .controls
       - if not @resume.nil?
-        = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+        = link_to "#{@resume}", resume_candidate_path({:id => @candidate.id})
 
 br
 h4 Assigned Positions
