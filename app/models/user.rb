@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :rememberable
 
-  validates_confirmation_of :password
+  validates_confirmation_of :password, :if => :already_has_password?, :on => :update
+  validates_presence_of :password, :if => :already_has_password?, :on => :update
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
@@ -70,5 +71,10 @@ class User < ActiveRecord::Base
 
   def department_string
     Department.find(self.department_id).name if self.department_id
+  end
+
+private
+  def already_has_password?
+    !encrypted_password.blank?
   end
 end
