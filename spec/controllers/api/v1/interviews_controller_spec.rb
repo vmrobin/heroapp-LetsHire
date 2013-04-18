@@ -57,10 +57,13 @@ describe Api::V1::InterviewsController do
 
     it 'can fetch all interviews in one interval' do
       interview = Interview.create! valid_interview(@users)
+
       get :index, {}
       assigns(:interviews).should eq([interview])
+
       get :index, {'interval' => '1w'}
       assigns(:interviews).should eq([interview])
+
       get :index, {'interval' => '1m'}
       assigns(:interviews).should eq([interview])
     end
@@ -72,7 +75,16 @@ describe Api::V1::InterviewsController do
     end
 
     it 'can fetch specific interview details' do
+      interview = Interview.create! valid_interview(@users)
 
+      get :show, {:id => interview.id, 'candidate' => '0'}
+      assigns(:interview).should be_a(Interview)
+      assigns(:candidate).should be_nil
+
+      get :show, {:id => interview.id ,'candidate' => '1'}
+      assigns(:interview).should be_a(Interview)
+      assigns(:candidate).should be_a(Candidate)
     end
+
   end
 end

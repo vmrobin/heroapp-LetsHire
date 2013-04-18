@@ -20,12 +20,14 @@ class Api::V1::InterviewsController < Api::V1::ApiController
 
   def show
     return missing_params unless params['id']
-    requested_attrs = ATTRIBUTE_MAPPINGS.select { |key| params[key] == '1'}
-    requested_attrs = ATTRIBUTE_MAPPINGS if requested_attrs.empty?
+
+    requested_attrs = ATTRIBUTE_MAPPINGS.select { |key| params[key] == '1' }
+
     @interview = Interview.find(params['id'])
     @candidate = nil
     if requested_attrs.include? 'candidate'
-      @candidate = Candidate.find(@interview.opening_candidate_id)
+      candidate_id = @interview.opening_candidate.candidate_id
+      @candidate = Candidate.find(candidate_id)
     end
     @attachment = nil
     render :json => {:ret => OK, :interviews => @interviews, :candidate => @candidate, :attachment => @attachment}
@@ -35,7 +37,6 @@ class Api::V1::InterviewsController < Api::V1::ApiController
 
   def update
     render :json => {:ret => OK, :message => 'not implemented'}, :status => 200
-
   end
 
   private
