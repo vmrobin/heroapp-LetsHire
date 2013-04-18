@@ -73,7 +73,7 @@ describe CandidatesController do
 
       it "redirects to candidates list" do
         post :create, { :candidate => valid_candidate }
-        response.should redirect_to("/candidates")
+        response.should redirect_to(Candidate.last)
       end
     end
 

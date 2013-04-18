@@ -62,17 +62,6 @@ describe OpeningsController do
         assigns(:openings).should eq([opening1])
       end
 
-      it "search works properly" do
-        opening1 = Opening.create! valid_attributes
-        opening2 = Opening.create! valid_attributes.merge(:title => 'Sales Manager')
-        get :index, { :q => {}}
-        assigns(:openings).should eq([opening1, opening2])
-        get :index, { :q => { :title_cont => 'Manager' }}
-        assigns(:openings).should eq([opening1, opening2])
-        get :index, { :q => { :title_cont => 'Marketing' }}
-        assigns(:openings).should eq([opening1])
-      end
-
     end
 
     describe "GET show" do
