@@ -16,7 +16,9 @@ br
     label.control-label
       b Status: 
     .controls
-      = link_to "#{@opening.status_str}, with #{pluralize(@opening.candidates.count, 'candidate')} assigned", candidates_path(:q => { :opening => @opening } )
+      = "#{@opening.status_str}, with "
+      span = link_to "#{pluralize(@opening.candidates.count, 'candidate')}", candidates_path(:opening_id => @opening.id )
+      span =  " assigned"
   .control-group
     label.control-label
       b Available Seats:

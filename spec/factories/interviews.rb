@@ -4,11 +4,11 @@ FactoryGirl.define do
     modality     "phone interview"
     title        "phone interview for Raymond Williamson"
     description  Faker::Lorem.paragraph
-    status       "pending"
+    status       "scheduled"
     score        9.2
     assessment   Faker::Lorem.paragraph
     scheduled_at DateTime.now
-    duration     1
+    duration     30
     phone        Faker::PhoneNumber.phone_number
     location     Faker::Address.state
   end

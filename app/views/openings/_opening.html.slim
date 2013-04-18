@@ -6,7 +6,7 @@ tr
       = link_to opening.hiring_manager.name, opening.hiring_manager
   td.capitalized-text = opening.status_str
   td= "#{opening.filled_no}/#{opening.total_no}"
-  td= link_to "#{opening.candidates.count}", candidates_path(:q => { :opening_id => opening.id } )
+  td= link_to "#{opening.candidates.count}", candidates_path(:opening_id => opening.id)
 
   td.actions
     = link_to 'Details', opening, :class => "btn"
