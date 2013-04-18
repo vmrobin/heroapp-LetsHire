@@ -50,10 +50,11 @@
       = f.label :status, :Status, :class => 'control-label'
       .controls
         = f.select :status, Interview::STATUS
-    .control-group
-      = label_tag :assessment, 'Feedback', :class => 'control-label'
-      .controls
-        = f.text_area :assessment, :class => 'span9', :readonly => !(is_interviewer? @interview.interviewers)
+    -if is_interviewer? @interview.interviewers
+      .control-group
+        = label_tag :assessment, 'Feedback', :class => 'control-label'
+        .controls
+        = f.text_area :assessment, :class => 'span9'
   .control-group
     .controls
       .actions
