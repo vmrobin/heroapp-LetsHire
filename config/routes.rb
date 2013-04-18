@@ -5,11 +5,17 @@ LetsHire::Application.routes.draw do
   # all V1 rest api (for mobile) should be below
   namespace :api do
     namespace :v1 do
+
+      get 'test' => 'misc#test_connection'
+
       devise_scope :user do
         resources :sessions, :only => [:create, :destroy]
         post 'login' => 'sessions#create'
         delete 'logout' => 'sessions#destroy'
       end
+
+      resources :interviews, :only => [:index, :show, :update]
+
     end
   end
 
