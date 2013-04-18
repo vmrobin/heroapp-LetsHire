@@ -1,7 +1,7 @@
 class InterviewsController < AuthorizedController
   def index
     authorize! :read, Interview
-    @interviews = Interview.all.to_a.sort_by! { |interview| interview.opening_candidate.candidate.name }
+    @interviews = Interview.order('scheduled_at ASC')
     unless can? :create, Interview
       @interviews.reject! do |interview|
         not interview.interviewers.any? { |interviewer| interviewer.user_id == current_user.id }

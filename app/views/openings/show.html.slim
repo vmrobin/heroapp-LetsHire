@@ -12,13 +12,20 @@ br
       b Department:
     .controls
       = @opening.department.try(:name)
-  .control-group
-    label.control-label
-      b Status: 
-    .controls
-      = "#{@opening.status_str}, with "
-      span = link_to "#{pluralize(@opening.candidates.count, 'candidate')}", candidates_path(:opening_id => @opening.id )
-      span =  " assigned"
+  -if user_signed_in?
+    .control-group
+      label.control-label
+        b Status:
+      .controls
+        = "#{@opening.status_str}, with "
+        span = link_to "#{pluralize(@opening.candidates.count, 'candidate')}", candidates_path(:opening_id => @opening.id )
+        span =  " assigned"
+  - else
+    .control-group
+      label.control-label
+        b Recruiter Email:
+      .controls
+        = @opening.recruiter.try(:email)
   .control-group
     label.control-label
       b Available Seats:

@@ -29,4 +29,4 @@ table class='table table-hover'
     th Duration
     th
 
-  =render opening_candidate.interviews, :opening_candidate => true
+  =render opening_candidate.interviews.order('scheduled_at ASC'), :opening_candidate => true

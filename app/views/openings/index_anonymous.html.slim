@@ -1,17 +1,12 @@
 h3 Openings
 
-= search_form_for @search, :html => { :class => 'form-horizontal' }  do |f|
-  = f.text_field :title_cont
-  = ' '
-  = f.submit
-
 table class='table table-hover'
   thead
     tr
-      th = sort_link @search, :title, "Title"
-      th = sort_link @search, :department
-      th = sort_link @search, :recruiter_id, "Recruiter"
-      th = sort_link @search, :available_no, "Seats"
+      th Title
+      th = Department
+      th Recruiter
+      th Seats
       th
   tbody
   - @openings.each do |opening|
