@@ -52,7 +52,7 @@ class InterviewsController < AuthorizedController
     if @interview.save
       @opening_candidate.status = OpeningCandidate::STATUS_LIST[:interview_loop]
       @opening_candidate.save
-      redirect_to candidate_path(@opening_candidate.candidate), :notice => "Interview created"
+      redirect_to @interview, :notice => "Interview was successfully created"
     else
       prepare_edit
       render :action => 'edit'

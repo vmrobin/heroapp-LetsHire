@@ -1,11 +1,11 @@
 h3.pull-left
-  = @candidate.name + " for " + @opening_candidate.opening.title
+  = link_to @candidate.name, candidate_path(@candidate)
+  span= " for "
+  span= link_to @opening_candidate.opening.title, opening_path(@opening_candidate.opening)
 .pull-right.align-to-title
  - if can? :update, Interview
    = link_to 'Edit', edit_interview_path(@interview), :class => 'btn btn-primary'
 dl.dl-horizontal.clear-both
-  dt Position
-  dd = link_to @opening_candidate.opening.title, opening_path(@opening_candidate.opening)
   dt Interview Type
   dd =@interview.modality
   dt Scheduled At
@@ -20,7 +20,7 @@ dl.dl-horizontal.clear-both
     dd= @interview.location
   dt Status
   dd= @interview.status
-  dt Interviewer
+  dt Interviewers
   dd
     div
       - @interview.interviewers.each do |interviewer|

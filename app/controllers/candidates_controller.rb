@@ -53,7 +53,7 @@ class CandidatesController < AuthenticatedController
         @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
                                                                 :opening_id => opening_id)
       end
-      redirect_to candidates_url, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
+      redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
       @departments = Department.with_at_least_n_openings
       render :action => 'new'
