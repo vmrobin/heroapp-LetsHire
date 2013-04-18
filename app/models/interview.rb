@@ -11,10 +11,9 @@ class Interview < ActiveRecord::Base
   attr_accessible :created_at, :updated_at
 
   # interview status constants
-  STATUS_NEW      = "new"
-  STATUS_PROGRESS = "progress"
-  STATUS_PENDING  = "pending"
-  STATUS_CLOSED   = "closed"
+  STATUS_NEW      = "scheduled"
+  STATUS_PROGRESS = "started"
+  STATUS_CLOSED   = "finished"
 
   # interview modality constants
   MODALITY_PHONE = "phone interview"
@@ -22,15 +21,12 @@ class Interview < ActiveRecord::Base
 
   MODALITIES = [MODALITY_PHONE, MODALITY_ONSITE]
 
-  STATUS = [STATUS_NEW, STATUS_PROGRESS, STATUS_PENDING, STATUS_CLOSED]
+  STATUS = [STATUS_NEW, STATUS_PROGRESS, STATUS_CLOSED]
 
   validates :opening_candidate_id, :presence => true
   validates :modality, :title, :scheduled_at, :presence => true
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
-
-  validates :interviewer_ids, :presence => true
-
 
   def self.overall_status(interviews)
     interview_counts = interviews.group(:status).count

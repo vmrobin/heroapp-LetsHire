@@ -23,10 +23,13 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
-  gem 'better_errors', '0.7.2'
-  gem 'meta_request', '0.2.2'
   gem 'execjs', '1.4.0'
   gem 'therubyracer', '0.11.4'
+end
+
+group :development do
+  gem 'better_errors', '0.7.2'
+  gem 'meta_request', '0.2.2'
 end
 
 # Gems used only for assets and not required

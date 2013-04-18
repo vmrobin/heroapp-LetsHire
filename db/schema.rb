@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130417125930) do
+ActiveRecord::Schema.define(:version => 20130418025954) do
 
   create_table "assessments", :force => true do |t|
     t.integer  "opening_candidate_id"

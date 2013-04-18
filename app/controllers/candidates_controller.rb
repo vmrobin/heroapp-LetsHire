@@ -3,8 +3,8 @@ class CandidatesController < AuthenticatedController
 
   def index
     opening = nil
-    if (params[:q] && params[:q][:opening_id])
-      opening = Opening.find(params[:q][:opening_id])
+    if (params[:opening_id])
+      opening = Opening.find(params[:opening_id])
     end
     if opening
       @candidates = opening.candidates.paginate(:page => params[:page])

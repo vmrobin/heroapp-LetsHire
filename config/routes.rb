@@ -1,8 +1,4 @@
 LetsHire::Application.routes.draw do
-  get "sessions/create"
-
-  get "sessions/destroy"
-
   get "stub_dashboard/overview"
   resources :AssessmentsController
 
