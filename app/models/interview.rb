@@ -28,9 +28,6 @@ class Interview < ActiveRecord::Base
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
 
-  validates :interviewer_ids, :presence => true
-
-
   def self.overall_status(interviews)
     interview_counts = interviews.group(:status).count
     (interview_counts.collect { | key, value | "#{value} #{key} interviews" }).join(",")

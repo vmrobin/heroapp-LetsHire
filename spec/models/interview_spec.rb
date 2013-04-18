@@ -4,7 +4,7 @@ describe Interview do
   it 'has a valid interview' do
     @user = FactoryGirl.create(:user)
     @user.should be_valid
-    FactoryGirl.build(:interview, :interviewer_ids => [@user.id]).should be_valid
+    FactoryGirl.build(:interview, :interviewer_ids => [ @user.id]).should be_valid
   end
 
   it 'requires modality to be valid' do
@@ -14,12 +14,6 @@ describe Interview do
     result = FactoryGirl.build(:interview, :modality => 'Invalid Value')
     result.should_not be_valid
     result.errors.messages.has_key?(:modality).should be_true
-  end
-
-  it 'requires interviewers to be present' do
-    result = FactoryGirl.build(:interview)
-    result.should_not be_valid
-    result.errors.messages.has_key?(:interviewer_ids).should be_true
   end
 
   it 'requires title to be present' do
