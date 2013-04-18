@@ -1,13 +1,9 @@
 tr
   -unless opening_candidate
-    td= link_to interview.opening_candidate.candidate.name, interview.opening_candidate.candidate
-    td= link_to interview.opening_candidate.opening.title, interview.opening_candidate.opening
-  td= link_to interview.title, interview
-  td= interview.modality
+    td= link_to interview.opening_candidate.candidate.name + " for " + interview.opening_candidate.opening.title, interview
+  td.capitalized-text = interview.modality
   td.iso-time= interview.scheduled_at_iso
   td= interview.duration
-  td= interview.interviewers.map { |interviewer| link_to interviewer.user.name, interviewer.user }.join(', ').html_safe
-  td= interview.status
   td.actions
-    = link_to 'Edit', edit_interview_path(interview)
+    = link_to 'Edit', edit_interview_path(interview), :class => 'btn'
     = link_to 'Delete', interview, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'

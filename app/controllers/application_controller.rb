@@ -22,4 +22,8 @@ class ApplicationController < ActionController::Base
       redirect_to root_path, :notice => REQUIRE_ADMIN
     end
   end
+
+  def after_sign_in_path_for(resource)
+    stub_dashboard_overview_path
+  end
 end

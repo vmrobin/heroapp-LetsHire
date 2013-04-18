@@ -57,10 +57,10 @@ describe User do
       it{ should_not be_able_to :manage, User.new }
     end
 
-    context 'hiringmanager' do
+    context 'hiring_manager' do
       let(:user) do
         user = FactoryGirl.build(:user)
-        user.add_role('hiringmanager')
+        user.add_role('hiring_manager')
         user
       end
       it{ should_not be_able_to :manage, Interview.new }
@@ -84,7 +84,7 @@ describe User do
       let(:user) do
         user = FactoryGirl.build(:user)
         user.add_role('interviewer')
-        user.add_role('hiringmanager')
+        user.add_role('hiring_manager')
         user
       end
       it{ should_not be_able_to :manage, Interview.new }

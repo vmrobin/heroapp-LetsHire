@@ -15,12 +15,11 @@ html
           .row-fluid
             .span2
               ul.nav.nav-list.nav-list-no-padding
-                li = link_to_unless_current 'Dashboard', :controller => 'stub_dashboard', :action => 'overview'
-                li = link_to_unless_current 'Openings', openings_path
-                li = link_to_unless_current 'Candidates', candidates_path
-                li = link_to_unless_current 'Interviews', interviews_path
+                li = link_to 'Job Openings', openings_path
+                li = link_to 'Candidates', candidates_path
+                li = link_to 'Interviews', interviews_path
                 - if current_user.admin?
-                  li.lastli = link_to_unless_current 'Users', users_path
+                  li.lastli = link_to 'Users + Roles', users_path
 
             .span10
               == yield
