@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130413063854) do
+ActiveRecord::Schema.define(:version => 20130416102417) do
 
   create_table "assessments", :force => true do |t|
     t.integer  "opening_candidate_id"
@@ -50,8 +50,7 @@ ActiveRecord::Schema.define(:version => 20130413063854) do
     t.datetime "updated_at",   :null => false
   end
 
-  add_index "interviewers", ["interview_id"], :name => "index_interviewers_on_interview_id"
-  add_index "interviewers", ["user_id"], :name => "index_interviewers_on_user_id"
+  add_index "interviewers", ["user_id", "interview_id"], :name => "index_interviewers_on_user_id_and_interview_id", :unique => true
 
   create_table "interviews", :force => true do |t|
     t.integer  "opening_candidate_id"
@@ -78,16 +77,14 @@ ActiveRecord::Schema.define(:version => 20130413063854) do
     t.boolean "hold"
   end
 
-  add_index "opening_candidates", ["candidate_id"], :name => "index_opening_candidates_on_candidate_id"
-  add_index "opening_candidates", ["opening_id"], :name => "index_opening_candidates_on_opening_id"
+  add_index "opening_candidates", ["opening_id", "candidate_id"], :name => "index_opening_candidates_on_opening_id_and_candidate_id", :unique => true
 
   create_table "opening_participants", :id => false, :force => true do |t|
     t.integer "user_id"
     t.integer "opening_id"
   end
 
-  add_index "opening_participants", ["opening_id"], :name => "index_opening_participants_on_opening_id"
-  add_index "opening_participants", ["user_id"], :name => "index_opening_participants_on_user_id"
+  add_index "opening_participants", ["user_id", "opening_id"], :name => "index_opening_participants_on_user_id_and_opening_id", :unique => true
 
   create_table "openings", :force => true do |t|
     t.string   "title"
