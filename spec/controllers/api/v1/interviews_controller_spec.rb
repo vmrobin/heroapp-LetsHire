@@ -86,5 +86,12 @@ describe Api::V1::InterviewsController do
       assigns(:candidate).should be_a(Candidate)
     end
 
+    it 'can update specific interview' do
+      interview = Interview.create! valid_interview(@users)
+      interview.status = Interview::STATUS_CLOSED
+      post :update, {:id => interview.id, :interview => {:status => Interview::STATUS_CLOSED } }
+      assigns(:interview).should eq(interview)
+    end
+
   end
 end
