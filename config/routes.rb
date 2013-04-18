@@ -1,7 +1,24 @@
 LetsHire::Application.routes.draw do
+  get "sessions/create"
+
+  get "sessions/destroy"
+
   get "stub_dashboard/overview"
   resources :AssessmentsController
 
+  # all V1 rest api (for mobile) should be below
+  namespace :api do
+    namespace :v1 do
+      devise_scope :user do
+        resources :sessions, :only => [:create, :destroy]
+        post 'login' => 'sessions#create'
+        delete 'logout' => 'sessions#destroy'
+      end
+    end
+  end
+
+
+  # all V1 rest api (for mobile) should be above
 
   devise_for :users
 
