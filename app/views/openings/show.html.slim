@@ -20,12 +20,12 @@ br
         = "#{@opening.status_str}, with "
         span = link_to "#{pluralize(@opening.candidates.count, 'candidate')}", candidates_path(:opening_id => @opening.id )
         span =  " assigned"
-  - else
+  - elsif @opening.recruiter
     .control-group
       label.control-label
         b Recruiter Email:
       .controls
-        = @opening.recruiter.try(:email)
+        a href="mailto:#{@opening.recruiter.email}" = @opening.recruiter.email
   .control-group
     label.control-label
       b Available Seats:
