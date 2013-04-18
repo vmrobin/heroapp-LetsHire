@@ -4,7 +4,7 @@ describe UsersController do
   def valid_attributes
     {
       :email    => 'test@test.com',
-      :password => 'test',
+      :password => 'testtest',
       :name     => 'test_user'
     }
   end
