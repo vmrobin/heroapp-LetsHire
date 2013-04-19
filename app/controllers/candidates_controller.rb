@@ -107,7 +107,7 @@ class CandidatesController < AuthenticatedController
     if @candidate.update_attributes(params[:candidate])
       redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated."
     else
-      #@resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+      @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
       render :action => 'edit'
     end
   rescue ActiveRecord::RecordNotFound
