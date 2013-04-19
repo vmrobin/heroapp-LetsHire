@@ -13,13 +13,13 @@ class OpeningCandidate < ActiveRecord::Base
   validates :candidate_id, :uniqueness => { :scope => :opening_id }
 
   #Don't change order randomly. order matters.
-  STATUS_LIST = { :interview_loop => 1,
-                  :fail => 2,
-                  :quit => 3,
-                  :offer_pending => 7,
-                  :offer_sent => 8,
-                  :offer_declined => 9,
-                  :offer_accepted => 10}
+  STATUS_LIST = { 'Interview Loop' => 1,
+                  'Fail' => 2,
+                  'Quit' => 3,
+                  'Offer Pending' => 7,
+                  'Offer Sent' => 8,
+                  'Offer Declined' => 9,
+                  'Offer Accepted' => 10}
 
   STATUS_STRINGS = STATUS_LIST.invert
 

@@ -56,10 +56,10 @@ describe OpeningsController do
   describe 'Anonymous User' do
     describe "GET index" do
       it "only returns published openings for anonymous user" do
-        opening1 = Opening.create! valid_attributes
-        Opening.create! valid_attributes.merge(:status => 0)
+        Opening.create! valid_attributes
+        opening2 = Opening.create! valid_attributes.merge(:status => 0)
         get :index, {}
-        assigns(:openings).should eq([opening1])
+        assigns(:openings).index(opening2).should be_nil
       end
 
     end
@@ -82,24 +82,23 @@ describe OpeningsController do
 
     describe "GET index" do
       it "return opening list correctly based on ownership" do
-        opening1 = Opening.create! valid_attributes
-        opening2 = Opening.create! valid_attributes, :status => 0
-        all_openings = [opening1, opening2]
+        Opening.create! valid_attributes
+        opening1 = Opening.create! valid_attributes, :status => 0
         get :index, {}
-        assigns(:openings).should eq([])
+        assigns(:openings).index(opening1).should nil
         get :index, { :all => true}
-        assigns(:openings).should eq(all_openings)
+        assigns(:openings).index(opening1).should be_true
 
         sign_in @user1
         get :index, { :all => true}
-        assigns(:openings).should eq(all_openings)
+        assigns(:openings).index(opening1).should be_true
 
         Opening.stub(:owned_by).and_return(Opening)
         sign_in @hiring_manager1
         get :index, {}
-        assigns(:openings).should eq(all_openings)
+        assigns(:openings).index(opening1).should be_true
         get :index, { :all => true}
-        assigns(:openings).should eq(all_openings)
+        assigns(:openings).index(opening1).should be_true
       end
     end
 
