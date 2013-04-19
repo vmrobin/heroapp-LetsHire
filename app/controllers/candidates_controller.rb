@@ -76,16 +76,13 @@ class CandidatesController < AuthenticatedController
       redirect_to @candidate, :notice => "Opening was already assigned."
       return
     end
-    respond_to do |format|
-      if @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
-                                                               :opening_id => new_opening_id)
-        format.html { redirect_to @candidate, :notice => "Opening was successfully assigned." }
-        format.json { head :no_content }
-      else
-        @departments = Department.with_at_least_n_openings
-        @selected_department_id = params[:candidate][:department_ids]
-        redirect_to @candidate, :notice => "Opening was already assigned or not given."
-      end
+    if @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
+                                                             :opening_id => new_opening_id)
+      redirect_to @candidate, :notice => "Opening was successfully assigned."
+    else
+      @departments = Department.with_at_least_n_openings
+      @selected_department_id = params[:candidate][:department_ids]
+      redirect_to @candidate, :notice => "Opening was already assigned or not given."
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to candidates_url, notice: 'Invalid Candidate'
@@ -96,7 +93,7 @@ class CandidatesController < AuthenticatedController
   def update
     @candidate = Candidate.find params[:id]
     unless params[:candidate]
-      redirect_to @candidate, notice: 'Invalid attributes'
+      redirect_to @candidate, notice: 'Invalid parameters'
       return
     end
     params[:candidate].delete(:department_ids)
@@ -107,14 +104,11 @@ class CandidatesController < AuthenticatedController
       params[:candidate][:resume] = upload_resume_file(params[:candidate][:name], params[:candidate][:resume].original_filename)
     end
 
-    respond_to do |format|
-      if @candidate.update_attributes(params[:candidate])
-        format.html { redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated." }
-        format.json { head :no_content }
-      else
-        @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
-        render :action => 'edit'
-      end
+    if @candidate.update_attributes(params[:candidate])
+      redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully updated."
+    else
+      @resume = File.basename(@candidate.resume) unless @candidate.resume.nil?
+      render :action => 'edit'
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to candidates_url, notice: 'Invalid Candidate'

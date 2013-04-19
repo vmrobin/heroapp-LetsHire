@@ -9,7 +9,6 @@ tr
   td= link_to "#{opening.candidates.count}", candidates_path(:opening_id => opening.id)
 
   td.actions
-    = link_to 'Details', opening, :class => "btn"
     - if can? :update, opening
       a.btn href=edit_opening_path(opening) Edit
       = link_to 'Delete', opening, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
