@@ -4,7 +4,7 @@ class CandidatesController < AuthenticatedController
   def index
     opening = nil
     if (params[:opening_id])
-      opening = Opening.find(params[:opening_id]).order('title ASC')
+      opening = Opening.find(params[:opening_id])
     end
     if opening
       @candidates = opening.candidates.paginate(:page => params[:page], :order => 'name ASC')
