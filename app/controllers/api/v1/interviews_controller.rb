@@ -38,7 +38,16 @@ class Api::V1::InterviewsController < Api::V1::ApiController
   end
 
   def update
-    render :json => {:ret => OK, :message => 'not implemented'}, :status => 200
+    return missing_params unless params[:id]
+    @interview = Interview.find(params[:id])
+
+    if @interview.update_attributes(params[:interview])
+      render :json => {:ret => OK, :interview => @interviews }, :status => 200
+    else
+      render :json => {:ret => ERROR, :message => 'Error update interview'}, :status => 500
+    end
+  rescue ActiveRecord::RecordNotFound
+    return unavailable_instance
   end
 
   private
