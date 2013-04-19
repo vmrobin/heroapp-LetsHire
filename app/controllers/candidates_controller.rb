@@ -91,11 +91,11 @@ class CandidatesController < AuthenticatedController
   #Don't support remove JD assignment via update API
   #To avoid removing a JD assignment accidentally, should use 'create_opening' instead.
   def update
+    @candidate = Candidate.find params[:id]
     unless params[:candidate]
-      redirect_to candidates_url, notice: 'Invalid parameters'
+      redirect_to @candidate, notice: 'Invalid parameters'
       return
     end
-    @candidate = Candidate.find params[:id]
     params[:candidate].delete(:department_ids)
     params[:candidate].delete(:opening_ids)
     unless params[:candidate][:resume].nil?
