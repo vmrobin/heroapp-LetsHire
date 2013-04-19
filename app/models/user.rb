@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   validates :name,  :presence => true
   validates :email, :presence => true, :uniqueness => true
-  validates :email, :email_format => { :message => 'email format error'}
+  validates :email, :email_format => true, :if => :email?
 
 
   has_many :openings_to_be_interviewed, :through => :opening_participants

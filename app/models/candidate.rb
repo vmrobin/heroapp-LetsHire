@@ -9,8 +9,10 @@ class Candidate < ActiveRecord::Base
   phone_format = Regexp.new("^(\\(\\d+\\)){0,1}(\\d+)[\\d|\\.|-]*(\\sx\\d+){0,1}$")
 
   validates :name, :presence => true
-  validates :email, :email_format => { :message => 'format error'}
-  validates :phone, :format => { :with => phone_format, :message => 'format error' }
+  validates :email,:presence => true
+  validates :email, :email_format => { :message => 'format error' }, :if => :email?
+  validates :phone, :presence => true
+  validates :phone, :format => { :with => phone_format, :message => 'format error' }, :if => :phone?
 
   self.per_page = 20
 
