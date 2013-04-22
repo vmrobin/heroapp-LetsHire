@@ -122,6 +122,14 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "photos", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "p",           :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",                :default => "",    :null => false
     t.string   "encrypted_password",   :default => "",    :null => false
