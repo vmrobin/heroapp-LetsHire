@@ -1,6 +1,6 @@
 class Api::V1::InterviewsController < Api::V1::ApiController
 
-  before_filter :authenticate_user!
+  before_filter :verify_current_user, :authenticate_user!
 
   INTERVAL_MAPPINGS = {
     '1d' => 1.day,
