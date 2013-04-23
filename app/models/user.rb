@@ -22,11 +22,7 @@ class User < ActiveRecord::Base
 
 
   has_many :openings_to_be_interviewed, :through => :opening_participants
-  # NOTE: Currently we are not sure why 'destroy' does not work but 'delete_all' does.
-  # From Rails document, the difference between them is that 'destroy' will invokes
-  # callback before do database transactions. Let's keep this implementation currently
-  # to see if we can get more confidence in the future.
-  has_many :opening_participants, :inverse_of => :participant, :dependent => :delete_all
+  has_many :opening_participants, :inverse_of => :participant, :dependent => :destroy
 
   def admin?
     read_attribute :admin
