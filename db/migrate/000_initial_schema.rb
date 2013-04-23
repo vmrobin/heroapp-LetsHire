@@ -104,7 +104,7 @@ class InitialSchema < ActiveRecord::Migration
     create_table :opening_candidates do |t|
       t.belongs_to :opening
       t.belongs_to :candidate
-      t.integer :status
+      t.integer :status, :default => 1
       t.boolean :hold
     end
 
