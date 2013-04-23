@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(:version => 20130418025954) do
   create_table "opening_candidates", :force => true do |t|
     t.integer "opening_id"
     t.integer "candidate_id"
-    t.integer "status"
+    t.integer "status",       :default => 1
     t.boolean "hold"
   end
 

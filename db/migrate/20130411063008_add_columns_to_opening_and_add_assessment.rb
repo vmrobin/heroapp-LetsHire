@@ -11,6 +11,6 @@ class AddColumnsToOpeningAndAddAssessment < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_column :opening_candidates, :status, :integer
+    add_column :opening_candidates, :status, :integer, :default => 1
   end
 end

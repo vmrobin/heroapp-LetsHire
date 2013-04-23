@@ -50,8 +50,7 @@ class CandidatesController < AuthenticatedController
     @candidate = Candidate.new params[:candidate]
     if @candidate.save
       if opening_id
-        @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
-                                                                :opening_id => opening_id)
+        @candidate.opening_candidates.create(:opening_id => opening_id)
       end
       redirect_to @candidate, :notice => "Candidate \"#{@candidate.name}\" (#{@candidate.email}) was successfully created."
     else
@@ -76,8 +75,7 @@ class CandidatesController < AuthenticatedController
       redirect_to @candidate, :notice => "Opening was already assigned."
       return
     end
-    if @candidate.opening_candidates.create(:status =>OpeningCandidate::STATUS_LIST[:interview_loop],
-                                                             :opening_id => new_opening_id)
+    if @candidate.opening_candidates.create(:opening_id => new_opening_id)
       redirect_to @candidate, :notice => "Opening was successfully assigned."
     else
       @departments = Department.with_at_least_n_openings
