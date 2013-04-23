@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "roles_mask",           :default => 1
     t.integer  "department_id"
     t.string   "authentication_token"
+    t.boolean  "deleted",              :default => false, :null => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
   end
