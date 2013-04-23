@@ -39,6 +39,7 @@ class InitialSchema < ActiveRecord::Migration
       t.integer :roles_mask, :default => 1
       t.integer :department_id
       t.string :authentication_token
+      t.boolean :deleted, :null => false, :default => false
 
       t.timestamps
     end
@@ -56,7 +57,6 @@ class InitialSchema < ActiveRecord::Migration
       t.string :source
       t.text   :description
       t.string :resume
-      # TODO reference JD
       t.timestamps
     end
 
