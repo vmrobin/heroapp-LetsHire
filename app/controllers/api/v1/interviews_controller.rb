@@ -32,21 +32,21 @@ class Api::V1::InterviewsController < Api::V1::ApiController
       @candidate = Candidate.find(candidate_id)
     end
     @attachment = nil
-    render :json => {:ret => OK, :interviews => @interviews, :candidate => @candidate, :attachment => @attachment}
+    render :json => {:ret => OK, :interview => @interview, :candidate => @candidate, :attachment => @attachment}
   rescue ActiveRecord::RecordNotFound
     return unavailable_instance
   end
 
   def update
-    return missing_params unless params[:id]
-    @interview = Interview.find(params[:id])
-
-    if @interview.update_attributes(params[:interview])
-      render :json => {:ret => OK, :interview => @interviews }, :status => 200
+    return missing_params unless params['id']
+    return missing_params unless params['interview']
+    interview = Interview.find(params['id'])
+    if interview.update_attributes(params['interview'])
+      render :json => {:interview => interview }, :status => 200
     else
-      render :json => {:ret => ERROR, :message => 'Error update interview'}, :status => 500
+      render :json => {:ret => ERROR, :message => 'internal error'}, :status => 500
     end
-  rescue ActiveRecord::RecordNotFound
+  rescue
     return unavailable_instance
   end
 
