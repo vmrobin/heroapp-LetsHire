@@ -35,12 +35,25 @@ class PostgresqlStorage < FileStorageImpl
     super(opts)
   end
 
+  def fini
+    disconnect
+  end
+
+  # Postgresql large object storage is based on pg_largeobject table, please
+  # refer to 9.0 version official document about the pg_largeobject table,
+  # http://www.postgresql.org/docs/9.0/static/catalog-pg-largeobject.html.
+  #
+  # Schema:
+  # loid    oid, Identifier of the large object that includes this page
+  # pageno int4, Page number of this page within its large object (counting from zero)
+  # data  bytea, Actual data stored in the large object. This will never be more than LOBLKSIZE bytes and might be less.
+
   def read(file, oid)
     file.rewind
-    transaction(connection) do
-      fd = connection.lo_open(oid, PG::INV_READ)
-      total_size = connection.lo_lseek(fd, 0, PG::SEEK_END)
-      connection.lo_lseek(fd, 0, PG::SEEK_SET)
+    connection.transaction do
+      fd = connection.lo_open(oid, PGconn::INV_READ)
+      total_size = connection.lo_lseek(fd, 0, PGconn::SEEK_END)
+      connection.lo_lseek(fd, 0, PGconn::SEEK_SET)
       offset = 0
       while offset < total_size
         buffer = connection.lo_read(fd, @buffer_size)
@@ -54,9 +67,9 @@ class PostgresqlStorage < FileStorageImpl
   def write(file)
     file.rewind
     oid = nil
-    transaction(connection) do
-      oid = connection.lo_create
-      fd = connection.lo_open(fd, 0, PG::INV_WRITE)
+    connection.transaction do
+      oid = connection.lo_creat(PGconn::INV_WRITE)
+      fd = connection.lo_open(oid, PGconn::INV_WRITE)
       total_size = file.length
       offset = 0
       while offset < total_size
@@ -73,29 +86,24 @@ class PostgresqlStorage < FileStorageImpl
   end
 
   def file_length(oid)
-    fd = connection.lo_open(oid, PG::INV_READ)
-    length = connection.lo_lseek(fd, 0, PG::SEEK_END)
-    connection.lo_close(fd)
+    length = 0
+    connection.transaction do
+      fd = connection.lo_open(oid, PGconn::INV_READ)
+      length = connection.lo_lseek(fd, 0, PGconn::SEEK_END)
+      connection.lo_close(fd)
+    end
     return length
   end
 
 private
   # NOTE: Shall we need a connection pool? Currently let's make it simple.
   def connection
-    @conn ||= PG.connect( :dbname => @database, :host => @host, :port => @port )
+    @conn ||= PGconn.connect( :dbname => @database, :host => @host, :port => @port )
     @conn
   end
 
   def disconnect
+    @conn.finish
   end
 
-  def transaction(conn, &blk)
-    begin
-      conn.exec('BEGIN')
-      yield
-      conn.exec('COMMIT')
-    rescue => exception
-      conn.exec('ROLLBACK')
-    end
-  end
 end
