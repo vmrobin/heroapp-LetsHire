@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20130424102908) do
 
   create_table "assessments", :force => true do |t|
     t.integer  "opening_candidate_id"
@@ -119,9 +119,9 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "roles_mask",           :default => 1
     t.integer  "department_id"
     t.string   "authentication_token"
-    t.boolean  "deleted",              :default => false, :null => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
+    t.datetime "deleted_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

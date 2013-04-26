@@ -15,7 +15,11 @@ table class='table table-hover'
         td = user.email
         td.actions
           a.btn href=edit_user_path(user.id) Edit
-          =link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
+          -if user.deleted_at.nil?
+            =link_to 'Deactivate',  user_disable_path(user), :confirm => 'Are you sure?', :class => 'btn btn-danger'
+          -else
+            =link_to 'Reactivate',  user_enable_path(user), :class => 'btn'
+
 
 div.digg_pagination
   = will_paginate @users, :class => "digg-paginate"

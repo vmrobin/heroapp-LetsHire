@@ -21,12 +21,14 @@ LetsHire::Application.routes.draw do
 
 
   # all V1 rest api (for mobile) should be above
-
+  get '/users/:id/disable', to: 'users#deactivate', as: :user_disable
+  get '/users/:id/enable', to: 'users#reactivate', as: :user_enable
   devise_for :users
 
   root to: 'static_pages#home'
   match '/help', to: 'static_pages#help'
   match '/contact', to: 'static_pages#contact'
+
 
   match '/profile', to: 'profile#edit'
   match '/profile/update', to: 'profile#update'

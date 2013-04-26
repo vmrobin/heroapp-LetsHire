@@ -126,19 +126,16 @@ describe UsersController do
     end
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested user" do
+  describe "Deactivate user" do
+    it "deactivate a user successfully" do
       user = User.create! valid_attributes
-      expect {
-        delete :destroy, {:id => user.to_param}
-      }.to change(User, :count).by(-1)
+      put :deactivate, {:id => user.to_param}
+      response.should redirect_to(users_url)
+      sign_in user
+      flash[:notice].should eq("Invalid user")
+
     end
 
-    it "redirects to the users list" do
-      user = User.create! valid_attributes
-      delete :destroy, {:id => user.to_param}
-      response.should redirect_to(users_url)
-    end
   end
 
 end

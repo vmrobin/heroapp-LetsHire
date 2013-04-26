@@ -7,12 +7,10 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
-  validates_confirmation_of :password, :if => :already_has_password?, :on => :update
-  validates_presence_of :password, :if => :already_has_password?, :on => :update
-
   # Setup accessible (or protected) attributes for your model
-  #attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me, :authentication_token
+  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me #, :authentication_token
+
+  attr_protected :deleted_at
 
   ROLES = %w[interviewer recruiter hiring_manager]
 
@@ -23,6 +21,8 @@ class User < ActiveRecord::Base
 
   has_many :openings_to_be_interviewed, :through => :opening_participants
   has_many :opening_participants, :inverse_of => :participant, :dependent => :destroy
+  has_many :interviewers
+  has_many :interviews, :through => :interviewers
 
   def admin?
     read_attribute :admin
@@ -71,8 +71,8 @@ class User < ActiveRecord::Base
     Department.find(self.department_id).name if self.department_id
   end
 
-private
-  def already_has_password?
-    !encrypted_password.blank?
+  def active_for_authentication?
+    self.deleted_at.nil? && super
   end
+
 end

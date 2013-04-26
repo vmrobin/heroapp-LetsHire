@@ -83,6 +83,8 @@ class InterviewsController < AuthorizedController
         end
       end
     end
+  rescue
+    redirect_to interviews_url, notice: 'Invalid interview'
   end
 
   private

@@ -75,16 +75,37 @@ class UsersController < AuthenticatedController
     redirect_to users_url, notice: 'Invalid user'
   end
 
-  def destroy
+  def deactivate
     @user = User.find(params[:id])
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { render :no_content}
+    active_openings = Opening.published.owned_by(@user.id).count
+    active_interviews = @user.interviews.where(Interview.arel_table[:status].not_eq(Interview::STATUS_CLOSED)).count
+    if active_openings > 0 || active_interviews > 0
+    return redirect_to users_url, notice: "Cannot disable user because he or she owns #{active_openings} active opening and #{active_interviews} active interviews."
     end
-  rescue ActiveRecord::RecordNotFound
+    toggle(params, false)
+  rescue
     redirect_to users_url, notice: 'Invalid user'
+  end
+
+  def reactivate
+    toggle(params, true)
+  rescue
+    redirect_to users_url, notice: 'Invalid user'
+  end
+
+  private
+
+  def toggle(params, active)
+    @user = User.find(params[:id])
+    if current_user == @user
+      return redirect_to users_url :notice => 'Cannot toggle your own active status'
+    end
+    option = {:deleted_at => (active ? nil : Time.current)}
+    if @user.update_without_password(option) && @user.save
+      return redirect_to users_url
+    else
+      return redirect_to users_url, :notice => "Operation Failed, error = #{@user.errors.inspect}"
+    end
   end
 
   private
