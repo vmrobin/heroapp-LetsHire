@@ -92,7 +92,7 @@ class InterviewsController < AuthorizedController
   def prepare_edit
     @opening_candidate = @interview.opening_candidate
     @candidate = @opening_candidate.candidate
-    load_openings
+    load_openings unless @candidate.nil?
   end
 
   def load_openings

@@ -4,7 +4,7 @@ describe UsersController do
   def valid_attributes
     {
       :email    => 'test@test.com',
-      :password => 'testtest',
+      :password => 'testtest323232',
       :name     => 'test_user'
     }
   end
@@ -126,13 +126,24 @@ describe UsersController do
     end
   end
 
-  describe "Deactivate user" do
-    it "deactivate a user successfully" do
+  describe "User Reactivate/Deactivate" do
+    it "deactivate a user" do
       user = User.create! valid_attributes
       put :deactivate, {:id => user.to_param}
       response.should redirect_to(users_url)
-      sign_in user
-      flash[:notice].should eq("Invalid user")
+      flash[:notice].should eq(nil)
+
+      assigns(:user).deleted_at.should_not eq(nil)
+
+    end
+
+    it "reactivate a user" do
+      user = User.create! valid_attributes.merge(:deleted_at => Time.current)
+      put :reactivate, {:id => user.to_param}
+      response.should redirect_to(users_url)
+      flash[:notice].should eq(nil)
+
+      assigns(:user).deleted_at.should eq(nil)
 
     end
 

@@ -8,15 +8,15 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me #, :authentication_token
-
-  attr_protected :deleted_at
+  attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me, :deleted_at #, :authentication_token
 
   ROLES = %w[interviewer recruiter hiring_manager]
 
   validates :name,  :presence => true
   validates :email, :presence => true, :uniqueness => true
   validates :email, :email_format => { :message => 'format error'}, :if => :email?
+
+  scope :active, where(:deleted_at => nil)
 
 
   has_many :openings_to_be_interviewed, :through => :opening_participants
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   end
 
   def has_role?(role_name)
-    admin? || (roles_mask & User::name2role(role_name) ) != 0
+    admin? || role_name.to_s == 'interviewer' || (roles_mask & User::name2role(role_name) ) != 0
   end
 
   # The class method used in seed.rb to create the only admin user
@@ -44,18 +44,18 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.users_with_role(role_name)
+  def self.with_role(role_name)
     role_mask = name2role(role_name)
     all.select { |user|  user.admin? || (user.roles_mask & role_mask) != 0}
   end
 
   def roles=(roles)
-    self.roles_mask = (roles & ROLES).map { |r| 2**ROLES.index(r) }.inject(0, :+)
+    self.roles_mask = ((roles & ROLES).map { |r| 2**ROLES.index(r) }.inject(0, :+)) | 1 # '| 1 ' means user always has interviewer role
   end
 
   def roles
     ROLES.reject do |r|
-      ((roles_mask || 0) & 2**ROLES.index(r)).zero?
+      r !=  'interviewer' && ((roles_mask || 0) & 2**ROLES.index(r)).zero?
     end
   end
 
@@ -68,11 +68,22 @@ class User < ActiveRecord::Base
   end
 
   def department_string
-    Department.find(self.department_id).name if self.department_id
+    Department.find(department_id).try(:name) if department_id
   end
 
   def active_for_authentication?
-    self.deleted_at.nil? && super
+    deleted_at.nil? && super
+  end
+
+  def self.active_departments
+    users = with_role(:hiring_manager)
+    department_ids = users.map(&:department_id)
+    department_ids.reject! { |item| item.nil?}
+    if department_ids.uniq.any?
+      Department.find_all_by_id(department_ids).map { |d| [d.name, d.id]}
+    else
+      []
+    end
   end
 
 end

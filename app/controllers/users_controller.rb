@@ -4,68 +4,62 @@ class UsersController < AuthenticatedController
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 20)
-
-    respond_to do |format|
-      format.html # index.html
-      format.json { render :json => @users }
-    end
   end
 
   def index_for_tokens
     unless user_signed_in?
       redirect_to new_user_session_path, :notice => REQUIRE_LOGIN
     end
-    @participants = User.select("id, name, email").where("name like ?", "%#{params[:q]}%")
+    if params[:all]
+      @participants = User.select("id, name, email").where("name like ?", "%#{params[:q]}%")
+    else
+      @participants = User.active.select("id, name, email").where("name like ?", "%#{params[:q]}%")
+    end
     respond_to do |format|
-      format.html
       format.json { render :json => @participants.map(&:attributes) }
     end
   end
 
   def create
     @user = User.new(params[:user])
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to users_url }
-        format.json { render :json => @user, :status => 'created', :location => @user }
-      else
-        format.html { render :action => 'new' }
-        format.json { render :json => @user.errors, :status => :unprocessable_entity}
-      end
+    if @user.save
+      redirect_to users_url
+    else
+      render :action => 'new'
     end
   end
 
   def new
     @user = User.new
-    respond_to do |format|
-      format.html
-      format.json {render :json => @user}
-    end
   end
 
   def show
     @user = User.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json { render :json => @user}
-    end
   rescue ActiveRecord::RecordNotFound
     redirect_to users_url, notice: 'Invalid user'
   end
 
   def update
     @user = User.find(params[:id])
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to @user}
-        format.json { render :no_content }
-      else
-        format.html { render :action => 'edit' }
-        format.json { render :json => @user.errors, :status => :unprocessable_entity }
-      end
+
+    # required for settings form to submit when password is left blank
+    if params[:user][:password].blank?
+      params[:user].delete("password")
+      params[:user].delete("password_confirmation")
     end
+
+    params[:user].delete("deleted_at")
+
+    if @user.update_attributes(params[:user])
+      redirect_to @user
+    else
+      render :action => 'edit'
+    end
+
   rescue ActiveRecord::RecordNotFound
     redirect_to users_url, notice: 'Invalid user'
+  rescue
+    redirect_to users_url, notice: 'Invalid parameter'
   end
 
   def edit
@@ -77,17 +71,23 @@ class UsersController < AuthenticatedController
 
   def deactivate
     @user = User.find(params[:id])
+    if current_user == @user
+      return redirect_to :back, :notice => 'Cannot disable yourself'
+    end
     active_openings = Opening.published.owned_by(@user.id).count
     active_interviews = @user.interviews.where(Interview.arel_table[:status].not_eq(Interview::STATUS_CLOSED)).count
     if active_openings > 0 || active_interviews > 0
-    return redirect_to users_url, notice: "Cannot disable user because he or she owns #{active_openings} active opening and #{active_interviews} active interviews."
+      return redirect_to users_url, notice: "Cannot disable user because he or she owns #{active_openings} active opening and #{active_interviews} active interviews."
     end
+    #It's ok to remove all 'potential interviewers' for this user
+    @user.opening_participants.destroy_all
     toggle(params, false)
-  rescue
-    redirect_to users_url, notice: 'Invalid user'
+  #rescue
+  #  redirect_to users_url, notice: 'Invalid user'
   end
 
   def reactivate
+    @user = User.find(params[:id])
     toggle(params, true)
   rescue
     redirect_to users_url, notice: 'Invalid user'
@@ -97,14 +97,11 @@ class UsersController < AuthenticatedController
 
   def toggle(params, active)
     @user = User.find(params[:id])
-    if current_user == @user
-      return redirect_to users_url :notice => 'Cannot toggle your own active status'
-    end
     option = {:deleted_at => (active ? nil : Time.current)}
     if @user.update_without_password(option) && @user.save
-      return redirect_to users_url
+      redirect_to users_url
     else
-      return redirect_to users_url, :notice => "Operation Failed, error = #{@user.errors.inspect}"
+      redirect_to users_url, :notice => "Operation Failed, error = #{@user.errors.inspect}"
     end
   end
 
