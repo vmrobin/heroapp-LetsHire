@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   scope :active, where(:deleted_at => nil)
 
-
+  belongs_to :department
   has_many :openings_to_be_interviewed, :through => :opening_participants
   has_many :opening_participants, :inverse_of => :participant, :dependent => :destroy
   has_many :interviewers

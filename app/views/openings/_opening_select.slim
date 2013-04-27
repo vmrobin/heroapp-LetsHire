@@ -1,4 +1,5 @@
 #openingid_select_wrapper
+  - opening_id ||= nil
   -if !selected_department_id.nil? && selected_department_id.to_i > 0
     -department = Department.find(selected_department_id.to_i)
     -if department.nil?
