@@ -3,18 +3,23 @@
 require 'spec_helper'
 require 'pg'
 require 'stringio'
+require 'yaml'
 
 # This is a postgresql system table to store the large object.
 TABLE_NAME = 'pg_largeobject'
 
+CONFIG_FILE = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'config', 'database.yml'))
+
 describe PostgresqlStorage do
 
   def env
+    dbconf = YAML.load(File.open(CONFIG_FILE))
+
     {
       :storage => 'postgresql',
       :host => 'localhost',
       :port => '5432',
-      :database => 'letshire_ci'
+      :database => dbconf["ci"]["database"]
     }
   end
 
@@ -52,7 +57,7 @@ describe PostgresqlStorage do
 
   it 'should raise exception with incorrect property' do
     expect do
-      pg = PostgresqlStorage.new(error_env)
+      pg = FileStorageImpl.new(error_env)
     end.to raise_error(Exception)
   end
 
@@ -80,6 +85,15 @@ describe PostgresqlStorage do
     #FIXME: not sure why the following statement reports error
     #res.should be_equal(content * 1024)
     pg.fini
+  end
+
+  it 'should clean binary object successfully' do
+    pg = PostgresqlStorage.new(env)
+    oid = pg.write(StringIO.new(content))
+    pg.clean(oid)
+    pg.fini
+    res = @conn.exec("SELECT * FROM pg_largeobject WHERE loid=#{oid}")
+    res.count.to_i.should be_equal(0)
   end
 
   it 'should get the correct size of binary object' do
