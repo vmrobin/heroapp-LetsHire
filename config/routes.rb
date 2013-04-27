@@ -19,6 +19,8 @@ LetsHire::Application.routes.draw do
     end
   end
 
+  # Hacker for initialization
+  match '/db_seed', to: 'application#db_seed'
 
   # all V1 rest api (for mobile) should be above
 
