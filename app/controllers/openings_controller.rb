@@ -94,19 +94,6 @@ class OpeningsController < ApplicationController
     redirect_to openings_url, notice: 'Invalid opening'
   end
 
-  def publish
-    @opening = Opening.find(params[:id])
-
-    if @opening.update_attributes(:status => Opening::STATUS_LIST[:published])
-      redirect_to @opening, notice: 'Opening was successfully published.'
-    else
-      render action: "edit"
-    end
-  rescue ActiveRecord::RecordNotFound
-    redirect_to openings_url, notice: 'Invalid opening'
-  end
-
-
 
   # DELETE /openings/1
   # DELETE /openings/1.json

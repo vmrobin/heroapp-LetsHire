@@ -53,7 +53,6 @@ LetsHire::Application.routes.draw do
 
   get '/departments/:id/user_select' => 'departments#user_select'
   resources :departments
-  get '/openings/:id/publish', to: 'openings#publish', as: :publish_opening
   resources :openings
   resources :candidates do
     resources :interviews

@@ -74,10 +74,13 @@ class UsersController < AuthenticatedController
     if current_user == @user
       return redirect_to :back, :notice => 'Cannot disable yourself'
     end
-    active_openings = Opening.published.owned_by(@user.id).count
-    active_interviews = @user.interviews.where(Interview.arel_table[:status].not_eq(Interview::STATUS_CLOSED)).count
-    if active_openings > 0 || active_interviews > 0
-      return redirect_to users_url, notice: "Cannot disable user because he or she owns #{active_openings} active opening and #{active_interviews} active interviews."
+    active_opening_count = Opening.published.owned_by(@user.id).count
+    active_interview_count = @user.interviews.where(Interview.arel_table[:status].not_eq(Interview::STATUS_CLOSED)).count
+    items = []
+    items << "active openings" if active_opening_count > 0
+    items << "active interviews" if active_interview_count > 0
+    if items.first
+      return redirect_to users_url, notice: "Cannot disable user assigned with #{items.join(' or ')}."
     end
     #It's ok to remove all 'potential interviewers' for this user
     @user.opening_participants.destroy_all

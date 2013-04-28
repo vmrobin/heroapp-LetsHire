@@ -76,10 +76,9 @@ class User < ActiveRecord::Base
   end
 
   def self.active_departments
-    users = with_role(:hiring_manager)
-    department_ids = users.map(&:department_id)
-    department_ids.reject! { |item| item.nil?}
-    if department_ids.uniq.any?
+    department_ids = with_role(:hiring_manager).map(&:department_id).reject! { |item| item.nil?}
+    department_ids.try(:uniq!)
+    if department_ids.try(:first)
       Department.find_all_by_id(department_ids).map { |d| [d.name, d.id]}
     else
       []
