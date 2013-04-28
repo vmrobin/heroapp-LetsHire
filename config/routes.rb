@@ -24,14 +24,11 @@ LetsHire::Application.routes.draw do
 
   # all V1 rest api (for mobile) should be above
 
-  devise_for :users
-
   root to: 'static_pages#home'
   match '/help', to: 'static_pages#help'
   match '/contact', to: 'static_pages#contact'
 
-  match '/profile', to: 'profile#edit'
-  match '/profile/update', to: 'profile#update'
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -46,12 +43,16 @@ LetsHire::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  match '/addresses/subregion_options' => 'openings#subregion_options'
-  match '/positions/opening_options' => 'openings#opening_options'
-  match '/participants' => 'users#index_for_tokens'
 
-
+  get '/users/:id/disable', to: 'users#deactivate', as: :disable_user
+  get '/users/:id/enable', to: 'users#reactivate', as: :enable_user
+  devise_for :users
+  match '/profile', to: 'profile#edit'
+  match '/profile/update', to: 'profile#update'
   resources :users
+
+  get '/departments/:id/user_select' => 'departments#user_select'
+  resources :departments
   resources :openings
   resources :candidates do
     resources :interviews
@@ -67,6 +68,12 @@ LetsHire::Application.routes.draw do
   end
 
   resources :interviews
+
+  get '/settings', to: 'settings#index'
+
+  get '/addresses/subregion_options' => 'openings#subregion_options'
+  get '/positions/opening_options' => 'openings#opening_options'
+  get '/participants' => 'users#index_for_tokens'
 
   # Sample resource route with options:
   #   resources :products do
