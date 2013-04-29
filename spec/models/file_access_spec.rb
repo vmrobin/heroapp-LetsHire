@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 require 'tempfile'
 require 'pg'
@@ -200,7 +198,6 @@ describe FileAccessBase do
       expect do
         @cleaner.clean(@oid - 1)
       end.to raise_error(Exception)
-
       res = @pgconn.exec('SELECT * FROM pg_largeobject')
       res.count.to_i.should_not be_equal(0)
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130424102908) do
+ActiveRecord::Schema.define(:version => 20130428012939) do
 
   create_table "assessments", :force => true do |t|
     t.integer  "opening_candidate_id"
@@ -29,7 +29,6 @@ ActiveRecord::Schema.define(:version => 20130424102908) do
     t.string   "phone"
     t.string   "source"
     t.text     "description"
-    t.string   "resume"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -44,6 +43,11 @@ ActiveRecord::Schema.define(:version => 20130424102908) do
   end
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
+
+  create_table "fake_data", :id => false, :force => true do |t|
+    t.integer "id",      :null => false
+    t.binary  "content"
+  end
 
   create_table "interviewers", :force => true do |t|
     t.integer  "interview_id"
@@ -109,6 +113,14 @@ ActiveRecord::Schema.define(:version => 20130424102908) do
   add_index "openings", ["department_id"], :name => "index_openings_on_department_id"
   add_index "openings", ["hiring_manager_id"], :name => "index_openings_on_hiring_manager_id"
   add_index "openings", ["recruiter_id"], :name => "index_openings_on_recruiter_id"
+
+  create_table "resumes", :force => true do |t|
+    t.integer  "candidate_id"
+    t.string   "resume_name"
+    t.string   "resume_path"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                :default => "",    :null => false

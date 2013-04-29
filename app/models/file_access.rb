@@ -2,6 +2,9 @@ require 'pathname'
 require 'file_storage'
 
 class FileAccessBase
+
+  attr_accessor :host, :port, :user, :password, :database
+
   def initialize(opts = nil)
     @storage = nil
     if opts.nil?
@@ -22,11 +25,11 @@ class FileAccessBase
 private
   def parse_env
     dbconfig = Rails.configuration.database_configuration[Rails.env]
-    @host     = dbconfig[:host]
-    @port     = dbconfig[:port]
-    @user     = dbconfig[:username]
-    @password = dbconfig[:password]
-    @database = dbconfig[:database]
+    @host     = dbconfig["host"]
+    @port     = dbconfig["port"]
+    @user     = dbconfig["username"]
+    @password = dbconfig["password"]
+    @database = dbconfig["database"]
   end
 
   def storagelo
@@ -48,7 +51,7 @@ private
 end
 
 class FileUploader < FileAccessBase
-  def initialize(opts)
+  def initialize(opts = nil)
     super(opts)
   end
 
@@ -66,7 +69,7 @@ class FileUploader < FileAccessBase
 end
 
 class FileDownloader < FileAccessBase
-  def initialize(opts)
+  def initialize(opts = nil)
     super(opts)
   end
 
@@ -82,7 +85,7 @@ class FileDownloader < FileAccessBase
 end
 
 class FileCleaner < FileAccessBase
-  def initialize(opts)
+  def initialize(opts = nil)
     super(opts)
   end
 
