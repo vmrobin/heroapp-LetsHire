@@ -56,7 +56,6 @@ class InitialSchema < ActiveRecord::Migration
       t.string :phone
       t.string :source
       t.text   :description
-      t.string :resume
       t.timestamps
     end
 
