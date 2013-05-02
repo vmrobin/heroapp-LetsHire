@@ -19,6 +19,8 @@ LetsHire::Application.routes.draw do
       post 'photo/upload' => 'photos#upload_file'
       get 'photo/download' => 'photos#get_file'
 
+      match 'mappings' => 'misc#mappings'
+
       mount PostgresqlLoStreamer::Engine => '/photo_p'
     end
   end

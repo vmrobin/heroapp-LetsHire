@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130428012939) do
+ActiveRecord::Schema.define(:version => 20130428021417) do
 
   create_table "assessments", :force => true do |t|
     t.integer  "opening_candidate_id"
@@ -47,6 +47,14 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
   create_table "fake_data", :id => false, :force => true do |t|
     t.integer "id",      :null => false
     t.binary  "content"
+  end
+
+  create_table "interview_photo_mappings", :force => true do |t|
+    t.integer  "interview_id"
+    t.integer  "photo_id"
+    t.integer  "p_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "interviewers", :force => true do |t|
