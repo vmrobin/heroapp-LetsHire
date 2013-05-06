@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
   end
 
   def roles_string
-    roles.join(',')
+    roles.join(', ')
   end
 
   def add_role(role)

@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
     t.string   "phone"
     t.string   "source"
     t.text     "description"
+    t.string   "resume"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -43,11 +44,6 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
   end
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
-
-  create_table "fake_data", :id => false, :force => true do |t|
-    t.integer "id",      :null => false
-    t.binary  "content"
-  end
 
   create_table "interviewers", :force => true do |t|
     t.integer  "interview_id"
