@@ -3,7 +3,7 @@ require 'capybara/rspec'
 require 'capybara'
 require 'capybara/dsl'
 require 'uuidtools'
-require_relative '../support/features/session_helpers'
+require_relative '../support/features/ui_helper'
 
 Capybara.run_server = true
 Capybara.default_driver = :selenium
@@ -12,16 +12,16 @@ Capybara.app_host = 'http://letshire-qa.cloudfoundry.com'
 include Features
 include Features::SignIn
 include Features::JobOpening
-include Features::Candidate
 
 feature 'job opening pages' do
+  title = ''
   background do
+    title = 'opening' + UUIDTools::UUID.random_create
     visit '/'
     sign_in(ADMIN_USERNAME, ADMIN_PASSWORD)
   end
 
   scenario 'check job opening list layout' do
-    title = 'opening' + UUIDTools::UUID.random_create
     add_job_opening(title, 'Facility', true, 3, 2)
     click_link 'Job Openings'
     page.should have_content 'Title'
@@ -44,7 +44,6 @@ feature 'job opening pages' do
   end
 
   scenario 'add a draft job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
     add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
       'System Administrator', 'China', 'Shanghai', 'CityofSH')
     page.should have_content title
@@ -57,7 +56,6 @@ feature 'job opening pages' do
   end
 
   scenario 'add a published job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
     add_job_opening(title, 'IT', true, 4, 4, 'System Administrator',
       'System Administrator', 'United States', 'New York', 'NYCity')
     page.should have_content title
@@ -70,7 +68,6 @@ feature 'job opening pages' do
   end
 
   scenario 'job opening details' do
-    title = 'opening' + UUIDTools::UUID.random_create
     add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
       'System Administrator', 'China', 'Shanghai', 'CityofSH', 'join vmware!')
     job_opening_details(title)
@@ -117,7 +114,6 @@ feature 'job opening pages' do
   end
 
   scenario 'delete a job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
     add_job_opening(title)
     click_link 'Job Openings'
     page.should have_content title
@@ -134,8 +130,7 @@ feature 'job opening pages' do
     page.should have_content 'Filled no is larger than total no.'
   end
 
-  scenario 'Valitions on editing job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
+  scenario 'Validations on editing job opening' do
     add_job_opening(title)
     click_link 'Job Openings'
     find(:xpath, "//tr[td[contains(., '#{title}')]]/td/a", :text => 'Edit').click

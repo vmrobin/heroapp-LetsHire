@@ -2,7 +2,7 @@ module Features
 
   SERVER_ERROR_MSG = "but something went wrong"
   ADMIN_USERNAME = 'admin@local.com'
-  ADMIN_PASSWORD = 'admin'
+  ADMIN_PASSWORD = '123456789'
 
   module SignIn
     def sign_in(username, password)
@@ -101,27 +101,74 @@ module Features
 
     def candidate_details(name)
       click_link 'Candidates'
-      page.should have_link(name, visible: true)
-      first(:link, name).click
-      page.should have_content('Information for')
+      click_link name
+      page.should have_content name
     end
 
-    def edit_candidate(currentName, newName, email, phone)
+    def edit_candidate(currentName, newName, email, phone, source ='', description = '')
       click_link 'Candidates'
-      find(:xpath, "//tr[td[contains(., '" + currentName + "')]]/td/a", :text => 'Edit').click
+      find(:xpath, "//tr[td[contains(., '#{currentName}')]]/td/a", :text => 'Edit').click
       fill_in 'candidate_name', with: newName
       fill_in 'candidate_email', with: email
       fill_in 'candidate_phone', with: phone
+      fill_in 'candidate_source', with: source if source != ''
+      fill_in 'candidate_description', with: description if description != ''
       click_button 'Save'
       page.should_not have_content(SERVER_ERROR_MSG)
     end
 
     def delete_candidate(name)
       click_link 'Candidates'
-      find(:xpath, "//tr[td[contains(., '" + name + "')]]/td/a", :text => 'Delete').click
+      find(:xpath, "//tr[td[contains(., '#{name}')]]/td/a", :text => 'Delete').click
+      page.driver.browser.switch_to.alert.accept
+      page.should_not have_content(SERVER_ERROR_MSG)
+    end
+  end
+
+  module User
+    def add_user(name, email, password, department = '', role = [])
+      click_link 'Users + Roles'
+      find_link('Add a User').click
+      fill_in 'user_name', with: name
+      fill_in 'user_email', with: email
+      fill_in 'user_password', with: password
+      fill_in 'user_password_confirmation', with: password
+      select department, :from => 'user_department_id' if department != ''
+      if role.size > 0
+        for i in 1..role.size do
+          check role[i-1]
+        end
+      end
+      click_button 'Save'
+    end
+
+    def edit_user(name, email, password = '', department = '', role = [])
+      click_link 'Users + Roles'
+      find(:xpath, "//tr[td[contains(., '#{name}')]]/td/a", :text => 'Edit').click
+      fill_in 'user_name', with: name
+      fill_in 'user_email', with: email
+      fill_in 'user_password', with: password if password != ''
+      fill_in 'user_password_confirmation', with: password if password != ''
+      select department, :from => 'user_department_id' if department != ''
+      if role.size > 0
+        for i in 1..role.size do
+          check role[i-1]
+        end
+      end
+      click_button 'Save'
+    end
+
+    def delete_user(name)
+      click_link 'Users + Roles'
+      find(:xpath, "//tr[td[contains(., '#{name}')]]/td/a", :text => 'Delete').click
       page.driver.browser.switch_to.alert.accept
       page.should_not have_content(SERVER_ERROR_MSG)
     end
 
+    def user_details(name)
+      click_link 'Users + Roles'
+      click_link name
+      #page.should have_content name
+    end
   end
 end

@@ -3,11 +3,11 @@ require 'capybara/rspec'
 require 'capybara'
 require 'capybara/dsl'
 require 'uuidtools'
-require_relative '../support/features/session_helpers'
+require_relative '../support/features/ui_helper'
 
 Capybara.run_server = true
 Capybara.default_driver = :selenium
-Capybara.app_host = 'http://letshire.cloudfoundry.com'
+Capybara.app_host = 'http://letshire-qa.cloudfoundry.com'
 
 include Features
 include Features::SignIn
@@ -15,136 +15,133 @@ include Features::JobOpening
 include Features::Candidate
 
 feature 'candidate pages' do
+  name = ''
+  email = ''
+
   background do
+    name = 'candidate' + UUIDTools::UUID.random_create
+    email = '' + UUIDTools::UUID.random_create + '@letshire.com'
     visit '/'
     sign_in(ADMIN_USERNAME, ADMIN_PASSWORD)
   end
 
-  scenario 'check job opening list layout' do
+  scenario 'check candidate list layout' do
+    add_candidate(name, email, '123456')
+    click_link 'Candidates'
+    page.should have_content 'Name'
+    page.should have_content 'Email'
+    page.should have_content 'Phone'
+    page.should have_content name
+    page.should have_content email
+    page.should have_content '123456'
+    delete_candidate(name)
+  end
+
+  scenario 'add a candidate with job opening assigned' do
     title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title, 'Facility', true, 3, 2)
-    click_link 'Job Openings'
-    page.should have_content 'Title'
-    page.should have_content 'Department'
-    page.should have_content 'Hiring Manager'
-    page.should have_content 'Status'
-    page.should have_content 'Filled/Total'
-    page.should have_content '# of Candidates'
+    add_job_opening(title, 'Facility')
+    add_candidate(name, email, '123456', 'internal referral', 'apply for job', 'Facility', title)
+    page.current_path.should =~ /\/candidates\/\d+$/
     page.should have_content title
-    page.should have_content 'System Administrator'
-    page.should have_content 'Facility'
-    page.should have_content 'Published'
-    page.should have_content '2/3'
-    click_link 'View All'
-    page.should_not have_link 'View All'
-    click_link 'View Mine'
-    page.should_not have_link 'View Mine'
-    page.should have_link 'View All'
+    page.should have_content name
+    page.should have_content email
+    page.should have_content '123456'
+    page.should have_content 'internal referral'
+    page.should have_content 'apply for job'
+    delete_candidate(name)
     delete_job_opening(title)
   end
 
-  scenario 'add a draft job opening' do
+  scenario 'candidate details' do
     title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
-      'System Administrator', 'China', 'Shanghai', 'CityofSH')
+    add_job_opening(title, 'Facility')
+    add_candidate(name, email, '123456', 'internal referral', 'apply for job', 'Facility', title)
+    candidate_details(name)
     page.should have_content title
-    page.should have_content 'System Administrator'
-    page.should have_content 'China'
-    page.should have_content 'Shanghai'
-    page.should have_content 'CityofSH'
-    page.should have_content 'draft'
+    page.should have_content name
+    page.should have_content email
+    page.should have_content '123456'
+    page.should have_content 'internal referral'
+    page.should have_content 'apply for job'
+    click_link 'Edit'
+    page.current_path.should =~ /\/candidates\/\d+\/edit/
+    page.evaluate_script('window.history.back()')
+    click_link title
+    page.current_path.should =~ /\/openings\/\d+$/
+    page.evaluate_script('window.history.back()')
+    click_link 'Assign Opening'
+    page.current_path.should =~ /\/candidates\/\d+\/new_opening/
+    page.evaluate_script('window.history.back()')
+    click_link 'Change Status'
+    page.current_path.should =~ /\/opening_candidates\/\d+\/assessments\/new/
+    page.evaluate_script('window.history.back()')
+    click_link 'Add Assessment'
+    page.current_path.should =~ /\/opening_candidates\/\d+\/assessments\/new/
+    page.evaluate_script('window.history.back()')
+    click_link 'New Interview'
+    page.current_path.should =~ /\/candidates\/\d+\/interviews\/new/
+    delete_candidate(name)
     delete_job_opening(title)
   end
 
-  scenario 'add a published job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title, 'IT', true, 4, 4, 'System Administrator',
-      'System Administrator', 'United States', 'New York', 'NYCity')
-    page.should have_content title
-    page.should have_content 'System Administrator'
-    page.should have_content 'United States'
-    page.should have_content 'New York'
-    page.should have_content 'NYCity'
-    page.should have_content 'published'
-    delete_job_opening(title)
+  scenario 'edit a candidate' do
+    add_candidate('slayer', 'abc@sc.com', '123456')
+    edit_candidate('slayer', name, email, '234567', 'internal referral', 'apply for job')
+    page.current_path.should =~ /\/candidates\/\d+$/
+    page.should have_content name
+    page.should have_content email
+    page.should have_content '234567'
+    page.should have_content 'internal referral'
+    page.should have_content 'apply for job'
+    delete_candidate(name)
   end
 
-  scenario 'job opening details' do
-    title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
-      'System Administrator', 'China', 'Shanghai', 'CityofSH', 'join vmware!')
-    job_opening_details(title)
-    page.should have_content title
-    page.should have_content 'System Administrator'
-    page.should have_content 'China'
-    page.should have_content 'Shanghai'
-    page.should have_content 'CityofSH'
-    page.should have_content 'draft'
-    page.should have_content 'join vmware'
-    delete_job_opening(title)
+  scenario 'delete a candidate' do
+    add_candidate(name, email, '123456')
+    click_link 'Candidates'
+    page.should have_content name
+    delete_candidate(name)
+    page.current_path.should == '/candidates'
+    page.should_not have_content name
   end
 
-  scenario 'edit a draft job opening' do
-    currentTitle = 'opening' + UUIDTools::UUID.random_create
-    newTitle = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(currentTitle)
-    edit_job_opening(currentTitle, newTitle, 'published', 'Finance', 3, 2, '', '', 'China',
-      'Shanghai', 'cityofsh', 'editjobopening')
-    page.should have_content newTitle
-    page.should have_content 'System Administrator'
-    page.should have_content 'China'
-    page.should have_content 'Shanghai'
-    page.should have_content 'cityofsh'
-    page.should have_content 'published'
-    page.should have_content 'editjobopening'
-    delete_job_opening(newTitle)
-  end
-
-  scenario 'edit a published job opening' do
-    currentTitle = 'opening' + UUIDTools::UUID.random_create
-    newTitle = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(currentTitle, '', true)
-    edit_job_opening(currentTitle, newTitle, 'closed', 'Finance', 3, 2, '', '', 'United States',
-      'New York', 'cityofny', 'editjobopening', 'System Administrator')
-    page.should have_content newTitle
-    page.should have_content 'System Administrator'
-    page.should have_content 'United States'
-    page.should have_content 'New York'
-    page.should have_content 'cityofny'
-    page.should have_content 'closed'
-    page.should have_content 'editjobopening'
-    delete_job_opening(newTitle)
-  end
-
-  scenario 'delete a job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title)
-    click_link 'Job Openings'
-    page.should have_content title
-    delete_job_opening(title)
-    page.should_not have_content title
-  end
-
-  scenario 'validations on adding job opening' do
-    click_link 'Job Openings'
-    find_link('Add a Job Opening').click
-    fill_in 'opening_filled_no', with: 2
+  scenario 'validations on adding candidate' do
+    click_link 'Candidates'
+    find_link('Add a Candidate').click
     click_button 'Save'
-    page.should have_content "Title can't be blank"
-    page.should have_content 'Filled no is larger than total no.'
+    page.should have_content "Name can't be blank"
+    page.should have_content "Email can't be blank"
+    page.should have_content "Phone can't be blank"
+    page.should_not have_content 'Email format error'
+    page.should_not have_content 'Phone format error'
+    fill_in 'candidate_email', with: 'abc'
+    fill_in 'candidate_phone', with: 'abc'
+    click_button 'Save'
+    page.should_not have_content "Email can't be blank"
+    page.should_not have_content "Phone can't be blank"
+    page.should have_content 'Email format error'
+    page.should have_content 'Phone format error'
   end
 
-  scenario 'Valitions on editing job opening' do
-    title = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(title)
-    click_link 'Job Openings'
-    find(:xpath, "//tr[td[contains(., '#{title}')]]/td/a", :text => 'Edit').click
-    fill_in 'opening_title', with: ''
-    fill_in 'opening_filled_no', with: 2
+  scenario 'Validations on editing candidate' do
+    add_candidate(name, email, '123456')
+    click_link 'Candidates'
+    find(:xpath, "//tr[td[contains(., '#{name}')]]/td/a", :text => 'Edit').click
+    fill_in 'candidate_name', with: ''
+    fill_in 'candidate_email', with: ''
+    fill_in 'candidate_phone', with: ''
     click_button 'Save'
-    page.should have_content "Title can't be blank"
-    page.should have_content 'Filled no is larger than total no.'
-    click_link 'Job Openings'
-    delete_job_opening(title)
+    page.should have_content "Name can't be blank"
+    page.should have_content "Email can't be blank"
+    page.should have_content "Phone can't be blank"
+    fill_in 'candidate_email', with: 'abc'
+    fill_in 'candidate_phone', with: 'abc'
+    click_button 'Save'
+    page.should_not have_content "Email can't be blank"
+    page.should_not have_content "Phone can't be blank"
+    page.should have_content 'Email format error'
+    page.should have_content 'Phone format error'
+    click_link 'Candidates'
+    delete_candidate(name)
   end
 end
