@@ -20,7 +20,7 @@ module PGTestHelper
 
   def database
     dbconf = YAML.load(File.open(@config_file))
-    return dbconf["ci"]["database"]
+    return dbconf["development"]["database"]
   end
 
   def trace(*msg)

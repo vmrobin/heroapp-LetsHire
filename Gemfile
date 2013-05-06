@@ -1,6 +1,6 @@
-source 'https://rubygems.org'
+#source 'https://rubygems.org'
 #please comment out the following line before submit
-#source 'http://ruby.taobao.org'
+source 'http://ruby.taobao.org'
 
 gem 'mime-types', '1.21'
 gem 'rails', '3.2.12'
@@ -16,8 +16,6 @@ gem 'pg', '0.15.1'
 gem 'carmen-rails', '1.0.0.beta3'
 gem 'jquery-tokeninput-rails', '1.6.0'
 gem 'ransack', '0.7.2'
-gem 'carrierwave', '~>0.6.2'
-gem 'carrierwave-postgresql', '0.1.0'
 gem 'postgresql_lo_streamer'
 
 group :development, :test do

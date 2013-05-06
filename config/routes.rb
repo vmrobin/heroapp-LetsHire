@@ -17,6 +17,7 @@ LetsHire::Application.routes.draw do
       resources :interviews, :only => [:index, :show, :update]
 
       post 'photo/upload' => 'photos#upload_file'
+      get 'photo/enum' => 'photos#list_files'
       get 'photo/download' => 'photos#get_file'
 
       match 'mappings' => 'misc#mappings'
