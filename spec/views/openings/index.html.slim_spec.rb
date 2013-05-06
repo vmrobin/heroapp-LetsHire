@@ -24,7 +24,6 @@ describe "openings/index" do
   it "renders a list of openings and give readonly access button" do
     render :template => "openings/index_anonymous"
 
-    expect(rendered).to include "Search"
     assert_select "tr>td", :text => "Title".to_s, :count => 2
     expect(rendered).not_to include "View Mine"
     expect(rendered).not_to include "View All"

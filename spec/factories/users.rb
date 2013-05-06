@@ -1,19 +1,22 @@
 FactoryGirl.define do
   factory :user do
-    email Faker::Internet.email
+    sequence(:email) { |n| "u#{n}#{Faker::Internet.email}" }
     name Faker::Name.name
-    password (Random.rand * 10000).to_i.to_s
-    admin false
-    roles_mask 1
+    department_id 1
+    password (Random.rand * 10000000000).to_i.to_s
   end
 
   factory :recruiter, :class => :User, :parent => :user do
-    email "R_#{Faker::Internet.email}"
-    roles_mask 3
+    sequence(:email) { |n| "r#{n}#{Faker::Internet.email}" }
   end
 
   factory :hiring_manager, :class => :User, :parent => :user do
-    email "HM_#{Faker::Internet.email}"
-    roles_mask 5
+    sequence(:email) { |n| "h#{n}#{Faker::Internet.email}" }
   end
+
+  factory :interviewer, :class => :User, :parent => :user do
+    sequence(:email) { |n| "i#{n}#{Faker::Internet.email}" }
+  end
+
 end
+

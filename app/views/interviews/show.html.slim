@@ -1,23 +1,17 @@
-h3
-  = "Interview Information for "
-  span =link_to @candidate.name , @candidate
-br
-.pull-right
+h3.pull-left
+  = link_to @candidate.name, candidate_path(@candidate)
+  span= " for "
+  span= link_to @opening_candidate.opening.title, opening_path(@opening_candidate.opening)
+.pull-right.align-to-title
  - if can? :update, Interview
-   = link_to 'Edit', edit_interview_path(@interview)
-
-
-dl.dl-horizontal
-  dt Title
-  dd =@interview.title
-  dt Position
-  dd = link_to @opening.opening.title, opening_path(@opening.opening)
-  dt Modality
+   = link_to 'Edit', edit_interview_path(@interview), :class => 'btn btn-primary'
+dl.dl-horizontal.clear-both
+  dt Interview Type
   dd =@interview.modality
   dt Scheduled At
   dd.iso-time= @interview.scheduled_at_iso
-  dt Duration(Minutes)
-  dd= @interview.duration
+  dt Duration
+  dd= @interview.duration.to_s + " min"
   - if @interview.modality.include?("phone")
     dt Phone
     dd= @interview.phone
@@ -32,7 +26,6 @@ dl.dl-horizontal
       - @interview.interviewers.each do |interviewer|
         .interviewer-line
           span.name= interviewer.user.name
-          span.email= interviewer.user.email
     span &nbsp;
   dt Description
   dd = simple_format(@interview.description)

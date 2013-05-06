@@ -14,7 +14,7 @@ gem 'dynamic_form', '1.1.4'
 gem 'binding_of_caller', '0.7.1'
 gem 'pg', '0.12.2'
 gem 'carmen-rails', '1.0.0.beta3'
-gem 'jquery-tokeninput-rails'
+gem 'jquery-tokeninput-rails', '1.6.0'
 gem 'ransack', '0.7.2'
 
 group :development, :test do
@@ -23,10 +23,13 @@ group :development, :test do
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.4.2'
   gem 'spork', '0.9.2'
-  gem 'better_errors', '0.7.2'
-  gem 'meta_request', '0.2.2'
   gem 'execjs', '1.4.0'
   gem 'therubyracer', '0.11.4'
+end
+
+group :development do
+  gem 'better_errors', '0.7.2'
+  gem 'meta_request', '0.2.2'
 end
 
 # Gems used only for assets and not required

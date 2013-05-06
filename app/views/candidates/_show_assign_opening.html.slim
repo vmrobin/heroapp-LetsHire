@@ -4,6 +4,9 @@ h5 = link_to "#{opening.title}", opening_path({:id => opening.id})
 p
   b Status:
   = opening_candidate.status_str
+  -if can? :manage, candidate
+    .pull-right
+      = link_to 'Change Status', new_opening_candidate_assessments_path(opening_candidate)
 
 h5 Assessments
 .pull-right
@@ -16,17 +19,14 @@ div[id="opening_candidate_#{opening_candidate.id}_assessments"]
 h5 Interviews
 .pull-right
   -if can? :manage, Interview
-    = link_to 'New Interview', new_candidate_interview_path(candidate)
+    -if opening_candidate.in_interview_loop?
+      = link_to 'New Interview', new_candidate_interview_path(candidate, :opening_candidate_id => opening_candidate)
 br
 table class='table table-hover'
   tr
-    th Title
-    th Modality
+    th Interview Type
     th Scheduled At
     th Duration
-    th Phone/Location
-    th Interviewers
-    th Status
     th
 
-  =render opening_candidate.interviews, :opening_candidate => true
+  =render opening_candidate.interviews.order('scheduled_at ASC'), :opening_candidate => true

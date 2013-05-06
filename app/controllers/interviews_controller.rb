@@ -1,7 +1,7 @@
 class InterviewsController < AuthorizedController
   def index
     authorize! :read, Interview
-    @interviews = Interview.all.to_a.sort_by! { |interview| interview.opening_candidate.candidate.name }
+    @interviews = Interview.order('scheduled_at ASC')
     unless can? :create, Interview
       @interviews.reject! do |interview|
         not interview.interviewers.any? { |interviewer| interviewer.user_id == current_user.id }
@@ -13,14 +13,16 @@ class InterviewsController < AuthorizedController
     @interview = Interview.find params[:id]
     authorize! :read, @interview
     @candidate = @interview.opening_candidate.candidate
-    @opening = @interview.opening_candidate
+    @opening_candidate = @interview.opening_candidate
   end
 
   def new
     authorize! :manage, Interview
     @candidate = Candidate.find params[:candidate_id]
+    @opening_candidate = OpeningCandidate.find params[:opening_candidate_id] if params[:opening_candidate_id]
     load_openings
     @interview = Interview.new
+    @interview.errors.add(:opening_candidate_id, "isn't in interview status") if @opening_candidates.size == 0
   end
 
   def edit
@@ -35,22 +37,19 @@ class InterviewsController < AuthorizedController
       redirect_to candidates_path, :notice => "No opening is selected for the candidate"
       return
     end
-    @opening = OpeningCandidate.find params[:opening_candidate_id]
-    if @opening.nil?
+    @opening_candidate = OpeningCandidate.find params[:opening_candidate_id]
+    if @opening_candidate.nil?
       redirect_to candidates_path, :notice => "No opening is selected for the candidate"
       return
     end
-    unless @opening.in_interview_loop?
+    unless @opening_candidate.in_interview_loop?
       redirect_to @opening.candidate, :notice => "The candidate isn't pending for interview."
       return
     end
-    @interview = Interview.new params[:interview]
-    @interview.opening_candidate = @opening
-    @interview.status = Interview::STATUS_NEW
+    params[:interview].merge! :status => Interview::STATUS_NEW
+    @interview = @opening_candidate.interviews.build params[:interview]
     if @interview.save
-      @opening.status = OpeningCandidate::STATUS_LIST[:interview_loop]
-      @opening.save
-      redirect_to candidate_path(@opening.candidate), :notice => "Interview created"
+      redirect_to @interview, :notice => "Interview was successfully created"
     else
       prepare_edit
       render :action => 'edit'
@@ -76,36 +75,41 @@ class InterviewsController < AuthorizedController
     @interview.destroy
 
     respond_to do |format|
-      format.html { redirect_to candidate_path(@candidate), :notice => "Interview deleted" }
-      format.json { head :no_content }
+      format.html do
+        if request.referrer == interview_path(@interview)
+          redirect_to interviews_url, :notice => "Interview deleted"
+        else
+          redirect_to :back, :notice => "Interview deleted"
+        end
+      end
     end
+  rescue
+    redirect_to interviews_url, notice: 'Invalid interview'
   end
 
   private
 
   def prepare_edit
-    @candidate = @interview.opening_candidate.candidate
-    @opening = @interview.opening_candidate
-    load_openings
+    @opening_candidate = @interview.opening_candidate
+    @candidate = @opening_candidate.candidate
+    load_openings unless @candidate.nil?
   end
 
   def load_openings
-    @openings = @candidate.opening_candidates.where(:status => OpeningCandidate::STATUS_LIST[:interview_loop])
-    @interviewers = []
+    @opening_candidates = @candidate.opening_candidates.select { |item| item.in_interview_loop? }
     interviewers_hash = {}
-    @openings.each do |opening|
-      opening = opening.opening
+    @opening_candidates.each do |opening_candidate|
+      opening = opening_candidate.opening
       if can? :manage, opening
-        interviewers = []
+        opening_interviewers = []
         opening.participants.each do |participant|
-          @interviewers << { :opening => opening, :interviewer => participant }
-          interviewers << {
+          opening_interviewers << {
               id: participant.id,
               name: participant.name,
               email: participant.email
           }
         end
-        interviewers_hash[opening.id] = interviewers
+        interviewers_hash[opening_candidate.id] = opening_interviewers
       end
     end
     @interviewers_json = interviewers_hash.to_json

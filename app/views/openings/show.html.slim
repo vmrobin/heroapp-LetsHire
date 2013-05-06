@@ -1,36 +1,60 @@
-h3= "Information for #{@opening.title}"
-= notice
+h3.pull-left = "#{@opening.title}"
 
-.pull-right
+.pull-right.align-to-title
   -if user_signed_in? && (can? :manage, @opening)
-    = link_to 'Edit', edit_opening_path(@opening)
-    = ' | '
-  = link_to 'Back', openings_path
+    = link_to 'Edit', edit_opening_path(@opening), :class => "btn btn-primary"
 
 br
-p
-  b Department:
-  = @opening.department.try(:name)
-p
-  b Status:
-  = @opening.status_str
-p
-  b Available:
-  = @opening.available_no
-
--if user_signed_in?
-  p
-    b Recruiter:
-    = @opening.recruiter.try(:name)
-  p
-    b HiringManager:
-    = @opening.hiring_manager.try(:name)
-  p
-    b Potential Interviewers:
-    = (@opening.participants.map { | user | user.name}).join(',')
-p
-  b Address:
-  = @opening.full_address
-p
-  b Description:
-  = simple_format(@opening.description)
+.form-horizontal.clear-both
+  .control-group
+    label.control-label
+      b Department:
+    .controls
+      = @opening.department.try(:name)
+  -if user_signed_in?
+    .control-group
+      label.control-label
+        b Status:
+      .controls
+        = "#{@opening.status_str}, with "
+        span = link_to "#{pluralize(@opening.candidates.count, 'candidate')}", candidates_path(:opening_id => @opening.id )
+        span =  " assigned"
+  - elsif @opening.recruiter
+    .control-group
+      label.control-label
+        b Recruiter Email:
+      .controls
+        a href="mailto:#{@opening.recruiter.email}" = @opening.recruiter.email
+  .control-group
+    label.control-label
+      b Available Seats:
+    .controls
+      = @opening.available_no
+  -if user_signed_in?
+    .control-group
+      label.control-label
+        b Recruiter: 
+      .controls
+        - if @opening.recruiter
+          = link_to @opening.recruiter.name, @opening.recruiter
+    .control-group
+      label.control-label
+        b Hiring Manager:
+      .controls
+        - if @opening.hiring_manager
+          = link_to @opening.hiring_manager.name, @opening.hiring_manager
+    #potential_interviewers.control-group
+      label.control-label
+        b Potential Interviewers:
+      .controls
+        = (@opening.participants.map { | user | link_to user.name, user}).join(', ').html_safe
+  .control-group
+    label.control-label
+      b Address:
+    .controls
+      = @opening.full_address
+  .control-group
+    label.control-label
+      b Description:
+    .controls
+      = simple_format(@opening.description)

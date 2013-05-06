@@ -3,12 +3,20 @@
   .control-group
     = form.label :name, :class => 'control-label'
     .controls
-      = form.text_field :name, :placeholder => 'Username'
+      = form.text_field :name
 
   .control-group
     = form.label :email, :class => 'control-label'
     .controls
-      = form.text_field :email, :placeholder => 'Email'
+      = form.text_field :email
+  .control-group
+    = form.label :password, :class => 'control-label'
+    .controls
+      = form.password_field :password
+  .control-group
+    = form.label :password_confirmation, "Confirm Password", :class => 'control-label'
+    .controls
+      = form.password_field :password_confirmation
   .control-group
     = form.label :department, :class => 'control-label'
     .controls
@@ -16,9 +24,10 @@
   .control-group
     = form.label :role, :class => 'control-label'
     .controls
-      - for role in User::ROLES
+      - User::ROLES.each do |role|
+        - next if role == 'interviewer'
         = check_box_tag "user[roles][#{role}]", role, @user.roles.include?(role), {:name => "user[roles][]", :class => 'checkbox'}
-        = label_tag "user_roles_#{role}", role.humanize, :class => 'checkbox inline'
+        = label_tag "user_roles_#{role}", role.humanize, :class => 'checkbox inline capitalized-text'
         br
       = hidden_field_tag "user[roles][]", ""
       br

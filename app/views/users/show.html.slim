@@ -1,7 +1,9 @@
 = notice
-h3 User Details
+h3.pull-left User Details
+.pull-right.align-to-title
+  =link_to 'Edit', edit_user_path(@user.id), :class => 'btn btn-primary'
 
-= form_for @user, :html => {:class => 'form-horizontal'} do |form|
+= form_for @user, :html => {:class => 'form-horizontal clear-both'} do |form|
   .control-group
     = form.label 'Name', :class => 'control-label'
     .controls
@@ -21,9 +23,5 @@ h3 User Details
   - if @user.admin
     .controls
       = form.label 'This User is Administrator'
-p
-  =link_to 'Edit', edit_user_path(@user.id), :class => 'btn btn-link'
-  =link_to 'Delete', user_path, :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-link'
-  =link_to 'Back to users', users_path, :class => 'btn btn-link'
 
 

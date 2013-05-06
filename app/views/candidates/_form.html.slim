@@ -13,13 +13,13 @@
   .controls
     = f.text_field :phone
 .control-group
-  = f.label :source, :class => 'control-label'
+  = f.label :source, "How did you find this candidate?", :class => 'control-label'
   .controls
     = f.text_field :source
 .control-group
   = f.label :description, :class => 'control-label'
   .controls
-    = f.text_area :description, :class => 'span8'
+    = f.text_area :description, :class => 'span8', :rows => 8
 .control-group
   = f.label :resume, "Upload Resume", :class => 'control-label'
   .controls
@@ -27,7 +27,7 @@
       tr
         td
           - if not @resume.nil?
-            = link_to "#{@resume}", candidates_resume_path({:id => @candidate.id})
+            = link_to "#{@resume}", resume_candidate_path({:id => @candidate.id})
         td
         td
           = f.file_field :resume

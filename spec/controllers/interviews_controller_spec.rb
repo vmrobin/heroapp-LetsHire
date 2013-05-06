@@ -1,45 +1,22 @@
 require 'spec_helper'
 
 describe InterviewsController do
-  let :valid_candidate do
-    {
-      :name => Faker::Name.name,
-      :email => Faker::Internet.email,
-      :phone => Faker::PhoneNumber.phone_number
-    }
-  end
-
-  let :valid_opening_candidate do
-    {
-      :candidate_id => @candidate.id,
-      :opening_id => 1
-    }
-  end
-
   def valid_interview(users = nil)
-    hash = {
-      :opening_candidate_id => @opening.id,
-      :modality     => Interview::MODALITY_PHONE,
-      :title        => "interview for David",
-      :description  => "30 minutes discussion",
-      :status       => Interview::STATUS_NEW,
-      :phone        => Faker::PhoneNumber.phone_number,
-      :scheduled_at => DateTime.now.to_s,
-      :duration     => 1,
-      :location     => Faker::Address.building_number,
-      :interviewer_ids => [@user_ids[0]]
-    }
+    hash = FactoryGirl.attributes_for(:interview).merge({
+      :opening_candidate_id => @opening.id
+    })
     hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
     hash
   end
 
   before :all do
     @users = []
-    3.times do
-      @users << User.create!(:name => Faker::Name.name, :email => Faker::Internet.email + UUIDTools::UUID.random_create.to_s)
-    end
-    @candidate = Candidate.create! valid_candidate
-    @opening = OpeningCandidate.create! valid_opening_candidate
+    3.times { @users << create_user(:user) }
+    @opening = Opening.create! FactoryGirl.attributes_for(:opening)
+    @candidate = Candidate.create! FactoryGirl.attributes_for(:candidate)
+    @candidate.should be_valid
+    @opening_candidate = OpeningCandidate.create!(:opening_id => @opening.id, :candidate_id => @candidate.id)
+    @opening_candidate.should be_valid
     @user_ids = @users.map { |user| user.id }
   end
 
@@ -70,7 +47,7 @@ describe InterviewsController do
 
     describe "GET new" do
       it "assigns a new interview as @interview" do
-        get :new, { :candidate_id => @opening.candidate_id }
+        get :new, { :candidate_id => @opening_candidate.candidate_id }
         assigns(:interview).should be_a_new(Interview)
       end
     end
@@ -91,12 +68,12 @@ describe InterviewsController do
       describe "with valid params" do
         it "creates a new Interview" do
           expect do
-            post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
+            post :create, { :interview => valid_interview, :opening_candidate_id => @opening_candidate.id }
           end.to change(Interview, :count).by(1)
         end
 
         it "assigns a newly created interview as @interview" do
-          post :create, { :interview => valid_interview, :opening_candidate_id => @opening.id }
+          post :create, { :interview => valid_interview, :opening_candidate_id => @opening_candidate.id }
           assigns(:interview).should be_a(Interview)
           assigns(:interview).should be_persisted
         end
@@ -105,20 +82,20 @@ describe InterviewsController do
       describe "with invalid params" do
         it "assigns a newly created but unsaved interview as @interview" do
           Interview.any_instance.stub(:save).and_return(false)
-          post :create, { :interview => {}, :opening_candidate_id => @opening.id }
+          post :create, { :interview => {}, :opening_candidate_id => @opening_candidate.id }
           assigns(:interview).should be_a_new(Interview)
         end
 
         it "re-renders the 'edit' template" do
           Interview.any_instance.stub(:save).and_return(false)
-          post :create, { :interview => {}, :opening_candidate_id => @opening.id }
+          post :create, { :interview => {}, :opening_candidate_id => @opening_candidate.id }
           response.should render_template("edit")
         end
       end
 
       describe "with interviewers" do
         it "create a new Interview with interviewers" do
-          post :create, { :interview => valid_interview(@users), :opening_candidate_id => @opening.id }
+          post :create, { :interview => valid_interview(@users), :opening_candidate_id => @opening_candidate.id }
           assigns(:interview).should be_a(Interview)
           assigns(:interview).should have(@users.size).interviewers
         end
