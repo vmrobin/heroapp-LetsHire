@@ -44,11 +44,6 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
 
   add_index "departments", ["name"], :name => "index_departments_on_name", :unique => true
 
-  create_table "fake_data", :id => false, :force => true do |t|
-    t.integer "id",      :null => false
-    t.binary  "content"
-  end
-
   create_table "interviewers", :force => true do |t|
     t.integer  "interview_id"
     t.integer  "user_id"

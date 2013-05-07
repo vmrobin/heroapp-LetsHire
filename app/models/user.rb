@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  validates :name,  :presence => true
+
   # Include default devise modules. Others available are:
   # :registerable, :recoverable, :rememberable, :trackable, :validatable
   # :token_authenticatable, :confirmable,
@@ -11,10 +13,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :name, :department_id, :roles, :remember_me, :deleted_at #, :authentication_token
 
   ROLES = %w[interviewer recruiter hiring_manager]
-
-  validates :name,  :presence => true
-  validates :email, :presence => true, :uniqueness => true
-  validates :email, :email_format => { :message => 'format error'}, :if => :email?
 
   scope :active, where(:deleted_at => nil)
 
@@ -60,7 +58,7 @@ class User < ActiveRecord::Base
   end
 
   def roles_string
-    roles.join(',')
+    roles.join(', ')
   end
 
   def add_role(role)
