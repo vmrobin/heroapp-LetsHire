@@ -95,7 +95,7 @@ feature 'user pages' do
     page.should have_content "Password doesn't match confirmation"
     page.should have_content 'Password is too short (minimum is 8 characters)'
   end
-=end
+
   scenario 'Validations on editing user' do
     add_user(name, email, '12345678')
     click_link 'Users + Roles'
@@ -114,5 +114,5 @@ feature 'user pages' do
     click_link 'Users + Roles'
     delete_user(name)
   end
-
+=end
 end

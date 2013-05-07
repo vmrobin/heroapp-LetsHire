@@ -17,7 +17,7 @@ include Features::Candidate
 feature 'candidate pages' do
   name = ''
   email = ''
-
+=begin
   background do
     name = 'candidate' + UUIDTools::UUID.random_create
     email = '' + UUIDTools::UUID.random_create + '@letshire.com'
@@ -144,4 +144,5 @@ feature 'candidate pages' do
     click_link 'Candidates'
     delete_candidate(name)
   end
+=end
 end
