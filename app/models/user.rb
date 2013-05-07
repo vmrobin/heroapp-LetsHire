@@ -13,8 +13,6 @@ class User < ActiveRecord::Base
   ROLES = %w[interviewer recruiter hiring_manager]
 
   validates :name,  :presence => true
-  validates :email, :presence => true, :uniqueness => true
-  validates :email, :email_format => { :message => 'format error'}, :if => :email?
 
   scope :active, where(:deleted_at => nil)
 
@@ -60,7 +58,7 @@ class User < ActiveRecord::Base
   end
 
   def roles_string
-    roles.join(',')
+    roles.join(', ')
   end
 
   def add_role(role)
