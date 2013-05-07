@@ -3,7 +3,7 @@ require 'spec_helper'
 describe InterviewsController do
   def valid_interview(users = nil)
     hash = FactoryGirl.attributes_for(:interview).merge({
-      :opening_candidate_id => @opening.id
+      :opening_candidate_id => @opening_candidate.id
     })
     hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
     hash
