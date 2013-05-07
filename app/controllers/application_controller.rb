@@ -14,13 +14,12 @@ class ApplicationController < ActionController::Base
     return render :text => 'DB is initialized already' if User.count > 0 || Department.count > 0
     long_password = '123456789'
 
-    Department.create([ { name: 'Marketing', description: 'Markecting'},
-                    { name: 'IT', description: 'IT'},
-                    { name: 'Facility', description: 'Facility'}])
+    Department.create(Department::DEFAULT_SET)
+    it = Department.find_by_name 'IT'
     User.new_admin(:email => 'admin@local.com',
                    :password => long_password,
                    :name => 'System Administrator',
-                   :department_id => 2).save
+                   :department_id => it.id).save
 
     redirect_to new_user_session_path, :notice => 'DB initialized successfully'
   end

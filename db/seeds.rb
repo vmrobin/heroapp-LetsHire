@@ -11,16 +11,9 @@ User.delete_all
 Department.delete_all
 
 
-Department.create([ { name: 'Administration', description: 'Administration & Facility Department'},
-                    { name: 'Facility', description: 'Facility'},
-                    { name: 'Finance', description: 'Finanace'},
-                    { name: 'HR', description: 'Human Resource'},
-                    { name: 'Marketing', description: 'Marketing'},
-                    { name: 'R&D', description: 'Rearch and Development'},
-                  ])
+Department.create(Department::DEFAULT_SET)
 
-
-it = Department.create({ name: 'IT', description: 'IT'})
+it = Department.find_by_name 'IT'
 
 long_password = '123456789'
 
