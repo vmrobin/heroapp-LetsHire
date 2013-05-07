@@ -44,7 +44,7 @@ class CandidatesController < AuthenticatedController
       params[:candidate].delete(:resume)
     end
 
-    params[:candidate].delete(:department_ids)
+    params[:candidate].delete(:department_id)
     opening_id = params[:candidate][:opening_ids]
     params[:candidate].delete(:opening_ids)
     @candidate = Candidate.new params[:candidate]
@@ -147,7 +147,7 @@ class CandidatesController < AuthenticatedController
     @resume = @candidate.resume
 
     unless @resume.nil?
-      path = File.join(download_folder, "#{@candidate.name}.#{@resume.resume_name}")
+      path = File.join(download_folder, "#{Time.now.to_s}.#{@resume.resume_name}")
       fp = File.new(path, 'wb')
       @resume.readfile(fp)
       fp.close
