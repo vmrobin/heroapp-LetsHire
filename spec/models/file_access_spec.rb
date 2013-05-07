@@ -194,7 +194,7 @@ describe FileAccessBase do
       res.count.to_i.should be_equal(0)
     end
 
-    it 'cannot delete non-exist large object' do
+    xit 'cannot delete non-exist large object' do
       expect do
         @cleaner.clean(@oid - 1)
       end.to raise_error(Exception)
