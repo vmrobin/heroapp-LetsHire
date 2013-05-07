@@ -18,14 +18,13 @@ module Features
   end
 
   module JobOpening
-    def add_job_opening(title, department = '', publish = false, total_seats = 0, filled_seats = 0, hiring_manager = '',
+    def add_job_opening(title, department = '', publish = false, total_seats = 0, hiring_manager = '',
       recruiter = '', country = '', province = '', city = '', description = '')
       click_link 'Job Openings'
       find_link('Add a Job Opening').click
       fill_in 'opening_title', with: title
       select department, :from => 'opening_department_id' if department != ''
       fill_in 'opening_total_no', with: total_seats if total_seats > 0
-      fill_in 'opening_filled_no', with: filled_seats if filled_seats > 0
       select hiring_manager, :from => 'opening_hiring_manager_id' if hiring_manager != ''
       select recruiter, :from => 'opening_recruiter_id' if recruiter != ''
       find(:xpath, "//select/option[text()='#{country}'][1]").select_option if country != ''
