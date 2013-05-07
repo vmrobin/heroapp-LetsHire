@@ -29,7 +29,6 @@ ActiveRecord::Schema.define(:version => 20130428012939) do
     t.string   "phone"
     t.string   "source"
     t.text     "description"
-    t.string   "resume"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
