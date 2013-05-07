@@ -18,18 +18,10 @@ describe Api::V1::InterviewsController do
   end
 
   def valid_interview(users = nil)
-    hash = {
-        :opening_candidate_id => @opening.id,
-        :modality     => Interview::MODALITY_PHONE,
-        :title        => "interview for David",
-        :description  => "30 minutes discussion",
-        :status       => Interview::STATUS_NEW,
-        :phone        => Faker::PhoneNumber.phone_number,
-        :scheduled_at => (DateTime.now + 1.hour).to_s,
-        :duration     => 1,
-        :location     => Faker::Address.building_number,
-        :interviewer_ids => [@user_ids[0]]
-    }
+    hash = FactoryGirl.attributes_for(:interview).merge({
+              :opening_candidate_id => @opening.id,
+              :scheduled_at => (DateTime.now + 1.hour).to_s
+          })
     hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
     hash
   end

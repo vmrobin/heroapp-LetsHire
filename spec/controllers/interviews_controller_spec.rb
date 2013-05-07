@@ -32,6 +32,7 @@ describe InterviewsController do
     describe "GET index" do
       it "assigns all interviews as @interviews" do
         interview = Interview.create! valid_interview
+        interview.should be_valid
         get :index, {}
         assigns(:interviews).should eq([interview])
       end

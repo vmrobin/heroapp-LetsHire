@@ -21,6 +21,7 @@ class Opening < ActiveRecord::Base
   has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
 
   validates :title, :presence => true
+  validates :department_id, :presence => true
 
   validate :select_valid_owners_if_active,
            :total_no_should_ge_than_filled_no
