@@ -33,7 +33,7 @@ feature 'job opening pages' do
     page.should have_content title
     page.should have_content 'System Administrator'
     page.should have_content 'Facility'
-    #page.should have_content 'Published'
+    page.should have_content 'Published'
     #page.should have_content '2/3'
     click_link 'View All'
     page.should_not have_link 'View All'
