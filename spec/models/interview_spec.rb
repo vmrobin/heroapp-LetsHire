@@ -16,12 +16,6 @@ describe Interview do
     result.errors.messages.has_key?(:modality).should be_true
   end
 
-  it 'requires title to be present' do
-    result = FactoryGirl.build(:interview, :title => nil)
-    result.should_not be_valid
-    result.errors.messages.has_key?(:title).should be_true
-  end
-
   it 'requires scheduled_at to be present' do
     result = FactoryGirl.build(:interview, :scheduled_at => nil)
     result.should_not be_valid

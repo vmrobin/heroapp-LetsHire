@@ -21,6 +21,7 @@ class Opening < ActiveRecord::Base
   has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
 
   validates :title, :presence => true
+  validates :department_id, :presence => true
 
   validate :select_valid_owners_if_active,
            :total_no_should_ge_than_filled_no
@@ -95,7 +96,7 @@ class Opening < ActiveRecord::Base
 
 
   def total_no_should_ge_than_filled_no
-    errors.add(:filled_no, "is larger than total no.") if filled_no > total_no
+    errors.add(:total_no, "is smaller than filled seat number.") if filled_no > total_no
   end
 
 

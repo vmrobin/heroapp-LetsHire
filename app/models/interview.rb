@@ -7,7 +7,7 @@ class Interview < ActiveRecord::Base
 
   attr_accessible :opening_candidate, :opening_candidate_id
   attr_accessible :interviewer_ids
-  attr_accessible :title, :modality, :scheduled_at, :scheduled_at_iso, :duration, :phone, :location, :description
+  attr_accessible :modality, :scheduled_at, :scheduled_at_iso, :duration, :phone, :location, :description
   attr_accessible :status, :score, :assessment
   attr_accessible :created_at, :updated_at
 
@@ -25,7 +25,7 @@ class Interview < ActiveRecord::Base
   STATUS = [STATUS_NEW, STATUS_PROGRESS, STATUS_CLOSED]
 
   validates :opening_candidate_id, :presence => true
-  validates :modality, :title, :scheduled_at, :presence => true
+  validates :modality, :scheduled_at, :presence => true
   validates :modality, :inclusion => MODALITIES
   validates :status, :inclusion => STATUS
 
