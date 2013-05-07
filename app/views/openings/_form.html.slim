@@ -27,12 +27,8 @@
   .control-group
     =f.label :total_no, 'Total Seats', :class => 'control-label'
     .controls
-      = f.number_field :total_no, :in => 1..1000
-
-  .control-group
-    =f.label :filled_no, 'Filled Seats', :class => 'control-label'
-    .controls
-      = f.number_field :filled_no, :in => 0..1000
+      - min_no = @opening.filled_no > 1 ? @opening.filled_no : 1
+      = f.number_field :total_no, :in => min_no..1000
 
   .control-group
     =f.label :city, :class => 'control-label'
