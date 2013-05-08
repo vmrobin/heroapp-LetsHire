@@ -108,6 +108,15 @@ ActiveRecord::Schema.define(:version => 20130507030219) do
   add_index "openings", ["hiring_manager_id"], :name => "index_openings_on_hiring_manager_id"
   add_index "openings", ["recruiter_id"], :name => "index_openings_on_recruiter_id"
 
+  create_table "photos", :force => true do |t|
+    t.integer  "interview_id"
+    t.string   "photo_name"
+    t.string   "photo_path"
+    t.text     "description"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "resumes", :force => true do |t|
     t.integer  "candidate_id"
     t.string   "resume_name"

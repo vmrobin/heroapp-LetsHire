@@ -2,6 +2,7 @@ class Interview < ActiveRecord::Base
   belongs_to :opening_candidate
   has_many :interviewers, :dependent => :destroy
   has_many :users, :through => :interviewers
+  has_many :photos, :dependent => :destroy
 
   accepts_nested_attributes_for :interviewers, :allow_destroy => true, :reject_if => proc { |interviewers| interviewers.empty? }
 

@@ -194,9 +194,9 @@ describe FileAccessBase do
       res.count.to_i.should be_equal(0)
     end
 
-    xit 'cannot delete non-exist large object' do
+    it 'cannot delete non-exist large object' do
       expect do
-        @cleaner.clean(@oid - 1)
+        @cleaner.clean(@oid + 100)
       end.to raise_error(Exception)
       res = @pgconn.exec('SELECT * FROM pg_largeobject')
       res.count.to_i.should_not be_equal(0)

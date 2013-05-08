@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://ruby.taobao.org/
   specs:
     actionmailer (3.2.12)
       actionpack (= 3.2.12)
@@ -92,6 +92,7 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    headless (1.0.1)
     hike (1.2.1)
     i18n (0.6.4)
     journey (1.0.4)
@@ -122,7 +123,7 @@ GEM
     multi_json (1.7.2)
     nokogiri (1.5.9)
     orm_adapter (0.4.0)
-    pg (0.12.2)
+    pg (0.15.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -247,6 +248,7 @@ DEPENDENCIES
   growl (= 1.0.3)
   guard-rspec (= 1.2.1)
   guard-spork (= 1.4.2)
+  headless
   jquery-rails (= 2.0.2)
   jquery-timepicker-addon-rails (= 1.2.2)
   jquery-tokeninput-rails (= 1.6.0)
@@ -254,7 +256,7 @@ DEPENDENCIES
   libnotify (= 0.8.0)
   meta_request (= 0.2.2)
   mime-types (= 1.21)
-  pg (= 0.12.2)
+  pg (= 0.15.1)
   rails (= 3.2.12)
   ransack (= 0.7.2)
   rb-fsevent (= 0.9.1)
