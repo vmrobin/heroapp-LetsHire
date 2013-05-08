@@ -4,10 +4,7 @@ class Opening < ActiveRecord::Base
   include Carmen
 
   attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :total_no, :filled_no
-  attr_accessible :hiring_manager_id, :recruiter_id, :participants, :participant_ids
-
-  attr_accessible :participant_tokens
-  attr_reader :participant_tokens
+  attr_accessible :hiring_manager_id, :recruiter_id, :department
 
   belongs_to :department, :counter_cache => true
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
@@ -21,7 +18,7 @@ class Opening < ActiveRecord::Base
   has_many :candidates, :class_name => "Candidate", :through => :opening_candidates
 
   validates :title, :presence => true
-  validates :department_id, :presence => true
+  validates :department_id, :hiring_manager_id, :creator, :total_no, :presence => true
 
   validate :select_valid_owners_if_active,
            :total_no_should_ge_than_filled_no
@@ -53,10 +50,6 @@ class Opening < ActiveRecord::Base
       end
     end
     items.join(', ')
-  end
-
-  def participant_tokens=(ids)
-    self.participant_ids = ids.split(',')
   end
 
   def published?

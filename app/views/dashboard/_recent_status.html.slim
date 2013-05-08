@@ -1,0 +1,3 @@
+div.container
+  p = "Current #{pluralize(@openings.count, 'Job Opening')}"
+  p = "Current #{pluralize(current_user.interviews.where(:status => 'scheduled' ).count, 'Interviews')}"

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe StubDashboardController do
+describe DashboardController do
 
   def valid_opening
     {

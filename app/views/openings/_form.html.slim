@@ -17,7 +17,9 @@
   .control-group
     =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
     .controls
-      = render 'users/user_select', { :selected_department_id => @opening.department_id, :role => 'hiring_manager', :user_id => @opening.hiring_manager.try(:id) }
+      - selected_users = []
+      - selected_users << @opening.hiring_manager_id unless @opening.hiring_manager_id.nil?
+      select#opening_hiring_manager_id data-value=@opening.hiring_manager_id
 
   .control-group
     =f.label :recruiter, :class => 'control-label'
@@ -47,10 +49,6 @@
       .controls
         = f.select :status, Opening::STATUS_LIST, {}, {:class => 'capitalized-text'}
 
-    .control-group
-      =f.label :participants, "Assign Possible Interviewers", :class => 'control-label'
-      .controls
-        = f.text_field :participant_tokens, "data-pre" => @opening.participants.map(&:attributes).to_json
   -else
     .control-group
       =f.label :status, "Make Job Opening active immediately", :class => 'control-label'

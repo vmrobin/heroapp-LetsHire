@@ -115,6 +115,7 @@ class OpeningsController < ApplicationController
     render :partial => 'openings/opening_select', :locals => {:selected_department_id => params[:selected_department_id] }
   end
 
+
   private
   def description_template
         #Fixme: need load from 'setting' page

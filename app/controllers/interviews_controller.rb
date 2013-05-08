@@ -87,6 +87,30 @@ class InterviewsController < AuthorizedController
     redirect_to interviews_url, notice: 'Invalid interview'
   end
 
+  def interviewers_select
+    interview_id = params[:interview_id]
+    interview = Interview.find(interview_id) if interview_id
+
+    unless interview
+      opening_candidate_id = params[:opening_candidate_id]
+      opening_candidate = OpeningCandidate.find(opening_candidate_id.to_i) if !opening_candidate_id.nil? && opening_candidate_id.to_i > 0
+      if opening_candidate.nil? || opening_candidate.opening.nil?
+        users = []
+      else
+        #TODO: need find favorite interviewers here.
+        users = opening_candidate.opening.department.users
+      end
+      selected_users = []
+    else
+      users = interview.opening_candidate.opening.department.users
+      selected_users = interview.users
+    end
+    render :partial => 'users/user_select', :locals => { :users => users,
+                                                         :selected_users => selected_users,
+                                                         :multiple=> true  }
+  end
+
+
   private
 
   def prepare_edit
