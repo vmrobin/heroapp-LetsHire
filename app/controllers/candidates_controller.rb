@@ -85,8 +85,6 @@ class CandidatesController < AuthenticatedController
     if @candidate.opening_candidates.create(:opening_id => new_opening_id)
       redirect_to @candidate, :notice => "Opening was successfully assigned."
     else
-      @departments = Department.with_at_least_n_openings
-      @selected_department_id = params[:candidate][:department_ids]
       redirect_to @candidate, :notice => "Opening was already assigned or not given."
     end
   rescue ActiveRecord::RecordNotFound
@@ -101,7 +99,7 @@ class CandidatesController < AuthenticatedController
       redirect_to @candidate, notice: 'Invalid parameters'
       return
     end
-    params[:candidate].delete(:department_ids)
+    params[:candidate].delete(:department_id)
     params[:candidate].delete(:opening_ids)
 
     tempio = nil
