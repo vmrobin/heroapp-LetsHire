@@ -18,7 +18,7 @@ module Features
   end
 
   module JobOpening
-    def add_job_opening(title, department = '', publish = false, total_seats = 0, filled_seats = 0, hiring_manager = '',
+    def add_job_opening(title, department = '', publish = false, total_seats = 0, hiring_manager = '',
       recruiter = '', country = '', province = '', city = '', description = '')
       click_link 'Job Openings'
       find_link('Add a Job Opening').click
