@@ -18,11 +18,11 @@ feature 'job opening pages' do
   background do
     title = 'opening' + UUIDTools::UUID.random_create
     visit '/'
-    sign_in(ADMIN_USERNAME, ADMIN_PASSWORD)
+    sign_in(RECRUITER_USERNAME, RECRUITER_PASSWORD)
   end
 
   scenario 'check job opening list layout' do
-    add_job_opening(title, 'Facility', true, 3)
+    add_job_opening(title, 'Customer Support', true, 3, 'recruiting hiring manager 1')
     click_link 'Job Openings'
     page.should have_content 'Title'
     page.should have_content 'Department'
@@ -32,7 +32,8 @@ feature 'job opening pages' do
     page.should have_content '# of Candidates'
     page.should have_content title
     page.should have_content 'System Administrator'
-    page.should have_content 'Facility'
+    page.should have_content 'Customer Support'
+    page.should have_content 'recruiting hiring manager 1'
     page.should have_content 'published'
     page.should have_content '0/3'
     click_link 'View All'
@@ -42,12 +43,13 @@ feature 'job opening pages' do
     page.should have_link 'View All'
     delete_job_opening(title)
   end
-=begin
+
   scenario 'add a draft job opening' do
-    add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
-      'System Administrator', 'China', 'Shanghai', 'CityofSH')
+    add_job_opening(title, 'Customer Support', false, 3, 'recruiting hiring manager 1',
+      'recruiter1', 'China', 'Shanghai', 'CityofSH')
     page.should have_content title
-    page.should have_content 'System Administrator'
+    page.should have_content 'recruiter1'
+    page.should have_content 'recruiting hiring manager 1'
     page.should have_content 'China'
     page.should have_content 'Shanghai'
     page.should have_content 'CityofSH'
@@ -56,10 +58,11 @@ feature 'job opening pages' do
   end
 
   scenario 'add a published job opening' do
-    add_job_opening(title, 'IT', true, 4, 4, 'System Administrator',
-      'System Administrator', 'United States', 'New York', 'NYCity')
+    add_job_opening(title, 'Customer Support', true, 4, 'recruiting hiring manager 1',
+      'recruiter1', 'United States', 'New York', 'NYCity')
     page.should have_content title
-    page.should have_content 'System Administrator'
+    page.should have_content 'recruiting hiring manager 1'
+    page.should have_content 'recruiter1'
     page.should have_content 'United States'
     page.should have_content 'New York'
     page.should have_content 'NYCity'
@@ -68,11 +71,12 @@ feature 'job opening pages' do
   end
 
   scenario 'job opening details' do
-    add_job_opening(title, 'Finance', false, 3, 2, 'System Administrator',
-      'System Administrator', 'China', 'Shanghai', 'CityofSH', 'join vmware!')
+    add_job_opening(title, 'Customer Support', false, 3, 'recruiting hiring manager 1',
+      'recruiter1', 'China', 'Shanghai', 'CityofSH', 'join vmware!')
     job_opening_details(title)
     page.should have_content title
-    page.should have_content 'System Administrator'
+    page.should have_content 'recruiter1'
+    page.should have_content 'recruiting hiring manager 1'
     page.should have_content 'China'
     page.should have_content 'Shanghai'
     page.should have_content 'CityofSH'
@@ -84,11 +88,13 @@ feature 'job opening pages' do
   scenario 'edit a draft job opening' do
     currentTitle = 'opening' + UUIDTools::UUID.random_create
     newTitle = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(currentTitle)
-    edit_job_opening(currentTitle, newTitle, 'published', 'Finance', 3, 2, '', '', 'China',
-      'Shanghai', 'cityofsh', 'editjobopening')
+    add_job_opening(currentTitle, 'Customer Support', false, 3, 'recruiting hiring manager 1', 'recruiter1')
+    edit_job_opening(currentTitle, newTitle, 'published', 'Customer Support', 23, 'recruiting hiring manager 1',
+      'recruiter1', 'China', 'Shanghai', 'cityofsh', 'editjobopening')
     page.should have_content newTitle
-    page.should have_content 'System Administrator'
+    page.should have_content 'recruiting hiring manager 1'
+    page.should have_content 'recruiter1'
+    page.should have_content '23'
     page.should have_content 'China'
     page.should have_content 'Shanghai'
     page.should have_content 'cityofsh'
@@ -100,11 +106,14 @@ feature 'job opening pages' do
   scenario 'edit a published job opening' do
     currentTitle = 'opening' + UUIDTools::UUID.random_create
     newTitle = 'opening' + UUIDTools::UUID.random_create
-    add_job_opening(currentTitle, '', true)
-    edit_job_opening(currentTitle, newTitle, 'closed', 'Finance', 3, 2, '', '', 'United States',
+    add_job_opening(currentTitle, 'Customer Support', true, 2, 'recruiting hiring manager 1', 'recruiter1')
+    edit_job_opening(currentTitle, newTitle, 'closed', 'Customer Support', 10, '', '', 'United States',
       'New York', 'cityofny', 'editjobopening', 'System Administrator')
     page.should have_content newTitle
+    page.should have_content '10'
     page.should have_content 'System Administrator'
+    page.should have_content 'recruiting hiring manager 1'
+    page.should have_content 'recruiter1'
     page.should have_content 'United States'
     page.should have_content 'New York'
     page.should have_content 'cityofny'
@@ -114,7 +123,7 @@ feature 'job opening pages' do
   end
 
   scenario 'delete a job opening' do
-    add_job_opening(title)
+    add_job_opening(title, 'Customer Support')
     click_link 'Job Openings'
     page.should have_content title
     delete_job_opening(title)
@@ -124,23 +133,19 @@ feature 'job opening pages' do
   scenario 'validations on adding job opening' do
     click_link 'Job Openings'
     find_link('Add a Job Opening').click
-    fill_in 'opening_filled_no', with: 2
     click_button 'Save'
     page.should have_content "Title can't be blank"
-    page.should have_content 'Filled no is larger than total no.'
+    page.should have_content "Department can't be blank"
   end
 
   scenario 'Validations on editing job opening' do
-    add_job_opening(title)
+    add_job_opening(title, 'Customer Support')
     click_link 'Job Openings'
     find(:xpath, "//tr[td[contains(., '#{title}')]]/td/a", :text => 'Edit').click
     fill_in 'opening_title', with: ''
-    fill_in 'opening_filled_no', with: 2
     click_button 'Save'
     page.should have_content "Title can't be blank"
-    page.should have_content 'Filled no is larger than total no.'
     click_link 'Job Openings'
     delete_job_opening(title)
   end
-=end
 end
