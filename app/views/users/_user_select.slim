@@ -1,14 +1,12 @@
-- active ||= params[:all_users]
 - selected_users ||= []
 - empty_msg ||= 'No users'
 - multiple ||= false
 -if users.count > 0
   select multiple=multiple
     -users.each do |user|
-      - next if (active && user.deleted_at)
       -if selected_users.any? && selected_users.index(user.id)
         option selected=true value="#{user.id}" ="#{user.name}"
       -else
         option value="#{user.id}" ="#{user.name}"
 -else
-  em id=html_id = empty_msg
+  em = empty_msg

@@ -22,11 +22,12 @@ describe Api::V1::InterviewsController do
               :opening_candidate_id => @opening.id,
               :scheduled_at => (DateTime.now + 1.hour).to_s
           })
-    hash = hash.merge :interviewer_ids => users.map { |user| user.id } if users.is_a?(Array)
+    hash = hash.merge :user_ids => users.map { |user| user.id } if users.is_a?(Array)
     hash
   end
 
   before :all do
+    @hiring_manager1 = create_user(:hiring_manager)
     @users = []
     user_password = '12345678'
     3.times do

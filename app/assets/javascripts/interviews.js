@@ -33,19 +33,32 @@ $(function () {
         }).val()
     );
 
-    // if it is on new/edit interview page
-    if ($("#position select").length > 0) {
-        function updateInterviewerList(openingId) {
-            var url = "/openings/interviewers_select?opening_candidate_id=" + openingId;
-            $("#interview_user_ids").load(url).attr('id', 'interview_user_ids')
-                .attr('name', 'interview[user_ids]');
-        }
 
-        updateInterviewerList(
-            $("#position select").change(function () {
-                updateInterviewerList(this.value);
-            }).val()
-        );
-        updateInterviewerList($("#position select")[0].value);
+    if ($("#interview_user_id").length > 0) {
+
+        // if it is on new/edit interview page
+        function reloadInterviewers() {
+            var old_val = $("#interview_user_id").val();
+            var opening_id = $('#opening_id')[0].value;
+            if (opening_id != undefined)  {
+                var url = "/openings/" + opening_id + "/interviewers_select"
+                if (!$("#only_favorite_interviewers").is(':checked')) {
+                    url = url + "?mode=all";
+                }
+                $("#interview_user_id").load(url, function(response, status) {
+                    if (status == 'success') {
+                        $("#interview_user_id").attr('id', 'interview_user_id')
+                          .attr('name', 'interview[user_id]');
+                        $("#interview_user_id").val(old_val);
+                    }
+                });
+            }
+        };
+
+        $("#only_favorite_interviewers").change(function() {
+            reloadInterviewers();
+        });
+
+        reloadInterviewers();
     }
 });

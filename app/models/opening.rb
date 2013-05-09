@@ -4,7 +4,7 @@ class Opening < ActiveRecord::Base
   include Carmen
 
   attr_accessible :title, :description,:department_id, :status, :country, :province, :city, :total_no, :filled_no
-  attr_accessible :hiring_manager_id, :recruiter_id, :department
+  attr_accessible :hiring_manager_id, :recruiter_id, :department, :creator_id
 
   belongs_to :department, :counter_cache => true
   belongs_to :hiring_manager, :class_name => "User", :foreign_key => :hiring_manager_id, :readonly => true
@@ -69,7 +69,7 @@ class Opening < ActiveRecord::Base
     if status != STATUS_LIST[:closed]
       if hiring_manager_id && hiring_manager_id.to_i > 0
         begin
-          user = User.active.find(hiring_manager_id)
+          user = User.find(hiring_manager_id)
           valid = user && user.has_role?(:hiring_manager)
         rescue
         end
@@ -78,7 +78,7 @@ class Opening < ActiveRecord::Base
       if recruiter_id && recruiter_id.to_i > 0
         valid = nil
         begin
-          user = User.active.find(recruiter_id)
+          user = User.find(recruiter_id)
           valid = user && user.has_role?(:recruiter)
         rescue
         end

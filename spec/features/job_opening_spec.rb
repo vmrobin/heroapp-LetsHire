@@ -32,7 +32,7 @@ feature 'job opening pages' do
     page.should have_content '# of Candidates'
     page.should have_content title
     page.should have_content 'System Administrator'
-    page.should have_content 'Facility'
+    page.should have_content 'Facilities'
     page.should have_content 'published'
     page.should have_content '0/3'
     click_link 'View All'

@@ -6,6 +6,11 @@
       = f.text_field :title
 
   .control-group
+    =f.label :recruiter, :class => 'control-label'
+    .controls
+      = f.select :recruiter_id, User.with_role(:recruiter).map { |user| [ user.name, user.id ] }
+
+  .control-group
     =f.label :department, :class => 'control-label'
     .controls
       - departments = User.active_departments
@@ -14,17 +19,18 @@
       - else
         = f.label 'No hiring manager created?!'
 
-  .control-group
-    =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
-    .controls
-      - selected_users = []
-      - selected_users << @opening.hiring_manager_id unless @opening.hiring_manager_id.nil?
-      select#opening_hiring_manager_id data-value=@opening.hiring_manager_id
-
-  .control-group
-    =f.label :recruiter, :class => 'control-label'
-    .controls
-      = f.select :recruiter_id, User.with_role(:recruiter).map { |user| [ user.name, user.id ] }
+  - unless @opening.closed?
+    .control-group
+      =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
+      .controls
+        - selected_users = []
+        - selected_users << @opening.hiring_manager_id unless @opening.hiring_manager_id.nil?
+        select#opening_hiring_manager_id data-value=@opening.hiring_manager_id
+  - else
+    .control-group
+      =f.label :hiring_manager, 'Hiring Manager', :class => 'control-label'
+      .controls
+        = f.label @opening.hiring_manager.name.html_safe
 
   .control-group
     =f.label :total_no, 'Total Seats', :class => 'control-label'

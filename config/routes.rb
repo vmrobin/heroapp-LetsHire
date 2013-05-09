@@ -57,8 +57,8 @@ LetsHire::Application.routes.draw do
   resources :users
 
   get '/departments/:id/user_select' => 'departments#user_select'
-  get '/openings/interviewers_select' => 'interviews#interviewers_select'
   resources :departments
+  get '/openings/:id/interviewers_select' => 'openings#interviewers_select'
   resources :openings
   resources :candidates do
     resources :interviews

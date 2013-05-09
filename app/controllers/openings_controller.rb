@@ -52,10 +52,10 @@ class OpeningsController < ApplicationController
   def new
     @opening = Opening.new(:title => '', :description => description_template)
     @opening.recruiter = current_user if current_user.has_role?(:recruiter)
-    @opening.hiring_manager = current_user if current_user.has_role?(:hiringmanager)
+    @opening.hiring_manager = current_user if current_user.has_role?(:hiring_manager)
 
     respond_to do |format|
-      format.html # new.html.slim
+      format.html # edit.html.slim
       format.json { render json: @opening }
     end
   end
@@ -85,6 +85,8 @@ class OpeningsController < ApplicationController
   def update
     @opening = Opening.find(params[:id])
 
+    params[:opening].delete :creator_id
+
     if @opening.update_attributes(params[:opening])
       redirect_to @opening, notice: 'Opening was successfully updated.'
     else
@@ -113,6 +115,24 @@ class OpeningsController < ApplicationController
 
   def opening_options
     render :partial => 'openings/opening_select', :locals => {:selected_department_id => params[:selected_department_id] }
+  end
+
+
+  def interviewers_select
+    opening_id = params[:id]
+    opening = Opening.find(opening_id)
+
+    mode = params[:mode]
+    if mode == 'all'
+      users = User.all
+    else
+      users = opening.participants
+    end
+    render :partial => 'users/user_select', :locals => { :users => users,
+                                                         :selected_users => [],
+                                                         :multiple=> true  }
+  rescue
+    render :partial => 'users/user_select', :locals => { :users => [] }
   end
 
 
