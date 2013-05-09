@@ -22,7 +22,7 @@ feature 'job opening pages' do
   end
 
   scenario 'check job opening list layout' do
-    add_job_opening(title, 'Facility', true, 3)
+    add_job_opening(title, 'Facilities', true, 3)
     click_link 'Job Openings'
     page.should have_content 'Title'
     page.should have_content 'Department'
@@ -32,7 +32,7 @@ feature 'job opening pages' do
     page.should have_content '# of Candidates'
     page.should have_content title
     page.should have_content 'System Administrator'
-    page.should have_content 'Facility'
+    page.should have_content 'Facilities'
     page.should have_content 'published'
     page.should have_content '0/3'
     click_link 'View All'
