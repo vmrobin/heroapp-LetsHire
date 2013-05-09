@@ -37,18 +37,15 @@ class InterviewsController < AuthorizedController
 
   def create
     authorize! :manage, Interview
-    puts 'GO here'
     if params[:interview][:opening_candidate_id].nil?
       redirect_to candidates_path, :notice => "No opening is selected for the candidate"
       return
     end
-    puts 'GO here'
     @opening_candidate = OpeningCandidate.find params[:interview][:opening_candidate_id]
     if @opening_candidate.nil?
       redirect_to candidates_path, :notice => "No opening is selected for the candidate"
       return
     end
-    puts 'GO here'
     unless @opening_candidate.in_interview_loop?
       redirect_to @opening.candidate, :notice => "The candidate isn't pending for interview."
       return
@@ -61,7 +58,6 @@ class InterviewsController < AuthorizedController
       redirect_to @interview, :notice => "Interview was successfully created"
     else
       prepare_edit
-      puts 'GO here'
       render :action => 'edit'
     end
   end
@@ -70,7 +66,6 @@ class InterviewsController < AuthorizedController
     @interview = Interview.find params[:id]
     authorize! :update, @interview
     @opening_candidate = @interview.opening_candidate
-    params[:interview].delete :opening_id
     if @interview.update_attributes(params[:interview])
       update_favorite_interviewers params[:interview][:user_id]
       redirect_to interview_path(@interview), :notice => "Interview updated"

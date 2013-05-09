@@ -119,17 +119,10 @@ class OpeningsController < ApplicationController
 
 
   def interviewers_select
-    opening_id = params[:id]
-    opening = Opening.find(opening_id)
-
+    opening = Opening.find(params[:id])
     mode = params[:mode]
-    if mode == 'all'
-      users = User.all
-    else
-      users = opening.participants
-    end
+    users = (mode == 'all') ? User.all: opening.participants
     render :partial => 'users/user_select', :locals => { :users => users,
-                                                         :selected_users => [],
                                                          :multiple=> true  }
   rescue
     render :partial => 'users/user_select', :locals => { :users => [] }

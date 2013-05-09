@@ -35,8 +35,6 @@ $(function () {
 
 
     if ($("#interview_user_id").length > 0) {
-
-        // if it is on new/edit interview page
         function reloadInterviewers() {
             var old_val = $("#interview_user_id").val();
             var opening_id = $('#opening_id')[0].value;

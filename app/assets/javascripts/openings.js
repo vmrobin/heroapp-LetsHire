@@ -4,7 +4,6 @@
 // below : http://jashkenas.github.com/coffee-script/
 $(function() {
     $("select#opening_country").change(function(event) {
-        //$(this).parent().find('span').remove();
         var country_code, state_select_wrapper, url;
         state_select_wrapper = $("#opening_state_wrapper");
         $("select", state_select_wrapper).attr("disabled", true);
@@ -20,10 +19,14 @@ $(function() {
 
         var role_id = $( '#opening_' + role + '_id');
         $('select', role_id).attr('disabled', true);
-
-        var url = "/departments/" + department_id + "/user_select?selected=" + role_id.data('value') + "&role=" + role;
-        return role_id.load(url).attr('id', 'opening_' + role + '_id')
-                                .attr('name', 'opening[' + role + '_id]');
+        var old_value = role_id.data('value');
+        var url = "/departments/" + department_id + "/user_select?role=" + role;
+        return role_id.load(url, function() {
+            var role_id = $( '#opening_' + role + '_id');
+            role_id.attr('id', 'opening_' + role + '_id')
+                .attr('name', 'opening[' + role + '_id]');
+            role_id.val(old_value);
+        });
     };
 
     $('select#opening_department_id').change(function(event) {
