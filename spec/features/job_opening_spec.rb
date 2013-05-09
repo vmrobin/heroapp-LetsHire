@@ -31,7 +31,6 @@ feature 'job opening pages' do
     page.should have_content 'Filled/Total'
     page.should have_content '# of Candidates'
     page.should have_content title
-    page.should have_content 'System Administrator'
     page.should have_content 'Customer Support'
     page.should have_content 'recruiting hiring manager 1'
     page.should have_content 'published'
