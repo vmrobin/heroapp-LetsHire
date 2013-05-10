@@ -39,6 +39,6 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    stub_dashboard_overview_path
+    dashboard_overview_path
   end
 end
