@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 
   ROLES = %w[interviewer recruiter hiring_manager]
 
-  scope :active, where(:deleted_at => nil)
+  default_scope where(:deleted_at => nil).order('name ASC')
 
   belongs_to :department
   has_many :openings_to_be_interviewed, :through => :opening_participants
@@ -82,6 +82,10 @@ class User < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def self.include_deleted_in
+    User.with_exclusive_scope { yield }
   end
 
 end

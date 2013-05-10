@@ -1,4 +1,4 @@
-class StubDashboardController < ApplicationController
+class DashboardController < ApplicationController
   before_filter :require_login
 
   def overview
